@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gradient-to-tl from-two to-one py-8 sm:px-32 rubik px-2;
+}
+
+.rubik {
+  font-family: var(' --font-rubik');
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  /* overflow: hidden; */
+}
+::-webkit-scrollbar-track {
+  background-color: '#C99944';
+}
+
+::-webkit-scrollbar-thumb {
+  background: #dadada;
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-track {
+  /* background: #c90101; */
+  border-radius: 20px;
+}
+
+pre {
+  white-space: pre-line;
+  word-wrap: break-word;
+}
+.keen-slider__slide {
+  border-radius: 0px;
+}
