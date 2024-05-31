@@ -51,12 +51,12 @@ export default function RegisterPage() {
         onSubmit={handleSubmit(onSubmit)}
         className="w-full lg:w-1/2 bg-four p-8 rounded-lg border border-one"
       >
-        <h1 className="w-full my-2 text-4xl font-bold text-center">
+        <h1 className="w-full my-2 text-4xl font-bold text-center select-none">
           تسجيل الدخول 🧀
         </h1>
 
         <div className="relative flex flex-col items-start justify-center w-full">
-          <h1 className="w-full my-4 ">البريد الإلكتروني</h1>
+          <h1 className="w-full my-4 select-none">البريد الإلكتروني</h1>
           <input
             type="text"
             name={'email'}
@@ -66,11 +66,13 @@ export default function RegisterPage() {
           />
         </div>
         {errors?.email && (
-          <h1 className="text-one text-md my-2">{errors?.email?.message}</h1>
+          <h1 className="text-one text-md my-2 select-none">
+            {errors?.email?.message}
+          </h1>
         )}
 
         <div className="relative flex flex-col items-start justify-center w-full">
-          <h1 className="w-full my-4 ">كلمة السر</h1>
+          <h1 className="w-full my-4 select-none">كلمة السر</h1>
           <input
             type="password"
             name={'password'}
@@ -80,7 +82,9 @@ export default function RegisterPage() {
           />
         </div>
         {errors?.password && (
-          <h1 className="text-one text-md my-2">{errors?.password?.message}</h1>
+          <h1 className="text-one text-md my-2 select-none">
+            {errors?.password?.message}
+          </h1>
         )}
         <div
           className="flex justify-between w-full bg-white rounded-md px-4 py-2 items-center my-2 hover:shadow-md cursor-pointer"
@@ -94,7 +98,7 @@ export default function RegisterPage() {
               objectFit="contain"
             />
           </div>
-          <h1 className="text-lg grow text-center text-four">
+          <h1 className="text-lg grow text-center text-four select-none">
             تسجيل الدخول عن طريق جوجل
           </h1>
         </div>

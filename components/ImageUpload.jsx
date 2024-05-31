@@ -1,7 +1,7 @@
 'use client';
 import { CldUploadWidget } from 'next-cloudinary';
 import Image from 'next/image';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { MdOutlineAddPhotoAlternate } from 'react-icons/md';
 import { inputsContext } from '../components/Context';
 
@@ -15,15 +15,24 @@ import { inputsContext } from '../components/Context';
 //? NEXT_PUBLIC_CLOUDINARY_Upload_preset_name = 'cooking';
 //? import { CldUploadWidget } from 'next-cloudinary' نستورد
 
-export default function ImageUpload() {
+export default function ImageUpload({ image, style }) {
+  console.log('this is image from imageUpload', image);
   const { dispatch, imageError } = useContext(inputsContext);
   // console.log('imageError', imageError);
   const [imageUrl, setImageUrl] = useState();
 
+  useEffect(() => {
+    setImageUrl(image);
+  }, [image]);
+
   function handleSuccess(result) {
-    console.log(result?.info?.secure_url);
+    // console.log(result?.info?.secure_url);
     setImageUrl(result?.info?.secure_url);
-    dispatch({ type: 'IMAGE', payload: result?.info?.secure_url });
+    if (style) {
+      dispatch({ type: 'PROFILE_IMAGE', payload: result?.info?.secure_url });
+    } else {
+      dispatch({ type: 'IMAGE', payload: result?.info?.secure_url });
+    }
   }
 
   return (
@@ -41,7 +50,11 @@ export default function ImageUpload() {
         return (
           <div
             onClick={() => open?.()}
-            className=" w-64 h-44 border-2 border-one cursor-pointer rounded-lg mt-4 overflow-hidden"
+            className={
+              style
+                ? ''
+                : ' w-64 h-44 border-2 border-one cursor-pointer rounded-lg mt-4 overflow-hidden'
+            }
           >
             {/* //? نريد عرض الصورة التي رفعناها في قلب الديف الذي رفعناها
             //?منه لذلك قمنا بانشاء حالة تحتوي على الرابط الراجع من السرفر 
@@ -55,12 +68,12 @@ export default function ImageUpload() {
               <div className="flex flex-col justify-center items-center h-full">
                 <MdOutlineAddPhotoAlternate className="text-one text-3xl" />
                 <h1 className="text-white font-bold m-2 text-lg">
-                  أضف صورة للطبخة
+                  {style ? '' : 'أضف صورة للطبخة'}
                 </h1>
               </div>
             )}
-            {imageUrl && (
-              <div className="relative w-full h-44">
+            {(image ? image : imageUrl) && (
+              <div className={style ? style : 'relative w-full h-44'}>
                 <Image
                   src={imageUrl}
                   layout="fill"

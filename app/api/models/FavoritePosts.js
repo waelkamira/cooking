@@ -1,31 +1,30 @@
 const { Schema, model, models } = require('mongoose');
 
-const MealSchema = new Schema(
+const FavoritePostsSchema = new Schema(
   {
+    favoritedByUser: {
+      type: String,
+    },
     userName: {
       type: String,
-      required: true,
     },
-    userImage: { type: String, required: true },
+    userImage: {
+      type: String,
+    },
     mealName: {
       type: String,
-      required: true,
     },
     selectedValue: {
       type: String,
-      required: true,
     },
     image: {
       type: String,
-      required: true,
     },
     ingredients: {
       type: String,
-      required: true,
     },
     theWay: {
       type: String,
-      required: true,
     },
     advise: {
       type: String,
@@ -35,23 +34,31 @@ const MealSchema = new Schema(
     },
     numberOfLikes: {
       type: Number,
-      default: 0,
     },
     numberOfHearts: {
       type: Number,
-      default: 0,
     },
     numberOfEmojis: {
       type: Number,
-      default: 0,
     },
-    favorite: {
+    heart: {
       type: Boolean,
       default: false,
     },
-    // comments: { type: [{}] }, يجب تعريف مخطط الكومنتات قبل نشر أي شيء
+    like: {
+      type: Boolean,
+      default: false,
+    },
+    emoji: {
+      type: Boolean,
+      default: false,
+    },
+    postId: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
 
-export const Meal = models?.Meal || model('Meal', MealSchema);
+export const Favorite =
+  models?.Favorite || model('Favorite', FavoritePostsSchema);

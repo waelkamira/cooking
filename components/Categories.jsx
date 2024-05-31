@@ -49,16 +49,12 @@ const categories3 = [
 ];
 
 const smallSize = [
+  { name: 'الوجبة الرئيسية', image: '/1.png' },
   { name: 'المعجنات', image: '/2.png' },
   {
     name: 'الشوربات',
     image: '/3.png',
   },
-  {
-    name: 'العصائر',
-    image: '/4.png',
-  },
-  { name: 'الوجبة الرئيسية', image: '/1.png' },
   {
     name: 'المقبلات',
     image: '/7.png',
@@ -70,6 +66,10 @@ const smallSize = [
   {
     name: 'الحلويات',
     image: '/5.png',
+  },
+  {
+    name: 'العصائر',
+    image: '/4.png',
   },
 ];
 
@@ -89,7 +89,7 @@ export default function Categories() {
     },
   });
   return (
-    <div className="w-full h-full bg-gradient-to-t from-two to-one rounded-lg">
+    <div className="w-full h-full  rounded-lg">
       <div className="2xl:hidden">
         <hr className="w-full h-1 m-0 p-0 bg-white border border-white rounded-full" />
         <div ref={sliderRef} className=" keen-slider ">
@@ -103,22 +103,35 @@ export default function Categories() {
                   alt="photo"
                 />
               </div>
-              <h1 className="text-md md:text-lg text-center rounded-full p-2 text-white mx-4 font-semibold w-full">
+              <h1 className="text-md md:text-lg text-center rounded-full p-2 text-white mx-4 font-semibold w-full select-none">
                 {category.name}
               </h1>
             </div>
           ))}
         </div>
       </div>
-
-      <div className="hidden 2xl:block w-full rounded-lg">
+      <div className="flex flex-col items-center justify-center p-4 w-full">
+        {smallSize.map((category) => (
+          <div className=" flex flex-col justify-center items-center rounded-full mx-4 cursor-pointer w-full ">
+            <div className="relative border-2 border-four w-full h-24 rounded-lg overflow-hidden hover:scale-[101%] transition-all duration-500 shadow-lg">
+              <Image
+                src={category.image}
+                layout="fill"
+                objectFit="cover"
+                alt="photo"
+              />
+            </div>
+            <h1 className="text-lg sm:text-xl text-center p-2  text-white mx-4 font-semibold w-full select-none">
+              {category.name}
+            </h1>
+          </div>
+        ))}
+      </div>
+      {/* <div className="hidden 2xl:block w-full rounded-lg">
         <div className="w-full  ">
           <div className="flex flex-col items-center justify-center p-4 w-full">
             {categories.map((category) => (
-              <div
-                className=" flex flex-col justify-center items-center rounded-full mx-4 cursor-pointer w-full "
-                onClick={() => setCategorySearchName()}
-              >
+              <div className=" flex flex-col justify-center items-center rounded-full mx-4 cursor-pointer w-full ">
                 <div className="relative border-2 border-four w-full h-24 sm:h-52 rounded-lg overflow-hidden hover:scale-[101%] transition-all duration-500 shadow-lg">
                   <Image
                     src={category.image}
@@ -127,7 +140,7 @@ export default function Categories() {
                     alt="photo"
                   />
                 </div>
-                <h1 className="text-lg sm:text-xl text-center rounded-full p-2 text-white mx-4 font-semibold w-full">
+                <h1 className="text-lg sm:text-xl text-center rounded-full p-2 text-white mx-4 font-semibold w-full select-none">
                   {category.name}
                 </h1>
               </div>
@@ -146,7 +159,7 @@ export default function Categories() {
                     priority
                   />
                 </div>
-                <h1 className="text-lg sm:text-xl text-center rounded-full p-2 text-white mx-4 font-semibold w-full">
+                <h1 className="text-lg sm:text-xl text-center rounded-full p-2 text-white mx-4 font-semibold w-full select-none">
                   {category.name}
                 </h1>
               </div>
@@ -183,7 +196,7 @@ export default function Categories() {
                   priority
                 />
               </div>
-              <h1 className="text-lg sm:text-xl text-center rounded-full p-2 text-white mx-4 font-semibold w-full">
+              <h1 className="text-lg sm:text-xl text-center rounded-full p-2 text-white mx-4 font-semibold w-full select-none">
                 {category.name}
               </h1>
             </div>
@@ -218,13 +231,13 @@ export default function Categories() {
                   priority
                 />
               </div>
-              <h1 className="text-lg sm:text-xl text-center rounded-full p-2 text-white mx-4 font-semibold w-full">
+              <h1 className="text-lg sm:text-xl text-center rounded-full p-2 text-white mx-4 font-semibold w-full select-none">
                 {category.name}
               </h1>
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -5,8 +5,12 @@ import Image from 'next/image';
 import toast from 'react-hot-toast';
 import SelectComponent from './SelectComponent';
 import { inputsContext } from '../components/Context';
+import { useSession } from 'next-auth/react';
 
 export default function CookingForm({ setIsVisible, isVisible }) {
+  const session = useSession();
+  const userName = session?.data?.user?.name;
+  const userImage = session?.data?.user?.image;
   const [errors, setErrors] = useState({
     mealName: false,
     mealNameErrorMessage: 'حقل المقادير مطلوب',
@@ -49,13 +53,15 @@ export default function CookingForm({ setIsVisible, isVisible }) {
       inputs.ingredients &&
       inputs.theWay &&
       inputs.selectedValue &&
-      inputs.image
+      inputs.image &&
+      userImage &&
+      userName
     ) {
       try {
         const response = await fetch('/api/createMeal', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(inputs),
+          body: JSON.stringify({ ...inputs, userName, userImage }),
         });
 
         if (response.ok) {
@@ -272,7 +278,7 @@ export default function CookingForm({ setIsVisible, isVisible }) {
             className="text-right w-full p-2 rounded-lg text-xl outline-2 focus:outline-one"
           />
         </div>
-        <div className="w-full flex flex-col items-start justify-center sm:flex-row-reverse gap-4 bg-one my-8 rounded-lg">
+        <div className="w-full flex flex-col items-start justify-center sm:flex-row-reverse gap-4 my-8 rounded-lg">
           <div className="w-full bg-four p-4 rounded-lg mb-4 border border-one">
             <h1 className="text-white font-sans w-full text-end md:text-xl">
               <span className="text-one md:text-xl font-bold w-full">
@@ -280,19 +286,19 @@ export default function CookingForm({ setIsVisible, isVisible }) {
                 لا تقم بنسخ الرابط مباشرة لأنه لن يعمل
               </span>
             </h1>
-            <pre className="text-white font-sans w-full text-end md:text-xl">
+            <pre className="text-white font-sans w-full text-end md:text-xl select-none">
               لوضع الرابط من يوتيوب بشكل صحيح اتبع الخطوات التالية
             </pre>
-            <pre className="text-white font-sans w-full text-end md:text-xl">
+            <pre className="text-white font-sans w-full text-end md:text-xl select-none">
               قم بالضغط على زر مشاركة أسفل الفيديو{' '}
             </pre>{' '}
-            <pre className="text-white font-sans w-full text-end md:text-xl">
+            <pre className="text-white font-sans w-full text-end md:text-xl select-none">
               embed اضغط على كلمة{' '}
             </pre>
-            <pre className="text-white font-sans w-full text-end md:text-xl">
+            <pre className="text-white font-sans w-full text-end md:text-xl select-none">
               نسخ copy ثم اضغط على كلمة
             </pre>
-            <pre className="text-white font-sans w-full text-end md:text-xl">
+            <pre className="text-white font-sans w-full text-end md:text-xl select-none">
               ثم الصق الرابط في حقل رابط الفيديو
             </pre>
           </div>

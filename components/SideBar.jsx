@@ -1,12 +1,26 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { signOut, useSession } from 'next-auth/react';
 import Button from './Button';
 import Image from 'next/image';
+import CurrentUser from '../components/CurrentUser';
+import Categories from './Categories';
+import NewRecipeButton from './NewRecipeButton';
+
 export default function SideBar() {
   const router = useRouter();
   const session = useSession();
+  const [newImage, setNewImage] = useState('');
+  const user = CurrentUser();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const ima = localStorage.getItem('image');
+      setNewImage(ima);
+    }
+  }, []);
+
   return (
     <div className="hidden 2xl:block w-1/4 h-[1845px] bg-gradient-to-t from-two to-five p-8">
       {session?.status === 'authenticated' && (
@@ -19,11 +33,7 @@ export default function SideBar() {
               {session?.data?.user?.name}{' '}
             </h1>
             <div className="relative w-14 h-10 overflow-hidden rounded-full">
-              <Image
-                src={session?.data?.user?.image}
-                fill
-                alt={session?.data?.user?.name}
-              />
+              <Image src={user?.image} fill alt={session?.data?.user?.name} />
             </div>
           </div>
           <Button
@@ -45,6 +55,15 @@ export default function SideBar() {
           <hr className="w-24 bg-four h-1 border border-four" />
         </div>
       )}
+      <div className="bg-four my-4 rounded-lg p-2">
+        <Button
+          title={'طبخاتي المفضلة'}
+          style={''}
+          onClick={() => router.push('/favoritePosts')}
+        />
+      </div>
+      {/* <NewRecipeButton /> */}
+      <Categories />
     </div>
   );
 }

@@ -36,8 +36,8 @@ export const authOptions = {
         const email = credentials?.email;
         const password = credentials?.password;
         const user = await User.findOne({ email });
-        console.log('user', user);
-        console.log('credentials', credentials);
+        // console.log('user', user);
+        // console.log('credentials', credentials);
         if (!user) {
           throw new Error('الايميل المدخل غير موجود');
         }

@@ -18,8 +18,13 @@ const UserSchema = new Schema(
     image: {
       type: String,
       default:
-        'https://res.cloudinary.com/dh2xlutfu/image/upload/v1716910329/bahiga_sqohf7.png',
+        'https://res.cloudinary.com/dh2xlutfu/image/upload/v1716844354/cooking/userImage_qeyh2w.png',
     },
+    // actions: {
+    //   like: { type: Boolean, default: false },
+    //   heart: { type: Boolean, default: false },
+    //   emoji: { type: Boolean, default: false },
+    // },
   },
   { timestamps: true }
 );

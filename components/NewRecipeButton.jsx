@@ -14,10 +14,10 @@ export default function NewRecipeButton() {
   const session = useSession();
 
   return (
-    <div className=" my-4 w-full">
-      <h1 className="text-sm sm:text-xl text-nowrap p-2 text-white w-full text-end">
+    <div className=" my-4 w-full bg-four rounded-lg p-2 z-50">
+      {/* <h1 className="text-sm sm:text-xl text-nowrap p-2 text-white w-full text-end">
         شو طابخين اليوم؟
-      </h1>
+      </h1> */}
       <button
         className="w-full bg-five hover:scale-[100.5%] hover:bg-one shadow-lg transition-all duration-300 rounded-full text-lg md:text-2xl px-4 py-2 text-white text-nowrap"
         onClick={() => setIsVisible(true)}
@@ -26,11 +26,11 @@ export default function NewRecipeButton() {
       </button>
       {isVisible && (
         <div
-          className="absolute flex justify-center items-start gap-4 overflow-auto w-full h-full z-10 border bg-four/90 border-five right-0 top-0 2xl:-top-8 rounded-lg"
+          className="absolute flex justify-center items-start gap-4 overflow-auto w-full h-full border md:p-8 bg-four/90 border-five right-0 top-0 2xl:-top-8 rounded-lg z-50"
           onClick={() => setIsVisible(false)}
         >
           <div
-            className="absolute top-2 right-2 xl:top-8 xl:right-8 flex justify-center items-center z-40 bg-five hover:bg-one cursor-pointer h-fit px-4 py-1 text-white font-semibold rounded-lg hover:scale-105 shadow-lg"
+            className="absolute top-2 right-2 sm:top-16 sm:right-16 flex justify-center items-center z-50 bg-five hover:bg-one cursor-pointer h-fit px-4 py-1 text-white font-semibold rounded-lg hover:scale-105 shadow-lg"
             onClick={() => setIsVisible(false)}
           >
             <h1>إغلاق</h1>
@@ -41,7 +41,7 @@ export default function NewRecipeButton() {
               (session?.status === 'unauthenticated'
                 ? 'h-[650px]'
                 : 'h-[2580px] sm:h-[2350px] lg:h-[2300px]') +
-              ' relative bg-four w-full 2xl:w-1/2  flex flex-col items-start justify-center sm:flex-row 2xl:my-8 top-0 z-20 '
+              ' relative bg-four w-full 2xl:w-2/3 flex flex-col items-start justify-center sm:flex-row 2xl:my-8 top-0 z-40 '
             }
             onClick={(e) => e.stopPropagation()}
           >

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { IoIosSearch } from 'react-icons/io';
 import SmallItem from './SmallItem';
+import Image from 'next/image';
 
 export default function SearchBar() {
   const [searchedWord, setSearchedWord] = useState(null);
@@ -26,8 +27,8 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="w-full">
-      <div className="flex flex-col-reverse gap-2 justify-center items-center w-full my-4 sticky mt-8">
+    <div className="w-full mt-8">
+      <div className="flex flex-row gap-4 justify-center items-center w-full sticky mb-4">
         <div className="relative w-full">
           <input
             value={searchedWord}
@@ -36,16 +37,23 @@ export default function SearchBar() {
             type="text"
             id="search_meal"
             name="search_meal"
-            placeholder=" ... الباشا و عساكره"
-            className="w-full rounded-full border-2 text-lg md:text-xl py-1 md:py-2 px-6 outline-2 focus:outline-one text-right caret-one"
+            placeholder="... ابحث عن وصفة طبخ
+"
+            className="w-full rounded-full border-2 text-lg md:text-xl py-1 md:py-2 px-10 outline-2 focus:outline-one text-right caret-one"
           />
-          <div className="absolute top-3 md:top-4 left-4">
+          <div className="absolute top-3 md:top-4 right-4">
             <IoIosSearch className="text-one font-bold size-5" />
           </div>
         </div>
-        <h1 className="text-sm sm:text-xl text-nowrap mx-2 font-medium text-white w-full text-end">
-          ابحث عن وصفة طبخ
-        </h1>
+        <div className="relative w-72 h-44 overflow-hidden">
+          <Image
+            priority
+            src={'/logo.png'}
+            layout="fill"
+            objectFit="contain"
+            alt="photo"
+          />
+        </div>
       </div>
       {searchedValues?.length > 0 && searchedWord !== '' && (
         <div className="w-full flex flex-col items-center justify-start p-4 overflow-y-auto h-screen bg-seven rounded-lg content-center">

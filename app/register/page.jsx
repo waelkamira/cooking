@@ -73,7 +73,7 @@ export default function RegisterPage() {
         onSubmit={handleSubmit(onSubmit)}
         className="w-full lg:w-1/2 bg-four p-8 rounded-lg border border-one"
       >
-        <h1 className="w-full my-2 text-4xl font-bold text-center">
+        <h1 className="w-full my-2 text-4xl font-bold text-center select-none">
           التسجيل 🍔
         </h1>
         <div className="flex flex-col items-start justify-center w-full">

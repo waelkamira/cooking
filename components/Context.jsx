@@ -18,6 +18,10 @@ function inputsReducer(currentState, action) {
       return {
         data: { ...currentState?.data, image: action.payload },
       };
+    case 'PROFILE_IMAGE':
+      return {
+        profile_image: { image: action.payload },
+      };
 
     case 'IMAGE_ERROR':
       return {
@@ -34,6 +38,7 @@ export function InputsContextProvider({ children }) {
   const [state, dispatch] = useReducer(inputsReducer, {
     data: {},
     imageError: {},
+    profile_image: {},
   });
   // console.log('from Context', state);
 

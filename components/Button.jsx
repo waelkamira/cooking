@@ -9,7 +9,7 @@ export default function Button({ style, title, onClick }) {
         style
           ? style
           : style +
-            '  text-lg md:text-xl text-white rounded-lg shadow-lg bg-five hover:bg-one p-2 md:p-3 my-4 w-full'
+            '  text-lg md:text-2xl text-white rounded-full shadow-lg bg-five hover:bg-one p-2 w-full'
       }
     >
       {title}
