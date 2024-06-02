@@ -5,10 +5,28 @@ import React, { act, createContext, useReducer } from 'react';
 
 function inputsReducer(currentState, action) {
   switch (action.type) {
+    case 'SET_RECIPES':
+      return {
+        allCookingRecipes: action?.payload,
+      };
+    case 'New_RECIPE':
+      console.log('New_RECIPE', action?.payload);
+      return {
+        newRecipe: action?.payload,
+      };
     case 'SELECTED_VALUE':
-      console.log('from Context', action.payload);
+      console.log('from Context', action?.payload);
       return {
         data: {
+          ...currentState?.data,
+          selectedValue: action.payload.selectedValue,
+          modelName: action.payload.modelName,
+        },
+      };
+    case 'DELETE_RECIPE':
+      console.log('from Context', action?.payload);
+      return {
+        deletedRecipe: {
           ...currentState?.data,
           selectedValue: action.payload.selectedValue,
           modelName: action.payload.modelName,
@@ -39,8 +57,11 @@ export function InputsContextProvider({ children }) {
     data: {},
     imageError: {},
     profile_image: {},
+    allCookingRecipes: [],
+    newRecipe: {},
+    deletedRecipe: {},
   });
-  // console.log('from Context', state);
+  console.log('from Context', state);
 
   return (
     <inputsContext.Provider value={{ ...state, dispatch }}>

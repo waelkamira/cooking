@@ -27,8 +27,17 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="w-full mt-8">
-      <div className="flex flex-row gap-4 justify-center items-center w-full sticky mb-4">
+    <div className="w-full lg:mt-8">
+      <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full sticky mb-4">
+        <div className="relative w-full xl:w-96 h-52 overflow-hidden">
+          <Image
+            priority
+            src={'/logo1.png'}
+            layout="fill"
+            objectFit="contain"
+            alt="photo"
+          />
+        </div>
         <div className="relative w-full">
           <input
             value={searchedWord}
@@ -44,15 +53,6 @@ export default function SearchBar() {
           <div className="absolute top-3 md:top-4 right-4">
             <IoIosSearch className="text-one font-bold size-5" />
           </div>
-        </div>
-        <div className="relative w-72 h-44 overflow-hidden">
-          <Image
-            priority
-            src={'/logo.png'}
-            layout="fill"
-            objectFit="contain"
-            alt="photo"
-          />
         </div>
       </div>
       {searchedValues?.length > 0 && searchedWord !== '' && (

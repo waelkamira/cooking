@@ -16,7 +16,7 @@ export default function page() {
     const json = await response?.json();
     if (response.ok) {
       const res = await json?.filter((item) => item?._id === id);
-      console.log(res[0]);
+      // console.log(res[0]);
       setOneCookingRecipe(res[0]);
     }
   }

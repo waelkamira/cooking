@@ -27,7 +27,7 @@ export default function RegisterPage() {
   } = useForm({ resolver: zodResolver(schema) });
 
   async function onSubmit() {
-    console.log('getValues', getValues());
+    // console.log('getValues', getValues());
     if (getValues()?.name === '') {
       setError('name', {
         type: 'custom',

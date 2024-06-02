@@ -12,7 +12,7 @@ import Image from 'next/image';
 
 export default function RegisterPage() {
   const session = useSession();
-  console.log(session?.data?.user?.name);
+  // console.log(session?.data?.user?.name);
   const router = useRouter();
   const schema = z.object({
     email: z.string().email(),
@@ -28,7 +28,7 @@ export default function RegisterPage() {
   } = useForm({ resolver: zodResolver(schema) });
 
   async function onSubmit() {
-    console.log('getValues', getValues());
+    // console.log('getValues', getValues());
 
     const response = await signIn('credentials', {
       ...getValues(),

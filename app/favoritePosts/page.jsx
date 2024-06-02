@@ -16,13 +16,13 @@ export default function page() {
     await fetch('/api/favoritePosts')
       .then((res) => res.json())
       .then((res) => {
-        console.log('this is res', res);
+        console.log('these are user favorites', res);
         setUserFavorites(res);
       });
   };
   return (
     <div className="w-full bg-four h-full p-4 lg:p-8 rounded-lg">
-      <div className="relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
+      <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
         <Image
           priority
           src={'/1.png'}
@@ -31,16 +31,25 @@ export default function page() {
           alt="photo"
         />
       </div>
-      <div className="flex flex-row-reverse justify-start items-center w-full gap-4 my-8">
-        <h1 className="grow text-lg lg:text-2xl w-full text-end text-white ">
-          وصفاتي المفضلة
+      <div className="relative w-full h-52 overflow-hidden xl:mt-8">
+        <Image
+          priority
+          src={'/logo1.png'}
+          layout="fill"
+          objectFit="contain"
+          alt="photo"
+        />
+      </div>
+      <div className="flex justify-between items-center w-full gap-4 my-8">
+        <h1 className="grow text-lg lg:text-2xl w-full text-white ">
+          :وصفاتي المفضلة
         </h1>
         <Link href={'/'}>
           <div className="flex items-center justify-center rounded-full overflow-hidden cursor-pointer xl:w-fit ">
-            <TbArrowBigLeftLinesFilled className=" text-white text-4xl lg:text-[44px] animate-pulse transition-all duration-300 bg-gray-500 rounded-l-full" />
             <button className=" text-white rounded-r-full font-bold text-lg lg:text-xl hover:scale-105 bg-one p-1 lg:p-2">
               رجوع
             </button>
+            <TbArrowBigLeftLinesFilled className=" text-white text-4xl lg:text-[44px] animate-pulse transition-all duration-300 bg-gray-500 rounded-l-full" />
           </div>
         </Link>
       </div>
@@ -53,7 +62,7 @@ export default function page() {
         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 justify-center items-center w-full ">
           {userFavorites?.length > 0 &&
             userFavorites.map((recipe, index) => (
-              <SmallItem recipe={recipe} index={index} show={false} id={true} />
+              <SmallItem recipe={recipe} index={index} show={true} id={true} />
             ))}
         </div>
       </div>

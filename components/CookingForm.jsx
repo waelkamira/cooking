@@ -66,9 +66,9 @@ export default function CookingForm({ setIsVisible, isVisible }) {
 
         if (response.ok) {
           console.log('success');
+          dispatch({ type: 'New_RECIPE', payload: inputs });
           setIsVisible(false);
           toast.success('تم إنشاء وصفة جديدة');
-          dispatch({ type: ' RECIPES', payload: inputs });
         } else {
           console.log('something went wrong!');
         }

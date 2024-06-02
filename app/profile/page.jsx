@@ -1,4 +1,5 @@
 'use client';
+import CurrentUser from '../../components/CurrentUser';
 import ImageUpload from '../../components/ImageUpload';
 import Button from '../../components/Button';
 import { useSession } from 'next-auth/react';
@@ -8,13 +9,12 @@ import { MdEdit } from 'react-icons/md';
 import { MdOutlineAddPhotoAlternate } from 'react-icons/md';
 import { inputsContext } from '../../components/Context';
 import toast from 'react-hot-toast';
-import CurrentUser from '../../components/CurrentUser';
 
 export default function Profile() {
   const user = CurrentUser();
-  console.log('this is user from profile', user);
+  // console.log('this is user from profile', user);
   const { profile_image } = useContext(inputsContext);
-  console.log('this is profile_image', profile_image?.image);
+  // console.log('this is profile_image', profile_image?.image);
   const session = useSession();
   const [newImage, setNewImage] = useState('');
 
