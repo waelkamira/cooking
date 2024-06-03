@@ -1,39 +1,29 @@
 'use client';
-import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
 import { signOut, useSession } from 'next-auth/react';
+import React from 'react';
+import CurrentUser from '../components/CurrentUser';
 import Button from './Button';
 import Image from 'next/image';
-import CurrentUser from '../components/CurrentUser';
-import Categories from './Categories';
-import NewRecipeButton from './NewRecipeButton';
+import { useRouter } from 'next/navigation';
 
-export default function SideBar() {
-  const router = useRouter();
+export default function SideBarMenu() {
   const session = useSession();
-  const [newImage, setNewImage] = useState('');
   const user = CurrentUser();
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const ima = localStorage.getItem('image');
-      setNewImage(ima);
-    }
-  }, []);
+  const router = useRouter();
 
   return (
-    <div className="hidden xl:block xl:w-1/3 h-[1945px] bg-gradient-to-t from-two to-five p-8">
+    <div className="xl:hidden p-4 w-52 h-72 border-[5px] border-one bg-four rounded-lg z-50">
       {session?.status === 'authenticated' && (
-        <div className="flex justify-between items-center bg-four p-2 rounded-lg">
+        <div className="flex flex-col gap-2 justify-between items-center bg-four p-2 rounded-lg w-full">
           <div
-            className="flex justify-center items-center w-full cursor-pointer gap-1 line-clamp-1"
+            className="flex justify-around items-center w-full cursor-pointer line-clamp-1"
             onClick={() => router.push('/profile?username')}
           >
             <div className="relative w-14 h-10 overflow-hidden rounded-full">
               <Image src={user?.image} fill alt={session?.data?.user?.name} />
             </div>
-            <h1 className=" text-white w-full text-nowrap">
-              {session?.data?.user?.name}{' '}
+            <h1 className=" text-white w-full text-nowrap text-start mx-3 text-lg">
+              {session?.data?.user?.name}
             </h1>
           </div>
           <Button
@@ -49,7 +39,7 @@ export default function SideBar() {
         <div className="flex flex-col justify-center items-start gap-1">
           <h1
             onClick={() => router.push('/login')}
-            className="cursor-pointer text-white w-full font-bold"
+            className="cursor-pointer text-white w-full font-bold text-center"
           >
             تسجيل الدخول
           </h1>
@@ -61,7 +51,9 @@ export default function SideBar() {
         <div className="bg-four my-4 rounded-lg p-2">
           <Button
             title={'طبخاتي المفضلة'}
-            style={''}
+            style={
+              'p-2 text-sm text-white text-nowrap bg-one rounded-full w-full'
+            }
             onClick={() => router.push('/favoritePosts')}
           />
         </div>

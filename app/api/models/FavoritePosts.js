@@ -14,7 +14,7 @@ const FavoritePostsSchema = new Schema(
     mealName: {
       type: String,
     },
-    selectedValue: {
+    category: {
       type: String,
     },
     image: {

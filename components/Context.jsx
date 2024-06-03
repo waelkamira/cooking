@@ -10,12 +10,12 @@ function inputsReducer(currentState, action) {
         allCookingRecipes: action?.payload,
       };
     case 'New_RECIPE':
-      console.log('New_RECIPE', action?.payload);
+      // console.log('New_RECIPE', action?.payload);
       return {
         newRecipe: action?.payload,
       };
     case 'SELECTED_VALUE':
-      console.log('from Context', action?.payload);
+      // console.log('from Context', action?.payload);
       return {
         data: {
           ...currentState?.data,
@@ -24,7 +24,7 @@ function inputsReducer(currentState, action) {
         },
       };
     case 'DELETE_RECIPE':
-      console.log('from Context', action?.payload);
+      // console.log('from Context', action?.payload);
       return {
         deletedRecipe: {
           ...currentState?.data,
@@ -60,8 +60,9 @@ export function InputsContextProvider({ children }) {
     allCookingRecipes: [],
     newRecipe: {},
     deletedRecipe: {},
+    deleteFavoritePost: {},
   });
-  console.log('from Context', state);
+  // console.log('from Context', state);
 
   return (
     <inputsContext.Provider value={{ ...state, dispatch }}>

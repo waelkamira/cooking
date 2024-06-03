@@ -14,7 +14,7 @@ export default function NewRecipeButton() {
   const session = useSession();
 
   return (
-    <div className=" my-4 w-full rounded-lg z-50 ">
+    <div className=" my-4 w-full rounded-lg z-40 ">
       <h1 className="hidden lg:block w-full text-start pb-8 text-gray-400 text-lg sm:text-xl font-semibold select-none">
         شو طابخة اليوم يا مرررراااااا
       </h1>
@@ -41,15 +41,15 @@ export default function NewRecipeButton() {
             className={
               (session?.status === 'unauthenticated'
                 ? 'h-[650px]'
-                : 'h-[2580px] sm:h-[2350px] lg:h-[2300px]') +
-              ' relative bg-four w-full 2xl:w-2/3 flex flex-col items-start justify-center sm:flex-row 2xl:my-8 top-0 z-40 '
+                : 'h-[2620px] sm:h-[2350px] lg:h-[2300px]') +
+              ' relative w-full 2xl:w-2/3 flex flex-col items-start justify-center sm:flex-row 2xl:my-8 top-0 z-40 overflow-hidden'
             }
             onClick={(e) => e.stopPropagation()}
           >
             <div
               className={
-                (session?.status === 'authenticated' ? 'h-full' : 'h-[650px]') +
-                ' relative border border-five  w-full top-0 flex items-start justify-start rounded-lg '
+                (session?.status === 'authenticated' ? 'h-full' : 'h-[670px]') +
+                ' relative border border-five w-full top-0 flex items-start justify-start rounded-lg overflow-hidden'
               }
             >
               <Image
@@ -85,8 +85,8 @@ export default function NewRecipeButton() {
               {session?.status === 'authenticated' && (
                 <div className="w-full">
                   <div className="flex justify-center items-center w-full px-8">
-                    <ImageUpload />
                     <TbArrowBigLeftLinesFilled className="hidden xl:block text-one text-5xl mx-32 animate-pulse transition-all duration-300" />
+                    <ImageUpload />
                   </div>
                   <CookingForm
                     setIsVisible={setIsVisible}

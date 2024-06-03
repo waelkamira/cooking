@@ -84,7 +84,7 @@ export default function SelectComponent() {
       isSearchable
       options={options}
       theme={customTheme}
-      className="w-full text-xl text-end"
+      className="w-full text-xl text-start"
     >
       Select
     </Select>

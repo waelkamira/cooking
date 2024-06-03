@@ -106,26 +106,6 @@ export default function CookingForm({ setIsVisible, isVisible }) {
       >
         <div className="w-full">
           <div className="flex flex-col gap-8 md:flex-row w-full ">
-            <div className="flex flex-col items-center justify-center w-full my-2 ">
-              {errors.mealName && (
-                <h1 className="text-one text-2xl text-end my-2 w-full animate-bounce font-bold opacity-0">
-                  اسم الطبخة مطلوب
-                </h1>
-              )}
-              {errors.selectedValue && (
-                <h1 className="text-one text-2xl text-end my-2 w-full animate-bounce font-bold">
-                  اختيار الصنف مطلوب
-                </h1>
-              )}
-              <div className="flex items-center gap-2 w-full justify-end">
-                <h1 className="text-right text-xl text-white font-bold my-2">
-                  :اختر الصنف
-                </h1>
-                <h1 className="text-one font-bold text-2xl">#</h1>
-              </div>
-
-              <SelectComponent />
-            </div>
             <div className="flex flex-col items-center justify-center w-full">
               {errors.selectedValue && (
                 <h1 className="text-one text-2xl text-end my-2 w-full animate-bounce font-bold opacity-0">
@@ -137,11 +117,11 @@ export default function CookingForm({ setIsVisible, isVisible }) {
                   اسم الطبخة مطلوب
                 </h1>
               )}
-              <div className="flex items-center gap-2 w-full justify-end">
-                <h1 className="text-right text-xl text-white font-bold my-2">
-                  :اسم الطبخة
+              <div className="flex items-center gap-2 w-full justify-start">
+                <h1 className="text-right text-xl text-white font-bold my-2 ">
+                  <span className="text-one font-bold text-2xl ml-2">#</span>
+                  اسم الطبخة:
                 </h1>
-                <h1 className="text-one font-bold text-2xl">#</h1>
               </div>
 
               <input
@@ -156,6 +136,26 @@ export default function CookingForm({ setIsVisible, isVisible }) {
                 autoFocus
                 className="text-right w-full p-2 rounded-lg text-lg outline-2 focus:outline-one h-10"
               />
+            </div>
+            <div className="flex flex-col items-center justify-center w-full my-2 ">
+              {errors.mealName && (
+                <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold opacity-0 ">
+                  اسم الطبخة مطلوب
+                </h1>
+              )}
+              {errors.selectedValue && (
+                <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold">
+                  اختيار الصنف مطلوب
+                </h1>
+              )}
+              <div className="flex items-center gap-2 w-full justify-start">
+                <h1 className="text-right text-xl text-white font-bold my-2">
+                  <span className="text-one font-bold text-2xl ml-2">#</span>
+                  اختر الصنف:
+                </h1>
+              </div>
+
+              <SelectComponent />
             </div>
           </div>
         </div>
@@ -173,12 +173,12 @@ export default function CookingForm({ setIsVisible, isVisible }) {
               حقل المقادير مطلوب
             </h1>
           )}
-          <div className="flex items-center gap-2 w-full justify-end">
+          <div className="flex items-center gap-2 w-full justify-start">
             {' '}
             <h1 className="text-right text-xl text-white font-bold my-2">
-              :المقادير
+              <span className="text-one font-bold text-2xl ml-2">#</span>
+              المقادير:
             </h1>
-            <h1 className="text-one font-bold text-2xl">#</h1>
           </div>
 
           <textarea
@@ -213,12 +213,12 @@ export default function CookingForm({ setIsVisible, isVisible }) {
               حقل الطريقة مطلوب
             </h1>
           )}
-          <div className="flex items-center gap-2 w-full justify-end">
+          <div className="flex items-center gap-2 w-full justify-start">
             {' '}
             <h1 className="text-right text-xl text-white font-bold my-2">
-              :الطريقة
+              <span className="text-one font-bold text-2xl ml-2">#</span>
+              الطريقة:
             </h1>
-            <h1 className="text-one font-bold text-2xl">#</h1>
           </div>
 
           <textarea
@@ -241,12 +241,12 @@ export default function CookingForm({ setIsVisible, isVisible }) {
           ></textarea>
         </div>
         <div className="w-full my-4">
-          <div className="flex items-center gap-2 w-full justify-end">
+          <div className="flex items-center gap-2 w-full justify-start">
             {' '}
             <h1 className="text-right text-xl text-white font-bold my-2">
-              :نصائح لتحضير الطبخة
+              <span className="text-one font-bold text-2xl ml-2">#</span>
+              نصائح لتحضير :
             </h1>
-            <h1 className="text-one font-bold text-2xl">#</h1>
           </div>
           <textarea
             value={inputs.advise}
@@ -261,12 +261,12 @@ export default function CookingForm({ setIsVisible, isVisible }) {
           ></textarea>
         </div>
         <div className="w-full">
-          <div className="flex items-center gap-2 w-full justify-end">
+          <div className="flex items-center gap-2 w-full justify-start ">
             {' '}
             <h1 className="text-right text-xl text-white font-bold my-2">
-              أضف رابط الطبخة من يوتيوب
+              <span className="text-one font-bold text-2xl ml-2">#</span>
+              أضف رابط الطبخة من يوتيوب:
             </h1>
-            <h1 className="text-one font-bold text-2xl">#</h1>
           </div>
           <input
             value={inputs.link}
@@ -278,28 +278,26 @@ export default function CookingForm({ setIsVisible, isVisible }) {
             className="text-right w-full p-2 rounded-lg text-xl outline-2 focus:outline-one"
           />
         </div>
-        <div className="w-full flex flex-col items-start justify-center sm:flex-row-reverse gap-4 my-8 rounded-lg">
+        <div className="w-full flex flex-col items-start justify-center lg:flex-row gap-4 my-10 rounded-lg">
           <div className="w-full bg-four p-4 rounded-lg mb-4 border border-one">
-            <h1 className="text-white font-sans w-full text-end md:text-xl">
-              <span className="text-one md:text-xl font-bold w-full">
-                {' '}
-                لا تقم بنسخ الرابط مباشرة لأنه لن يعمل
-              </span>
+            <h1 className="text-one md:text-xl font-bold w-full">
+              {' '}
+              لا تقم بنسخ رابط الفيديو من يوتيوب مباشرة لأنه لن يعمل
             </h1>
-            <pre className="text-white font-sans w-full text-end md:text-xl select-none">
-              لوضع الرابط من يوتيوب بشكل صحيح اتبع الخطوات التالية
+            <pre className="text-white font-sans w-full text-start md:text-xl select-none">
+              لوضع الرابط من يوتيوب بشكل صحيح اتبع الخطوات التالية:
             </pre>
-            <pre className="text-white font-sans w-full text-end md:text-xl select-none">
-              قم بالضغط على زر مشاركة أسفل الفيديو{' '}
+            <pre className="text-white font-sans w-full text-start md:text-xl select-none">
+              1- قم بالضغط على زر مشاركة أسفل الفيديو
             </pre>{' '}
-            <pre className="text-white font-sans w-full text-end md:text-xl select-none">
-              embed اضغط على كلمة{' '}
+            <pre className="text-white font-sans w-full text-start md:text-xl select-none">
+              2- اضغط على كلمة embed
             </pre>
-            <pre className="text-white font-sans w-full text-end md:text-xl select-none">
-              نسخ copy ثم اضغط على كلمة
+            <pre className="text-white font-sans w-full text-start md:text-xl select-none">
+              3- اضغط على كلمة نسخ copy
             </pre>
-            <pre className="text-white font-sans w-full text-end md:text-xl select-none">
-              ثم الصق الرابط في حقل رابط الفيديو
+            <pre className="text-white font-sans w-full text-start md:text-xl select-none">
+              ثم الصق الرابط في حقل رابط الفيديو هنا
             </pre>
           </div>
           <div className="relative w-full h-96 rounded-lg overflow-hidden">
@@ -308,16 +306,16 @@ export default function CookingForm({ setIsVisible, isVisible }) {
         </div>
         <div className="flex flex-col sm:flex-row justify-around items-center gap-8 w-full my-12">
           <button
-            className="bg-five rounded-lg text-white shadow-lg hover:bg-one text-xl py-2 px-16 w-full"
-            onClick={() => setIsVisible(false)}
-          >
-            إلغاء
-          </button>
-          <button
             type="submit"
             className="bg-five rounded-lg text-white shadow-lg hover:bg-one text-xl py-2 px-16 w-full"
           >
             حفظ
+          </button>
+          <button
+            className="bg-five rounded-lg text-white shadow-lg hover:bg-one text-xl py-2 px-16 w-full"
+            onClick={() => setIsVisible(false)}
+          >
+            إلغاء
           </button>
         </div>
       </form>

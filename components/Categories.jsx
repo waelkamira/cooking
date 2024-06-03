@@ -1,7 +1,9 @@
+'use client';
 import Image from 'next/image';
 import React from 'react';
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
+import { useRouter } from 'next/navigation';
 const animation = { duration: 50000, easing: (t) => t };
 
 const items = [
@@ -49,31 +51,33 @@ const categories3 = [
 ];
 
 const smallSize = [
-  { name: 'الوجبة الرئيسية', image: '/1.png' },
-  { name: 'المعجنات', image: '/2.png' },
+  { name: 'وجبة رئيسية', image: '/1.png' },
+  { name: 'معجنات', image: '/2.png' },
   {
-    name: 'الشوربات',
+    name: 'شوربات',
     image: '/3.png',
   },
   {
-    name: 'المقبلات',
+    name: 'مقبلات',
     image: '/7.png',
   },
   {
-    name: 'السلطات',
+    name: 'سلطات',
     image: '/6.png',
   },
   {
-    name: 'الحلويات',
+    name: 'حلويات',
     image: '/5.png',
   },
   {
-    name: 'العصائر',
+    name: 'عصائر و مشروبات',
     image: '/4.png',
   },
 ];
 
 export default function Categories() {
+  const router = useRouter();
+
   const [sliderRef] = useKeenSlider({
     loop: true,
     renderMode: 'performance',
@@ -89,12 +93,15 @@ export default function Categories() {
     },
   });
   return (
-    <div className="w-full h-full  rounded-lg">
-      <div className="2xl:hidden">
+    <div className="w-full xl:w-1/3 h-full rounded-lg">
+      <div className="xl:hidden">
         <hr className="w-full h-1 m-0 p-0 bg-white border border-white rounded-full" />
         <div ref={sliderRef} className=" keen-slider ">
           {smallSize.map((category) => (
-            <div className="keen-slider__slide flex flex-col gap-2 justify-center items-center bg-four rounded-lg cursor-pointer h-full ">
+            <div
+              className="keen-slider__slide flex flex-col gap-2 justify-center items-center bg-four rounded-lg cursor-pointer h-full "
+              onClick={() => router.push(`?searchCategory=${category?.name}`)}
+            >
               <div className="relative border-2 border-four mt-4 w-52 h-24 sm:w-72 sm:h-32 md:w-80 md:h-44 lg:w-[500px] lg:h-62 xl:w-[900px]  rounded-lg overflow-hidden hover:scale-[101%] transition-all duration-500">
                 <Image
                   src={category.image}
@@ -110,10 +117,16 @@ export default function Categories() {
           ))}
         </div>
       </div>
-      <div className="flex flex-col items-center justify-center p-4 w-full">
+      <div className="hidden xl:flex flex-col items-center justify-center p-4 w-full bg-four rounded-lg border-[10px] border-one">
+        <h1 className="text-lg sm:text-xl text-center p-2 text-white mx-4 font-semibold w-full select-none">
+          ابحث حسب الصنف
+        </h1>
         {smallSize.map((category) => (
           <div className=" flex flex-col justify-center items-center rounded-full mx-4 cursor-pointer w-full ">
-            <div className="relative border-2 border-four w-full h-24 rounded-lg overflow-hidden hover:scale-[101%] transition-all duration-500 shadow-lg">
+            <div
+              className="relative border border-one w-full h-[103px] rounded-lg overflow-hidden hover:scale-[101%] transition-all duration-300 shadow-lg"
+              onClick={() => router.push(`?searchCategory=${category?.name}`)}
+            >
               <Image
                 src={category.image}
                 layout="fill"
@@ -121,7 +134,7 @@ export default function Categories() {
                 alt="photo"
               />
             </div>
-            <h1 className="text-lg sm:text-xl text-center p-2  text-white mx-4 font-semibold w-full select-none">
+            <h1 className="text-lg sm:text-xl text-center p-2 text-white mx-4 font-ةي w-full select-none">
               {category.name}
             </h1>
           </div>

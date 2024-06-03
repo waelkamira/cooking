@@ -73,50 +73,52 @@ export default function RegisterPage() {
         onSubmit={handleSubmit(onSubmit)}
         className="w-full lg:w-1/2 bg-four p-8 rounded-lg border border-one"
       >
-        <h1 className="w-full my-2 text-4xl font-bold text-center select-none">
+        <h1 className="w-full my-2 text-xl sm:text-2xl md:text-3xl xl:text-4xl font-bold text-center select-none">
           التسجيل 🍔
         </h1>
         <div className="flex flex-col items-start justify-center w-full">
-          <h1 className="w-full my-4 ">اسم المستخدم</h1>
+          <h1 className="w-full my-4 select-none text-start">اسم المستخدم</h1>
           <input
             type="text"
             name={'name'}
             placeholder="الإسم"
             {...register('name')}
-            className=" placeholder-gray-400 transition-all duration-300 grow py-2 border-2 border-gray-300 border-solid focus:border-2 focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-end"
+            className=" placeholder-gray-400 transition-all duration-300 grow py-2 border-2 border-gray-300 border-solid focus:border-2 focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-start"
           />
         </div>
         {errors?.name && (
           <h1 className="text-one text-md my-2">{errors?.name?.message}</h1>
         )}
         <div className="relative flex flex-col items-start justify-center w-full">
-          <h1 className="w-full my-4 ">البريد الإلكتروني</h1>
+          <h1 className="w-full my-4 select-none text-start">
+            البريد الإلكتروني
+          </h1>
           <input
             type="text"
             name={'email'}
             placeholder="الإيميل"
             {...register('email')}
-            className=" placeholder-gray-400 transition-all duration-300 grow py-2 border-2 border-gray-300 border-solid focus:border-2 focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-end"
+            className=" placeholder-gray-400 transition-all duration-300 grow py-2 border-2 border-gray-300 border-solid focus:border-2 focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-start"
           />
         </div>
         {errors?.email && (
           <h1 className="text-one text-md my-2">{errors?.email?.message}</h1>
         )}
         <div className="relative flex flex-col items-start justify-center w-full">
-          <h1 className="w-full my-4 ">كلمة السر</h1>
+          <h1 className="w-full my-4 select-none text-start">كلمة السر</h1>
           <input
             type="password"
             name={'password'}
             placeholder="كلمة السر"
             {...register('password')}
-            className=" placeholder-gray-400 transition-all duration-300 grow py-2 border-2 border-gray-300 border-solid focus:border-2 focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-end"
+            className=" placeholder-gray-400 transition-all duration-300 grow py-2 border-2 border-gray-300 border-solid focus:border-2 focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-start"
           />
         </div>
         {errors?.password && (
           <h1 className="text-one text-md my-2">{errors?.password?.message}</h1>
         )}
         <div
-          className="flex justify-between w-full bg-white rounded-md px-4 py-2 items-center my-2 hover:shadow-md cursor-pointer"
+          className="flex justify-between w-full bg-white rounded-md px-4 py-2 items-center my-8 hover:shadow-md cursor-pointer"
           onClick={() => signIn('google')}
         >
           <div className="relative h-8 w-8">
@@ -127,20 +129,20 @@ export default function RegisterPage() {
               objectFit="contain"
             />
           </div>
-          <h1 className="text-lg grow text-center text-four">
+          <h1 className="text-sm sm:text-lg grow text-center text-gray-500 select-none font-semibold">
             التسجيل عن طريق جوجل
           </h1>
         </div>
-        <div className="flex justify-between gap-8 items-center mt-4">
-          <Button title={'إغلاق'} onClick={() => router.push('/')} />
+        <div className="flex flex-col sm:flex-row justify-between gap-8 items-center mt-4">
           <Button title={'تسجيل'} />
+          <Button title={'إغلاق'} onClick={() => router.push('/')} />
         </div>
         <Link href={'/login'}>
           {' '}
-          <h1>
+          <h1 className="mt-4 text-start text-sm sm:text-lg">
             هل لديك حساب بالفعل ؟ قم بتسجيل الدخول{' '}
-            <span className="text-one text-lg md:text-[27px] hover:scale-105">
-              🥧 هنا
+            <span className="text-one text-lg sm:text-xl hover:scale-105">
+              هنا 🥝
             </span>
           </h1>
         </Link>

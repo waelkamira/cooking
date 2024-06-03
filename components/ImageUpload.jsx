@@ -52,7 +52,7 @@ export default function ImageUpload({ image, style }) {
             onClick={() => open?.()}
             className={
               style
-                ? ''
+                ? style
                 : ' w-64 h-44 border-2 border-one cursor-pointer rounded-lg mt-4 overflow-hidden'
             }
           >

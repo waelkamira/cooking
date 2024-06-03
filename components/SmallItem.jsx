@@ -2,7 +2,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
@@ -14,8 +14,6 @@ import { inputsContext } from '../components/Context';
 import Loading from './Loading';
 
 export default function SmallItem({ recipe, index, show = true, id }) {
-  const { dispatch } = useContext(inputsContext);
-
   const [currentUser, setCurrentUser] = useState('');
   const [favorites, setFavorites] = useState();
   const [numberOfLikes, setNumberOfLikes] = useState(recipe?.numberOfLikes);
@@ -26,8 +24,10 @@ export default function SmallItem({ recipe, index, show = true, id }) {
   const [heart, setHeart] = useState(false);
   const [emoji, setEmoji] = useState(false);
 
+  const { dispatch } = useContext(inputsContext);
   const session = useSession();
   const router = useRouter();
+  const path = usePathname();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -51,9 +51,7 @@ export default function SmallItem({ recipe, index, show = true, id }) {
         numberOfHearts: numberOfHearts,
       }),
     });
-    if (response.ok) {
-      console.log(response);
-    } else {
+    if (!response.ok) {
       toast.error('حدث خطأ ما');
     }
   }
@@ -158,7 +156,7 @@ export default function SmallItem({ recipe, index, show = true, id }) {
               </h1>
             </div>
           </Link>
-          {currentUser?.email === 'waelkamira@gmail.com' && (
+          {currentUser?.email === 'waelkamira@gmail.com' && path === '/' && (
             <div
               className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
               onClick={() => handleDeletePost(recipe)}

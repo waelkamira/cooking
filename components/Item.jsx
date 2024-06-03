@@ -18,10 +18,10 @@ export default function Item({
   createdAt,
 }) {
   const user = CurrentUser();
-
   const router = useRouter();
 
-  // console.log(createdAt);
+  console.log(typeof createdAt);
+  console.log(createdAt);
   //? src نريد ان نستخرج منه قيمة ال string لكنه نص  ifram html الذي هو عبارة عن عنصر  link انشأنا ديف مؤقت لوضع ال
   let tempDiv = document.createElement('div');
   tempDiv.innerHTML = link;
@@ -76,11 +76,11 @@ export default function Item({
               <h6 className="text-[12px] sm:text-[15px] text-eight font-semibold select-none">
                 {user?.name}
               </h6>
-              <h1 className="text-[12px] sm:text-[12px] text-gray-400 font-semibold select-none">
+              {/* <h1 className="text-[12px] sm:text-[12px] text-gray-400 font-semibold select-none">
                 {formatDistanceToNow(new Date(createdAt), {
                   addSuffix: true,
                 })}
-              </h1>
+              </h1> */}
             </div>
           </div>
           <div className="relative w-full h-44 sm:h-96 overflow-hidden rounded-lg border ">

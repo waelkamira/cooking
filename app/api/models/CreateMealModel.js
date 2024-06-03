@@ -11,7 +11,7 @@ const MealSchema = new Schema(
       type: String,
       required: true,
     },
-    selectedValue: {
+    category: {
       type: String,
       required: true,
     },

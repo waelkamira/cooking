@@ -1,12 +1,15 @@
 'use client';
+import { useSession } from 'next-auth/react';
 import SmallItem from '../../components/SmallItem';
-
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { TbArrowBigLeftLinesFilled } from 'react-icons/tb';
+import { IoMdClose } from 'react-icons/io';
+import toast from 'react-hot-toast';
 
 export default function page() {
+  const session = useSession();
   const [userFavorites, setUserFavorites] = useState([]);
   useEffect(() => {
     fetchUserFavorites();
@@ -17,9 +20,25 @@ export default function page() {
       .then((res) => res.json())
       .then((res) => {
         console.log('these are user favorites', res);
-        setUserFavorites(res);
+        setUserFavorites(res?.reverse());
       });
   };
+
+  async function handleDeletePost(recipe) {
+    const response = await fetch('/api/favoritePosts', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(recipe),
+    });
+
+    if (response.ok) {
+      toast.success('👍 تم حذف هذا البوست من قائمة المفضلة لديك');
+      fetchUserFavorites();
+    } else {
+      toast.error('حدث خطأ ما');
+    }
+  }
+
   return (
     <div className="w-full bg-four h-full p-4 lg:p-8 rounded-lg">
       <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
@@ -62,7 +81,23 @@ export default function page() {
         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 justify-center items-center w-full ">
           {userFavorites?.length > 0 &&
             userFavorites.map((recipe, index) => (
-              <SmallItem recipe={recipe} index={index} show={true} id={true} />
+              <div className="relative ">
+                {session?.status === 'authenticated' && (
+                  <div
+                    className="absolute top-12 left-4 flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
+                    onClick={() => handleDeletePost(recipe)}
+                  >
+                    <IoMdClose className="" />
+                    <h6 className="text-sm select-none">حذف</h6>
+                  </div>
+                )}
+                <SmallItem
+                  recipe={recipe}
+                  index={index}
+                  show={false}
+                  id={true}
+                />
+              </div>
             ))}
         </div>
       </div>

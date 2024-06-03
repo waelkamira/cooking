@@ -51,18 +51,20 @@ export default function RegisterPage() {
         onSubmit={handleSubmit(onSubmit)}
         className="w-full lg:w-1/2 bg-four p-8 rounded-lg border border-one"
       >
-        <h1 className="w-full my-2 text-4xl font-bold text-center select-none">
+        <h1 className="w-full my-2 text-xl sm:text-2xl md:text-3xl xl:text-4xl font-bold text-center select-none">
           تسجيل الدخول 🧀
         </h1>
 
         <div className="relative flex flex-col items-start justify-center w-full">
-          <h1 className="w-full my-4 select-none">البريد الإلكتروني</h1>
+          <h1 className="w-full my-4 select-none text-start">
+            البريد الإلكتروني
+          </h1>
           <input
             type="text"
             name={'email'}
             placeholder="الإيميل"
             {...register('email')}
-            className=" placeholder-gray-400 transition-all duration-300 grow py-2 border-2 border-gray-300 border-solid focus:border-2 focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-end"
+            className=" placeholder-gray-400 transition-all duration-300 grow py-2 border-2 border-gray-300 border-solid focus:border-2 focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-start"
           />
         </div>
         {errors?.email && (
@@ -72,13 +74,13 @@ export default function RegisterPage() {
         )}
 
         <div className="relative flex flex-col items-start justify-center w-full">
-          <h1 className="w-full my-4 select-none">كلمة السر</h1>
+          <h1 className="w-full my-4 select-none text-start">كلمة السر</h1>
           <input
             type="password"
             name={'password'}
             placeholder="كلمة السر"
             {...register('password')}
-            className=" placeholder-gray-400 transition-all duration-300 grow py-2 border-2 border-gray-300 border-solid focus:border-2 focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-end"
+            className=" placeholder-gray-400 transition-all duration-300 grow py-2 border-2 border-gray-300 border-solid focus:border-2 focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-start"
           />
         </div>
         {errors?.password && (
@@ -87,10 +89,10 @@ export default function RegisterPage() {
           </h1>
         )}
         <div
-          className="flex justify-between w-full bg-white rounded-md px-4 py-2 items-center my-2 hover:shadow-md cursor-pointer"
+          className="flex justify-center w-full bg-white rounded-md px-4 py-2 items-center my-8 hover:shadow-md cursor-pointer"
           onClick={() => signIn('google')}
         >
-          <div className="relative h-8 w-8">
+          <div className="relative h-8 w-8 ">
             <Image
               src={'/google.png'}
               alt="google image"
@@ -98,19 +100,19 @@ export default function RegisterPage() {
               objectFit="contain"
             />
           </div>
-          <h1 className="text-lg grow text-center text-four select-none">
+          <h1 className="text-sm sm:text-lg grow text-center text-gray-500 select-none font-semibold">
             تسجيل الدخول عن طريق جوجل
           </h1>
         </div>
-        <div className="flex justify-between gap-8 items-center mt-4">
-          <Button title={'إغلاق'} onClick={() => router.push('/')} />
+        <div className="flex flex-col sm:flex-row justify-between gap-8 items-center mt-4">
           <Button title={'تسجيل الدخول'} />
+          <Button title={'إغلاق'} onClick={() => router.push('/')} />
         </div>
         <Link href={'/register'}>
           {' '}
-          <h1>
+          <h1 className="mt-4 text-start text-sm sm:text-lg">
             ليس لديك حساب؟ قم بالتسجيل{' '}
-            <span className="text-one text-lg md:text-[27px] hover:scale-105">
+            <span className="text-one text-lg sm:text-xl hover:scale-105">
               🥧 هنا
             </span>
           </h1>
