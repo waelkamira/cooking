@@ -12,7 +12,7 @@ import { SlLike } from 'react-icons/sl';
 import Link from 'next/link';
 import { inputsContext } from '../components/Context';
 import Loading from './Loading';
-
+import CustomToast from './CustomToast';
 export default function SmallItem({ recipe, index, show = true, id }) {
   const [currentUser, setCurrentUser] = useState('');
   const [favorites, setFavorites] = useState();
@@ -31,9 +31,13 @@ export default function SmallItem({ recipe, index, show = true, id }) {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const user = JSON.parse(localStorage.getItem('CurrentUser'));
-      setCurrentUser(user);
+      const userData = localStorage.getItem('CurrentUser');
+      if (userData !== 'undefined') {
+        const user = JSON.parse(userData);
+        setCurrentUser(user);
+      }
     }
+
     handleActions();
     fetchFavoritePosts();
   }, [like, heart, emoji]);
@@ -52,7 +56,7 @@ export default function SmallItem({ recipe, index, show = true, id }) {
       }),
     });
     if (!response.ok) {
-      toast.error('حدث خطأ ما');
+      toast.custom((t) => <CustomToast t={t} message={'حدث خطأ ما 😐'} />);
     }
   }
 
@@ -73,9 +77,17 @@ export default function SmallItem({ recipe, index, show = true, id }) {
       });
       if (response.ok) {
         fetchFavoritePosts();
-        toast.success('😋 تم إضافة هذه الوصفة إلى وصفاتك المفضلة 😋');
+
+        toast.custom((t) => (
+          <CustomToast
+            t={t}
+            message={'😋 تم إضافة هذه الوصفة إلى وصفاتك المفضلة ✔'}
+          />
+        ));
       } else {
-        toast.error('حدث خطأ ما حاول مرة أخرى');
+        toast.custom((t) => (
+          <CustomToast t={t} message={'😐 حدث خطأ ما حاول مرة أخرى ✖'} />
+        ));
       }
     } else {
       const response = await fetch('/api/favoritePosts', {
@@ -87,9 +99,16 @@ export default function SmallItem({ recipe, index, show = true, id }) {
       });
       if (response.ok) {
         fetchFavoritePosts();
-        toast.success('تم إزالة هذه الوصفة من قائمة مفضلاتك');
+        toast.custom((t) => (
+          <CustomToast
+            t={t}
+            message={'تم إزالة هذه الوصفة من قائمة مفضلاتك بنجاح ✔'}
+          />
+        ));
       } else {
-        toast.error('حدث خطأ ما حاول مرة أخرى');
+        toast.custom((t) => (
+          <CustomToast t={t} message={'😐 حدث خطأ ما حاول مرة أخرى ✖'} />
+        ));
       }
     }
   }
@@ -118,10 +137,12 @@ export default function SmallItem({ recipe, index, show = true, id }) {
     });
 
     if (response.ok) {
-      toast.success('تم حذف هذا البوست');
+      toast.custom((t) => (
+        <CustomToast t={t} message={'تم حذف هذا البوست بنجاح ✔'} />
+      ));
       dispatch({ type: 'DELETE_RECIPE', payload: recipe });
     } else {
-      toast.error('حدث خطأ ما');
+      toast.custom((t) => <CustomToast t={t} message={'😐 حدث خطأ ما ✖'} />);
     }
   }
 
@@ -139,7 +160,7 @@ export default function SmallItem({ recipe, index, show = true, id }) {
           >
             <div className="relative w-[70px] h-12 overflow-hidden rounded-full">
               <Image
-                src={currentUser?.image}
+                src={recipe?.userImage}
                 layout="fill"
                 objectFit="contain"
                 alt={recipe?.mealName}
@@ -147,7 +168,7 @@ export default function SmallItem({ recipe, index, show = true, id }) {
             </div>
             <div className="flex flex-col justify-center w-full ">
               <h6 className="text-[14px] text-eight font-semibold select-none">
-                {currentUser?.name}{' '}
+                {recipe?.userName}{' '}
               </h6>
               <h1 className="text-[10px] text-gray-400 font-semibold select-none">
                 {formatDistanceToNow(new Date(recipe?.createdAt), {
@@ -178,14 +199,25 @@ export default function SmallItem({ recipe, index, show = true, id }) {
               <div
                 className="flex justify-center items-center gap-2 cursor-pointer hover:bg-seven p-1 lg:p-2 rounded-lg select-none"
                 onClick={() => {
-                  handleActions();
-                  if (!heart) {
-                    setNumberOfHearts(numberOfHearts + 1);
+                  if (session?.status === 'authenticated') {
+                    handleActions();
+                    if (!heart) {
+                      setNumberOfHearts(numberOfHearts + 1);
+                    } else {
+                      setNumberOfHearts(numberOfHearts - 1);
+                    }
+                    handleFavoritePost();
+                    fetchFavoritePosts();
                   } else {
-                    setNumberOfHearts(numberOfHearts - 1);
+                    toast.custom((t) => (
+                      <CustomToast
+                        t={t}
+                        message={
+                          'يجب عليك تسجيل الدخول أولا لحفظ هذه الوصفة 😉'
+                        }
+                      />
+                    ));
                   }
-                  handleFavoritePost();
-                  fetchFavoritePosts();
                 }}
               >
                 <div className="hover:scale-105">
@@ -212,12 +244,21 @@ export default function SmallItem({ recipe, index, show = true, id }) {
               <div
                 className="flex justify-center items-center gap-2 cursor-pointer hover:bg-seven p-1 lg:p-2 rounded-lg select-none"
                 onClick={() => {
-                  handleActions();
-                  setLike(!like);
-                  if (!like) {
-                    setNumberOfLikes(numberOfLikes + 1);
+                  if (session?.status === 'authenticated') {
+                    handleActions();
+                    setLike(!like);
+                    if (!like) {
+                      setNumberOfLikes(numberOfLikes + 1);
+                    } else {
+                      setNumberOfLikes(numberOfLikes - 1);
+                    }
                   } else {
-                    setNumberOfLikes(numberOfLikes - 1);
+                    toast.custom((t) => (
+                      <CustomToast
+                        t={t}
+                        message={'يجب عليك تسجيل الدخول أولا 😉'}
+                      />
+                    ));
                   }
                 }}
               >
@@ -243,12 +284,21 @@ export default function SmallItem({ recipe, index, show = true, id }) {
               <div
                 className="flex justify-center items-center gap-2 cursor-pointer hover:bg-seven py-1 px-2 rounded-lg select-none"
                 onClick={() => {
-                  handleActions();
-                  setEmoji(!emoji);
-                  if (!emoji) {
-                    setNumberOfEmojis(numberOfEmojis + 1);
+                  if (session?.status === 'authenticated') {
+                    handleActions();
+                    setEmoji(!emoji);
+                    if (!emoji) {
+                      setNumberOfEmojis(numberOfEmojis + 1);
+                    } else {
+                      setNumberOfEmojis(numberOfEmojis - 1);
+                    }
                   } else {
-                    setNumberOfEmojis(numberOfEmojis - 1);
+                    toast.custom((t) => (
+                      <CustomToast
+                        t={t}
+                        message={'يجب عليك تسجيل الدخول أولا 😉'}
+                      />
+                    ));
                   }
                 }}
               >
@@ -287,7 +337,16 @@ export default function SmallItem({ recipe, index, show = true, id }) {
         </div>
         <button
           onClick={() => {
-            router.push(`/recipes/${id ? recipe?.postId : recipe?._id}`);
+            if (session?.status === 'authenticated') {
+              router.push(`/recipes/${id ? recipe?.postId : recipe?._id}`);
+            } else {
+              toast.custom((t) => (
+                <CustomToast
+                  t={t}
+                  message={'يجب عليك تسجيل الدخول أولا لرؤية هذه الوصفة 😉'}
+                />
+              ));
+            }
           }}
           className="sm:text-2xl p-2 bg-five hover:bg-one hover:scale-[102%] text-white font-bold text-center select-none w-full rounded-full shadow-lg transition-all duration-300"
         >

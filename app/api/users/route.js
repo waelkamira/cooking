@@ -16,11 +16,13 @@ export async function PUT(req) {
 export async function GET() {
   await mongoose.connect(process.env.NEXT_PUBLIC_MONGODB);
   const session = await getServerSession(authOptions);
-  const email = await session?.user?.email;
-  // console.log('this is session from users', session);
-  const user = await User.findOne({ email });
-
-  // console.log('find user', user);
-
+  const email = session?.user?.email;
+  const user = await User.find({ email });
   return Response.json(user);
+}
+
+export async function GetAllUsers() {
+  await mongoose.connect(process.env.NEXT_PUBLIC_MONGODB);
+  const users = await User.find();
+  return Response.json(users);
 }

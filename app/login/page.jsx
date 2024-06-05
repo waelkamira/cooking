@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react';
 import Image from 'next/image';
+import CustomToast from '../../components/CustomToast';
 
 export default function RegisterPage() {
   const session = useSession();
@@ -37,11 +38,16 @@ export default function RegisterPage() {
     });
 
     if (response.ok) {
-      toast.success(`🎉أهلا وسهلا 🎉`);
+      toast.custom((t) => (
+        <CustomToast
+          t={t}
+          message={'🎉 بهيجة اشرق لبن ترحب بكم أهلا وسهلا 🎉'}
+        />
+      ));
       router.push('/');
     } else {
       setError(response?.error);
-      toast.error(response?.error);
+      toast.custom((t) => <CustomToast t={t} message={'حدث خطأ ما 😐'} />);
     }
   }
 
@@ -56,7 +62,7 @@ export default function RegisterPage() {
         </h1>
 
         <div className="relative flex flex-col items-start justify-center w-full">
-          <h1 className="w-full my-4 select-none text-start">
+          <h1 className="w-full my-4 select-none text-start text-sm sm:text-lg">
             البريد الإلكتروني
           </h1>
           <input
@@ -64,7 +70,7 @@ export default function RegisterPage() {
             name={'email'}
             placeholder="الإيميل"
             {...register('email')}
-            className=" placeholder-gray-400 transition-all duration-300 grow py-2 border-2 border-gray-300 border-solid focus:border-2 focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-start"
+            className=" placeholder-gray-400 transition-all placeholder:text-sm placeholder:sm:text-lg duration-300 grow py-2 border-2 border-gray-300 border-solid focus:border-2 focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-start"
           />
         </div>
         {errors?.email && (
@@ -74,13 +80,15 @@ export default function RegisterPage() {
         )}
 
         <div className="relative flex flex-col items-start justify-center w-full">
-          <h1 className="w-full my-4 select-none text-start">كلمة السر</h1>
+          <h1 className="w-full my-4 select-none text-start text-sm sm:text-lg">
+            كلمة السر
+          </h1>
           <input
             type="password"
             name={'password'}
             placeholder="كلمة السر"
             {...register('password')}
-            className=" placeholder-gray-400 transition-all duration-300 grow py-2 border-2 border-gray-300 border-solid focus:border-2 focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-start"
+            className=" placeholder-gray-400 placeholder:text-sm placeholder:sm:text-lg transition-all duration-300 grow py-2 border-2 border-gray-300 border-solid focus:border-2 focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-start"
           />
         </div>
         {errors?.password && (

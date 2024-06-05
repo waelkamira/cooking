@@ -56,7 +56,9 @@ export default function RegisterPage() {
     });
 
     if (response.ok) {
-      toast.success('تم التسجيل بنجاح');
+      toast.custom((t) => (
+        <CustomToast t={t} message={'🌿 تم التسجيل بنجاح 🌿'} />
+      ));
       router.push('/login');
     } else {
       setError('email', {
@@ -77,20 +79,22 @@ export default function RegisterPage() {
           التسجيل 🍔
         </h1>
         <div className="flex flex-col items-start justify-center w-full">
-          <h1 className="w-full my-4 select-none text-start">اسم المستخدم</h1>
+          <h1 className="w-full my-4 select-none text-start text-sm sm:text-lg">
+            اسم المستخدم
+          </h1>
           <input
             type="text"
             name={'name'}
             placeholder="الإسم"
             {...register('name')}
-            className=" placeholder-gray-400 transition-all duration-300 grow py-2 border-2 border-gray-300 border-solid focus:border-2 focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-start"
+            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border-2 border-gray-300 border-solid focus:border-2 focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-start"
           />
         </div>
         {errors?.name && (
           <h1 className="text-one text-md my-2">{errors?.name?.message}</h1>
         )}
         <div className="relative flex flex-col items-start justify-center w-full">
-          <h1 className="w-full my-4 select-none text-start">
+          <h1 className="w-full my-4 select-none text-start text-sm sm:text-lg">
             البريد الإلكتروني
           </h1>
           <input
@@ -98,20 +102,22 @@ export default function RegisterPage() {
             name={'email'}
             placeholder="الإيميل"
             {...register('email')}
-            className=" placeholder-gray-400 transition-all duration-300 grow py-2 border-2 border-gray-300 border-solid focus:border-2 focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-start"
+            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border-2 border-gray-300 border-solid focus:border-2 focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-start"
           />
         </div>
         {errors?.email && (
           <h1 className="text-one text-md my-2">{errors?.email?.message}</h1>
         )}
         <div className="relative flex flex-col items-start justify-center w-full">
-          <h1 className="w-full my-4 select-none text-start">كلمة السر</h1>
+          <h1 className="w-full my-4 select-none text-start text-sm sm:text-lg">
+            كلمة السر
+          </h1>
           <input
             type="password"
             name={'password'}
             placeholder="كلمة السر"
             {...register('password')}
-            className=" placeholder-gray-400 transition-all duration-300 grow py-2 border-2 border-gray-300 border-solid focus:border-2 focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-start"
+            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border-2 border-gray-300 border-solid focus:border-2 focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-start"
           />
         </div>
         {errors?.password && (

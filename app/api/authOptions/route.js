@@ -3,12 +3,12 @@ import { User } from '../models/UserModel';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import bcrypt from 'bcrypt';
-import { MongoDBAdapter } from '@auth/mongodb-adapter';
-import clientPromise from '../../../lib/Mongodb';
+// import { MongoDBAdapter } from '@auth/mongodb-adapter';
+// import clientPromise from '../../../lib/Mongodb';
 
 export const authOptions = {
   secret: process.env.NEXT_PUBLIC_SECRET,
-  adapter: MongoDBAdapter(clientPromise),
+  // adapter: MongoDBAdapter(clientPromise),
 
   providers: [
     //! google provider

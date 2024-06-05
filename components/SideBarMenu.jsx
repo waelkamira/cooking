@@ -6,23 +6,23 @@ import Button from './Button';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-export default function SideBarMenu() {
+export default function SideBarMenu({ setIsOpen }) {
   const session = useSession();
   const user = CurrentUser();
   const router = useRouter();
-
+  console.log('user', user);
   return (
     <div className="xl:hidden p-4 w-52 h-72 border-[5px] border-one bg-four rounded-lg z-50">
       {session?.status === 'authenticated' && (
         <div className="flex flex-col gap-2 justify-between items-center bg-four p-2 rounded-lg w-full">
           <div
-            className="flex justify-around items-center w-full cursor-pointer line-clamp-1"
+            className="flex justify-around items-center w-full cursor-pointer line-clamp-1 mb-2"
             onClick={() => router.push('/profile?username')}
           >
             <div className="relative w-14 h-10 overflow-hidden rounded-full">
               <Image src={user?.image} fill alt={session?.data?.user?.name} />
             </div>
-            <h1 className=" text-white w-full text-nowrap text-start mx-3 text-lg">
+            <h1 className=" text-white w-full text-nowrap text-start mx-3 text-sm">
               {session?.data?.user?.name}
             </h1>
           </div>
@@ -58,6 +58,15 @@ export default function SideBarMenu() {
           />
         </div>
       )}
+      <div className="bg-four my-4 rounded-lg p-2">
+        <Button
+          title={'إغلاق'}
+          style={
+            'p-2 text-sm text-white text-nowrap bg-one rounded-full w-full'
+          }
+          onClick={() => setIsOpen(false)}
+        />
+      </div>
     </div>
   );
 }

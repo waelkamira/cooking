@@ -23,7 +23,7 @@ export default function HomePage() {
           className=" p-2 rounded-lg text-4xl lg:text-four lg:bg-one text-one bg-four "
           onClick={() => setIsOpen(!isOpen)}
         />
-        {isOpen && <SideBarMenu />}
+        {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
       </div>
       <div className="relative hidden lg:block w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
         <Image

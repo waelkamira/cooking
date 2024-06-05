@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { TbArrowBigLeftLinesFilled } from 'react-icons/tb';
 import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
+import CustomToast from '../../components/CustomToast';
 
 export default function page() {
   const session = useSession();
@@ -19,7 +20,7 @@ export default function page() {
     await fetch('/api/favoritePosts')
       .then((res) => res.json())
       .then((res) => {
-        console.log('these are user favorites', res);
+        // console.log('these are user favorites', res);
         setUserFavorites(res?.reverse());
       });
   };
@@ -32,10 +33,15 @@ export default function page() {
     });
 
     if (response.ok) {
-      toast.success('👍 تم حذف هذا البوست من قائمة المفضلة لديك');
+      toast.custom((t) => (
+        <CustomToast
+          t={t}
+          message={'👍 تم حذف هذا البوست من قائمة المفضلة لديك'}
+        />
+      ));
       fetchUserFavorites();
     } else {
-      toast.error('حدث خطأ ما');
+      toast.custom((t) => <CustomToast t={t} message={'حدث خطأ ما 😐'} />);
     }
   }
 
