@@ -12,11 +12,12 @@ import toast from 'react-hot-toast';
 import Link from 'next/link';
 import { TbArrowBigLeftLinesFilled } from 'react-icons/tb';
 import CustomToast from '../../components/CustomToast';
+import BackButton from '../../components/BackButton';
 
 export default function Profile() {
   const user = CurrentUser();
   // console.log('this is user from profile', user);
-  const { profile_image } = useContext(inputsContext);
+  const { profile_image, dispatch } = useContext(inputsContext);
   // console.log('this is profile_image', profile_image?.image);
   const session = useSession();
   const [newImage, setNewImage] = useState('');
@@ -31,7 +32,7 @@ export default function Profile() {
       if (typeof window !== 'undefined') {
         localStorage.setItem('image', JSON.stringify(profile_image?.image));
       }
-      const response = await fetch('/api/users', {
+      const response = await fetch('/api/user', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -43,6 +44,7 @@ export default function Profile() {
         toast.custom((t) => (
           <CustomToast t={t} message={'تم التعديل بنجاح 👏🏽'} />
         ));
+        // dispatch({ type: 'PROFILE_IMAGE', payload: profile_image?.image });
       } else {
         toast.custom((t) => (
           <CustomToast t={t} message={'حدث حطأ ما حاول مرة أخرى 😐'} />
@@ -62,42 +64,43 @@ export default function Profile() {
               {' '}
               <Button title={'تسجيل الدخول'} />
             </Link>{' '}
-            <Link href={'/'}>
-              <div className="flex items-center justify-center rounded-full overflow-hidden cursor-pointer xl:w-fit ">
-                <button className=" text-white rounded-r-full font-bold text-lg lg:text-xl hover:scale-105 bg-one p-1 lg:p-2">
-                  رجوع
-                </button>
-                <TbArrowBigLeftLinesFilled className=" text-white text-4xl lg:text-[44px] animate-pulse transition-all duration-300 bg-gray-500 rounded-l-full" />
-              </div>
-            </Link>
+            <div className="flex justify-end w-full items-center bg-sky-300">
+              <BackButton />
+            </div>
           </div>
         </div>
       )}
       {session?.status === 'authenticated' && (
-        <div className="flex justify-center items-center bg-four rounded-lg text-end text-four text-lg lg:text-2xl w-full">
-          <div className="flex flex-col items-center gap-4 justify-center w-full 2xl:w-2/3 h-full rounded-lg overflow-hidden">
-            <div className="relative w-full bg-green-400">
-              <div className="relative h-64 w-full bg-seven rounded-full">
+        <div className="relative flex justify-center items-center w-full h-full bg-four  xl:p-8 rounded-lg text-md sm:text-lg lg:text-xl">
+          <BackButton />
+          <div className="flex flex-col items-center gap-4  justify-center w-full 2xl:w-2/3 h-full rounded-lg overflow-hidden">
+            <div className="relative w-full ">
+              <div className="relative h-72 w-full  rounded-full">
                 <Image
-                  src={'/profile background.png'}
+                  src={'sm' ? '/profile background.png' : '/cupcake.png'}
                   layout="fill"
                   objectFit="cover"
                   alt={session?.data?.user?.name}
                 />
               </div>
-              <div className="absolute right-1 -bottom-6 h-20 w-20 bg-four rounded-full cursor-pointer">
-                <ImageUpload
-                  image={user?.image}
-                  style={
-                    'peer/image rounded-full w-20 h-20 cursor-pointer overflow-hidden'
-                  }
-                />
-                <MdOutlineAddPhotoAlternate className="absolute text-one text-xl top-0 -right-1" />
+
+              <div className="relative">
+                <div className="absolute right-1 -bottom-6 h-20 w-20 bg-four rounded-full cursor-pointer overflow-hidden">
+                  <ImageUpload
+                    image={user?.image}
+                    style={
+                      'peer/image rounded-full w-20 h-20 cursor-pointer overflow-hidden'
+                    }
+                  />
+                </div>
+                <MdOutlineAddPhotoAlternate className="absolute text-one text-xl -top-12 right-1" />
               </div>
             </div>
-            <div className="flex flex-col justify-center items-center w-full text-end text-white">
+
+            <div className="flex flex-col justify-center items-center w-full text-start text-white">
               <div className="flex flex-col items-center gap-2 justify-between rounded-lg px-8 py-2 w-full my-2">
-                <h1 className="text-nowrap text-end w-full select-none">
+                <h1 className="text-nowrap text-start w-full select-none">
+                  <span className="text-one font-bold text-2xl ml-2">#</span>
                   {session?.data?.user?.name}
                 </h1>
                 <div className="flex items-center w-full">
@@ -105,9 +108,32 @@ export default function Profile() {
                 </div>
               </div>
               <div className="flex flex-col items-center gap-2 justify-between rounded-lg px-8 py-2 w-full my-2">
-                <h1 className="text-nowrap text-end w-full select-none">
+                <h1 className="text-nowrap text-start w-full select-none">
+                  <span className="text-one font-bold text-2xl ml-2">#</span>
                   {session?.data?.user?.email}
                 </h1>
+                <div className="flex items-center w-full">
+                  <hr className="w-full h-0.5 bg-gray-400 rounded-full border-hidden" />
+                </div>
+              </div>
+              <div className="flex flex-col items-center gap-2 justify-between rounded-lg px-8 py-2 w-full my-2">
+                <Link href={'/myRecipes'} className="w-full">
+                  <h1 className="text-nowrap text-start w-full select-none cursor-pointer ">
+                    <span className="text-one font-bold text-2xl ml-2 ">#</span>
+                    وصفاتي{' '}
+                  </h1>
+                </Link>
+                <div className="flex items-center w-full">
+                  <hr className="w-full h-0.5 bg-gray-400 rounded-full border-hidden" />
+                </div>
+              </div>
+              <div className="flex flex-col items-center gap-2 justify-between rounded-lg px-8 py-2 w-full my-2">
+                <Link href={'/favoritePosts'} className="w-full">
+                  <h1 className="text-nowrap text-start w-full select-none cursor-pointer ">
+                    <span className="text-one font-bold text-2xl ml-2 ">#</span>
+                    وصفات أعجبتني{' '}
+                  </h1>
+                </Link>
                 <div className="flex items-center w-full">
                   <hr className="w-full h-0.5 bg-gray-400 rounded-full border-hidden" />
                 </div>

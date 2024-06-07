@@ -17,14 +17,7 @@ export async function PUT(req) {
   await mongoose.connect(process.env.NEXT_PUBLIC_MONGODB);
   const { _id, numberOfLikes, numberOfEmojis, numberOfHearts } =
     await req.json();
-  // console.log(
-  //   'this is _id',
-  //   '***************************************************',
-  //   _id,
-  //   numberOfLikes,
-  //   numberOfEmojis,
-  //   numberOfHearts
-  // );
+
   const updateLikes = await Meal?.findByIdAndUpdate(
     { _id },
     {

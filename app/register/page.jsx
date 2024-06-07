@@ -8,9 +8,11 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 import Image from 'next/image';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
+import CustomToast from '../../components/CustomToast';
 
 export default function RegisterPage() {
+  const session = useSession();
   const router = useRouter();
   const schema = z.object({
     name: z.string(),
@@ -23,8 +25,13 @@ export default function RegisterPage() {
     getValues,
     handleSubmit,
     setError,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm({ resolver: zodResolver(schema) });
+
+  //! اذا تم التسجيل بنجاح عن طريق أحد البروفايدرز سوف يتم توجيه المستخدم الى صفحة تسجيل الدخول
+  if (session?.data?.user?.email) {
+    router.push('/login');
+  }
 
   async function onSubmit() {
     // console.log('getValues', getValues());
@@ -139,9 +146,24 @@ export default function RegisterPage() {
             التسجيل عن طريق جوجل
           </h1>
         </div>
-        <div className="flex flex-col sm:flex-row justify-between gap-8 items-center mt-4">
-          <Button title={'تسجيل'} />
-          <Button title={'إغلاق'} onClick={() => router.push('/')} />
+        <div className="flex flex-col sm:flex-row justify-between gap-8 items-center mt-4 w-full">
+          <button
+            type="submit"
+            className=" text-lg p-2  my-3 text-white text-nowrap bg-five hover:bg-one rounded-full hover:scale-[101%] w-full "
+          >
+            تسجيل
+          </button>
+
+          <div className="w-full">
+            <Link href={'/'}>
+              <button
+                type="submit"
+                className=" text-lg p-2  my-3 text-white text-nowrap bg-five hover:bg-one rounded-full hover:scale-[101%] w-full "
+              >
+                إغلاق{' '}
+              </button>{' '}
+            </Link>
+          </div>
         </div>
         <Link href={'/login'}>
           {' '}

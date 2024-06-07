@@ -6,9 +6,10 @@ import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function SearchBar() {
-  const [searchByCategory, setSearchByCategory] = useState([]);
+  const [isVisible, setIsVisible] = useState(false);
+  const [searchByCategory, setSearchByCategory] = useState('');
   const [searchedWord, setSearchedWord] = useState('');
-  const [searchedValues, setSearchedValues] = useState([]);
+  const [searchedValues, setSearchedValues] = useState('');
   const searchCate = useSearchParams();
   const searchCategory = searchCate.get('searchCategory');
   const router = useRouter();
@@ -21,14 +22,18 @@ export default function SearchBar() {
     await fetch('/api/allCookingRecipes')
       .then((res) => res.json())
       .then((res) => {
+        if (searchCategory || searchedWord) {
+          setIsVisible(true);
+        }
         const search = res?.filter((item) =>
           item?.mealName?.match(searchedWord)
         );
         setSearchedValues(search);
 
         const categoryValues = res?.filter(
-          (item) => item?.category === searchCategory
+          (item) => item?.selectedValue === searchCategory
         );
+        console.log('categoryValues', categoryValues);
         setSearchByCategory(categoryValues);
       });
   };
@@ -54,7 +59,7 @@ export default function SearchBar() {
             id="search_meal"
             name="search_meal"
             placeholder="ابحث عن وصفة طبخ   ..."
-            className="w-full rounded-full border-2 text-lg md:text-xl placeholder:text-lg py-1 md:py-2 px-10 outline-2 focus:outline-one text-right caret-one"
+            className="w-full rounded-full border-2 text-lg md:text-xl placeholder:text-lg py-1 md:py-2 px-10 outline-2 focus:outline-one text-right caret-one "
           />
           <div className="absolute top-3 md:top-4 right-4">
             <IoIosSearch className="text-one font-bold size-5" />
@@ -84,12 +89,15 @@ export default function SearchBar() {
           ))}
         </div>
       )}
-      {searchByCategory?.length > 0 && searchCategory !== null && (
+      {isVisible && searchByCategory?.length > 0 && searchCategory !== '' && (
         <div className="w-full flex flex-col items-center justify-start p-4 overflow-y-auto h-fit bg-seven rounded-lg content-center">
           <div className="flex flex-row-reverse justify-between items-center w-full">
             <button
               onClick={() => {
+                setIsVisible(false);
                 setSearchByCategory([]);
+                setSearchedValues([]);
+                setSearchedWord();
                 router.push('/');
               }}
               className="p-2 text-white bg-five w-24 rounded-full font-bold text-sm sm:text-lg hover:bg-one hover:scale-105"
@@ -100,11 +108,12 @@ export default function SearchBar() {
               نتائج البحث:
             </h1>
           </div>
-          {searchByCategory?.map((recipe, index) => (
-            <div className="w-full 2xl:w-2/3">
-              <SmallItem recipe={recipe} index={index} />
-            </div>
-          ))}
+          {searchByCategory !== '' &&
+            searchByCategory?.map((recipe, index) => (
+              <div className="w-full 2xl:w-2/3">
+                <SmallItem recipe={recipe} index={index} />
+              </div>
+            ))}
         </div>
       )}
     </div>

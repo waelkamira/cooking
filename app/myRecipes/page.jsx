@@ -10,24 +10,37 @@ import toast from 'react-hot-toast';
 import CustomToast from '../../components/CustomToast';
 import BackButton from '../../components/BackButton';
 
-export default function page() {
+export default function MyRecipes() {
+  const [CurrentUser, setCurrentUser] = useState({});
   const session = useSession();
-  const [userFavorites, setUserFavorites] = useState([]);
+  const [myRecipes, setMyRecipes] = useState([]);
   useEffect(() => {
-    fetchUserFavorites();
+    fetchMyRecipes();
   }, []);
 
-  const fetchUserFavorites = async () => {
-    await fetch('/api/favoritePosts')
+  const fetchMyRecipes = async () => {
+    await fetch('/api/allCookingRecipes')
       .then((res) => res.json())
       .then((res) => {
-        // console.log('these are user favorites', res);
-        setUserFavorites(res?.reverse());
+        console.log('these are my recipes', res);
+        console.log('CurrentUser', CurrentUser);
+        if (typeof window !== 'undefined') {
+          const userData = JSON.parse(localStorage.getItem('CurrentUser'));
+          console.log('userData', userData);
+          setCurrentUser(userData);
+          const email = userData?.email;
+          console.log('email', email);
+
+          const findUserRecipes = res?.filter(
+            (item) => item?.createdBy === email
+          );
+          setMyRecipes(findUserRecipes?.reverse());
+        }
       });
   };
 
   async function handleDeletePost(recipe) {
-    const response = await fetch('/api/favoritePosts', {
+    const response = await fetch('/api/allCookingRecipes', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(recipe),
@@ -35,12 +48,9 @@ export default function page() {
 
     if (response.ok) {
       toast.custom((t) => (
-        <CustomToast
-          t={t}
-          message={'👍 تم حذف هذا البوست من قائمة المفضلة لديك'}
-        />
+        <CustomToast t={t} message={'👍 تم حذف هذا البوست من قائمة وصفاتك'} />
       ));
-      fetchUserFavorites();
+      fetchMyRecipes();
     } else {
       toast.custom((t) => <CustomToast t={t} message={'حدث خطأ ما 😐'} />);
     }
@@ -67,20 +77,18 @@ export default function page() {
         />
       </div>
       <div className="flex justify-between items-center w-full gap-4 my-8">
-        <h1 className="grow text-lg lg:text-2xl w-full text-white ">
-          وصفاتي المفضلة:
-        </h1>
+        <h1 className="grow text-lg lg:text-2xl w-full text-white ">وصفاتي:</h1>
         <BackButton />
       </div>
       <div className="my-8">
-        {userFavorites?.length === 0 && (
+        {myRecipes?.length === 0 && (
           <h1 className="text-2xl md:text-3xl w-full text-center text-white mt-8 ">
-            😉 لا يوجد نتائج لعرضها ,لم تقم بحفظ أي وصفة بعد
+            😉 لا يوجد نتائج لعرضها ,لم تقم بإنشاء أي وصفة بعد
           </h1>
         )}
         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 justify-center items-center w-full ">
-          {userFavorites?.length > 0 &&
-            userFavorites.map((recipe, index) => (
+          {myRecipes?.length > 0 &&
+            myRecipes.map((recipe, index) => (
               <div className="relative ">
                 {session?.status === 'authenticated' && (
                   <div
@@ -91,12 +99,7 @@ export default function page() {
                     <h6 className="text-sm select-none">حذف</h6>
                   </div>
                 )}
-                <SmallItem
-                  recipe={recipe}
-                  index={index}
-                  show={false}
-                  id={true}
-                />
+                <SmallItem recipe={recipe} index={index} show={false} />
               </div>
             ))}
         </div>

@@ -5,7 +5,10 @@ import GoogleProvider from 'next-auth/providers/google';
 import bcrypt from 'bcrypt';
 // import { MongoDBAdapter } from '@auth/mongodb-adapter';
 // import clientPromise from '../../../lib/Mongodb';
-
+import { GoogleUser } from '../models/UserModelForGoogle';
+import { RegisterGoogleUser } from '../registerGoogleUser/route';
+import { redirect } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 export const authOptions = {
   secret: process.env.NEXT_PUBLIC_SECRET,
   // adapter: MongoDBAdapter(clientPromise),
@@ -55,6 +58,47 @@ export const authOptions = {
       },
     }),
   ],
+
+  //?عند التسجيل عن طريق جوجل session نعرف فيها دالة لإرجاع ال  callbacks  ال
+  //?لمعرفة ما إذا كان هذا المستخدم قد سجل أو لا اذا لم يسجل نقوم بتسجيله signIn و نعرف دالة أخر
+
+  callbacks: {
+    async session({ session }) {
+      //?التي تم انشاوها من حساب جوجل المستخدم session هذه ال
+      //? نستطيع اضافة خصائص أخرى للجلسة هنا
+      return session;
+    },
+
+    //?هو بروفايل المستخدم الذي قام بالتسجيل او تسجيل الدخول عن طريق جوجل profile
+    async signIn({ profile, credentials }) {
+      try {
+        console.log('profile', profile);
+
+        // const userExist = await GoogleUser?.findOne({ email: profile?.email });
+        const userExist1 = await User?.findOne({
+          email: profile?.email || credentials?.email,
+        });
+        if (userExist1) {
+          signIn({ redirectTo: '/' });
+        }
+        if (!userExist1) {
+          const user = await User.create({
+            email: profile?.email || credentials?.email,
+            name: profile?.name || credentials?.name,
+            image: profile?.picture || credentials?.image,
+            password: credentials?.password,
+          });
+        }
+        return true;
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
+    },
+    async redirect({ url, baseUrl }) {
+      return baseUrl;
+    },
+  },
 
   session: { strategy: 'jwt' },
   debug: process.env.NODE_ENV,

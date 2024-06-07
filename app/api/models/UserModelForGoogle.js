@@ -11,13 +11,7 @@ const UserSchema = new Schema(
       required: true,
       unique: true,
     },
-    password: {
-      type: String,
-    },
-    isAdmin: {
-      type: Boolean,
-      default: false,
-    },
+
     image: {
       type: String,
       default:
@@ -27,4 +21,4 @@ const UserSchema = new Schema(
   { timestamps: true }
 );
 
-export const User = models?.User || model('User', UserSchema);
+export const GoogleUser = models?.GoogleUser || model('GoogleUser', UserSchema);

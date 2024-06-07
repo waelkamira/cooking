@@ -2,9 +2,9 @@ import mongoose from 'mongoose';
 import { User } from '../models/UserModel';
 import bcrypt from 'bcrypt';
 
-export async function POST(req) {
+export async function RegisterGoogleUser(req) {
   await mongoose.connect(process.env.NEXT_PUBLIC_MONGODB);
-  const { name, email, password } = await req.json();
+  const { name, email, picture } = await req.json();
 
   const isExist = await User.findOne({ email });
   if (isExist) {
@@ -12,8 +12,7 @@ export async function POST(req) {
       'هذا الايميل موجود بالفعل قم بتسجيل الدخول او استخدم بريد الكتروني أخر'
     );
   }
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await User.create({ name, email, password: hashedPassword });
+  const user = await User.create({ name, email, image: picture });
   // console.log('user', user);
 
   return Response.json(user);

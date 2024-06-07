@@ -13,7 +13,8 @@ import Link from 'next/link';
 import { inputsContext } from '../components/Context';
 import Loading from './Loading';
 import CustomToast from './CustomToast';
-export default function SmallItem({ recipe, index, show = true, id }) {
+
+export default function SmallItem({ recipe, index, show = true, id = false }) {
   const [currentUser, setCurrentUser] = useState('');
   const [favorites, setFavorites] = useState();
   const [numberOfLikes, setNumberOfLikes] = useState(recipe?.numberOfLikes);
@@ -153,20 +154,22 @@ export default function SmallItem({ recipe, index, show = true, id }) {
         key={index}
         className="flex flex-col justify-center items-center shadow-md w-full p-4 rounded-lg mt-8 bg-white "
       >
-        <div className="flex justify-between items-center gap-2 w-full">
+        <div className="w-full p-2">
           <Link
             href={'/profile'}
-            className="cursor-pointer w-full flex justify-between"
+            className="cursor-pointer flex justify-start items-center gap-2 w-full h-fit "
           >
-            <div className="relative w-[70px] h-12 overflow-hidden rounded-full">
-              <Image
-                src={recipe?.userImage}
-                layout="fill"
-                objectFit="contain"
-                alt={recipe?.mealName}
-              />
+            <div className="overflow-hidden rounded-full">
+              <div className="relative size-12  rounded-full">
+                <Image
+                  src={recipe?.userImage}
+                  layout="fill"
+                  objectFit="contain"
+                  alt={recipe?.mealName}
+                />
+              </div>
             </div>
-            <div className="flex flex-col justify-center w-full ">
+            <div className="flex flex-col justify-center">
               <h6 className="text-[14px] text-eight font-semibold select-none">
                 {recipe?.userName}{' '}
               </h6>
@@ -177,7 +180,7 @@ export default function SmallItem({ recipe, index, show = true, id }) {
               </h1>
             </div>
           </Link>
-          {currentUser?.email === 'waelkamira@gmail.com' && path === '/' && (
+          {currentUser?.isAdmin === true && path === '/' && (
             <div
               className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
               onClick={() => handleDeletePost(recipe)}

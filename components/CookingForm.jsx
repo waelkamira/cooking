@@ -6,11 +6,12 @@ import toast from 'react-hot-toast';
 import SelectComponent from './SelectComponent';
 import { inputsContext } from '../components/Context';
 import { useSession } from 'next-auth/react';
-
+import CurrentUser from './CurrentUser';
 export default function CookingForm({ setIsVisible, isVisible }) {
   const session = useSession();
-  const userName = session?.data?.user?.name;
-  const userImage = session?.data?.user?.image;
+  const userName = CurrentUser()?.name;
+  const userImage = CurrentUser()?.image;
+  const createdBy = CurrentUser()?.email;
   const [errors, setErrors] = useState({
     mealName: false,
     mealNameErrorMessage: 'حقل المقادير مطلوب',
@@ -55,13 +56,14 @@ export default function CookingForm({ setIsVisible, isVisible }) {
       inputs.selectedValue &&
       inputs.image &&
       userImage &&
-      userName
+      userName &&
+      createdBy
     ) {
       try {
         const response = await fetch('/api/createMeal', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...inputs, userName, userImage }),
+          body: JSON.stringify({ ...inputs, userName, userImage, createdBy }),
         });
 
         if (response.ok) {

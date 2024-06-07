@@ -6,6 +6,10 @@ const MealSchema = new Schema(
       type: String,
       required: true,
     },
+    createdBy: {
+      type: String,
+      required: true,
+    },
     userImage: { type: String, required: true },
     mealName: {
       type: String,

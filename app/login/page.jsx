@@ -11,7 +11,7 @@ import { signIn, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import CustomToast from '../../components/CustomToast';
 
-export default function RegisterPage() {
+export default function LogInPage() {
   const session = useSession();
   // console.log(session?.data?.user?.name);
   const router = useRouter();
@@ -28,8 +28,28 @@ export default function RegisterPage() {
     formState: { errors, isValid },
   } = useForm({ resolver: zodResolver(schema) });
 
+  //!و ضعنا هذه الجملة الشرطية هنا لانه عندما يقوم المستخدم بتسجيل الدخول عن طريق جوجل مثلا ح
+  //! أو احد الروفايدرز يتم انشاء جلسة اي ان عملية تسجيل الدخول صحيحة وبالتالي نقوم باعادة توجيه المستخدم الى الصفحة الرئيسية
+  if (session?.data?.user?.email) {
+    router.push('/');
+  }
+
   async function onSubmit() {
-    // console.log('getValues', getValues());
+    if (getValues()?.email === '') {
+      setError('email', {
+        type: 'custom',
+        message: 'عنوان البريد الإلكتروني مطلوب',
+      });
+      return;
+    } else if (getValues()?.password?.length < 5) {
+      setError('password', {
+        type: 'custom',
+        message:
+          'طول كلمة السر يجب أن يكون 5 أحرف (أو 5 أرقام وأحرف) على الأقل',
+      });
+      return;
+    }
+    console.log('getValues', getValues());
 
     const response = await signIn('credentials', {
       ...getValues(),
@@ -112,14 +132,28 @@ export default function RegisterPage() {
             تسجيل الدخول عن طريق جوجل
           </h1>
         </div>
-        <div className="flex flex-col sm:flex-row justify-between gap-8 items-center mt-4">
-          <Button title={'تسجيل الدخول'} />
-          <Button title={'إغلاق'} onClick={() => router.push('/')} />
+        <div className="flex flex-col sm:flex-row justify-between gap-8 items-center mt-4 w-full">
+          <button
+            type="submit"
+            className=" text-lg p-2  my-3 text-white text-nowrap bg-five hover:bg-one rounded-full hover:scale-[101%] w-full "
+          >
+            تسجيل الدخول
+          </button>
+
+          <div className="w-full">
+            <Link href={'/'}>
+              <button
+                type="submit"
+                className=" text-lg p-2  my-3 text-white text-nowrap bg-five hover:bg-one rounded-full hover:scale-[101%] w-full "
+              >
+                إغلاق{' '}
+              </button>{' '}
+            </Link>
+          </div>
         </div>
         <Link href={'/register'}>
-          {' '}
           <h1 className="mt-4 text-start text-sm sm:text-lg">
-            ليس لديك حساب؟ قم بالتسجيل{' '}
+            ليس لديك حساب؟ قم بالتسجيل
             <span className="text-one text-lg sm:text-xl hover:scale-105">
               🥧 هنا
             </span>

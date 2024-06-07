@@ -1,6 +1,4 @@
 'use client';
-import { data } from 'autoprefixer';
-import { modelNames } from 'mongoose';
 import React, { act, createContext, useReducer } from 'react';
 
 function inputsReducer(currentState, action) {
@@ -51,7 +49,7 @@ function inputsReducer(currentState, action) {
   }
 }
 
-export const inputsContext = createContext();
+export const inputsContext = createContext('');
 export function InputsContextProvider({ children }) {
   const [state, dispatch] = useReducer(inputsReducer, {
     data: {},
