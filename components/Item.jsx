@@ -176,7 +176,7 @@ export default function Item({
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerpolicy="strict-origin-when-cross-origin"
                     allowfullscreen
-                    className="rounded-lg w-full h-full sm:h-52 2xl:h-96"
+                    className="rounded-lg w-full h-full sm:h-52 lg:h-72 xl:h-96 2xl:h-[500px]"
                   ></iframe>
                 </div>
               </div>

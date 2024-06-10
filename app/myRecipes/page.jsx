@@ -3,38 +3,46 @@ import { useSession } from 'next-auth/react';
 import SmallItem from '../../components/SmallItem';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { TbArrowBigLeftLinesFilled } from 'react-icons/tb';
 import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
 import CustomToast from '../../components/CustomToast';
 import BackButton from '../../components/BackButton';
+import { inputsContext } from '../../components/Context';
 
 export default function MyRecipes() {
+  const { dispatch, allCookingRecipes, rerenderMyRecipes } =
+    useContext(inputsContext);
   const [CurrentUser, setCurrentUser] = useState({});
   const session = useSession();
   const [myRecipes, setMyRecipes] = useState([]);
+
   useEffect(() => {
     fetchMyRecipes();
-  }, []);
+  }, [allCookingRecipes, rerenderMyRecipes]);
 
   const fetchMyRecipes = async () => {
     await fetch('/api/allCookingRecipes')
       .then((res) => res.json())
       .then((res) => {
-        console.log('these are my recipes', res);
-        console.log('CurrentUser', CurrentUser);
+        // console.log('these are my recipes', res);
+        // console.log('CurrentUser', CurrentUser);
         if (typeof window !== 'undefined') {
           const userData = JSON.parse(localStorage.getItem('CurrentUser'));
-          console.log('userData', userData);
+          // console.log('userData', userData);
           setCurrentUser(userData);
           const email = userData?.email;
-          console.log('email', email);
+          // console.log('email', email);
 
           const findUserRecipes = res?.filter(
             (item) => item?.createdBy === email
           );
           setMyRecipes(findUserRecipes?.reverse());
+          dispatch({
+            type: 'USER_RECIPES',
+            payload: findUserRecipes?.reverse(),
+          });
         }
       });
   };

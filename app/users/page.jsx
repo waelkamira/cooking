@@ -26,11 +26,11 @@ export default function Users() {
   async function fetchAllUsers() {
     const response = await fetch('/api/allUsers');
     const json = await response.json();
-    console.log(json);
+    // console.log(json);
     if (response.ok) {
       if (findUser) {
         const user = json?.filter((item) => item?.email.match(findUser));
-        console.log(user);
+        // console.log(user);
         setUsers(user);
       } else {
         setUsers(json);

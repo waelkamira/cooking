@@ -13,19 +13,26 @@ import Link from 'next/link';
 import { inputsContext } from '../components/Context';
 import Loading from './Loading';
 import CustomToast from './CustomToast';
+import Item from './Item';
 
 export default function SmallItem({ recipe, index, show = true, id = false }) {
   const [currentUser, setCurrentUser] = useState('');
   const [favorites, setFavorites] = useState();
-  const [numberOfLikes, setNumberOfLikes] = useState(recipe?.numberOfLikes);
-  const [numberOfEmojis, setNumberOfEmojis] = useState(recipe?.numberOfEmojis);
-  const [numberOfHearts, setNumberOfHearts] = useState(recipe?.numberOfHearts);
+  const [numberOfLikes, setNumberOfLikes] = useState(
+    recipe?.usersWhoLikesThisRecipe?.length
+  );
+  const [numberOfEmojis, setNumberOfEmojis] = useState(
+    recipe?.usersWhoPutEmojiOnThisRecipe?.length
+  );
+  const [numberOfHearts, setNumberOfHearts] = useState(
+    recipe?.usersWhoPutHeartOnThisRecipe?.length
+  );
 
   const [like, setLike] = useState(false);
   const [heart, setHeart] = useState(false);
   const [emoji, setEmoji] = useState(false);
 
-  const { dispatch } = useContext(inputsContext);
+  const { dispatch, action } = useContext(inputsContext);
   const session = useSession();
   const router = useRouter();
   const path = usePathname();
@@ -38,26 +45,30 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
         setCurrentUser(user);
       }
     }
-
-    handleActions();
+    // handleActions();
     fetchFavoritePosts();
-  }, [like, heart, emoji]);
+    setActions();
+    console.log('reload');
+  }, []);
 
-  //? يتم تفعيل هذه الدالة عند الضغط على أحد الأزرار الثلاثة حفظ أعجبني لذيذ وذلك لحساب عدد مرات التفاعل مع البوست
-  async function handleActions() {
-    const response = await fetch('/api/allCookingRecipes', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        _id: recipe?._id,
-        userName: currentUser?.name,
-        numberOfLikes: numberOfLikes,
-        numberOfEmojis: numberOfEmojis,
-        numberOfHearts: numberOfHearts,
-      }),
-    });
-    if (!response.ok) {
-      toast.custom((t) => <CustomToast t={t} message={'حدث خطأ ما 😐'} />);
+  function setActions() {
+    const isLiked = recipe?.usersWhoLikesThisRecipe?.filter(
+      (item) => item === session?.data?.user?.email
+    );
+    if (isLiked?.length > 0) {
+      setLike(true);
+    }
+    const isEmoji = recipe?.usersWhoPutEmojiOnThisRecipe?.filter(
+      (item) => item === session?.data?.user?.email
+    );
+    if (isEmoji?.length > 0) {
+      setEmoji(true);
+    }
+    const isHeart = recipe?.usersWhoPutHeartOnThisRecipe?.filter(
+      (item) => item === session?.data?.user?.email
+    );
+    if (isHeart?.length > 0) {
+      setHeart(true);
     }
   }
 
@@ -113,7 +124,6 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
       }
     }
   }
-
   //? للبحث عن هذا البوست في قائمة المفضلة اذا موجود يتم تفعيل اللون الاحمر بأن المستخدم بالفعل أعجب بهذا البوست من قبل
   async function fetchFavoritePosts() {
     const response = await fetch('/api/favoritePosts');
@@ -126,6 +136,114 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
       setHeart(true);
     } else {
       setHeart(false);
+    }
+  }
+
+  //? إذا كان المستخدم غير موجود في مصفوفة المعجبين  بهذا البوست heart يتم تفعيل هذه الدالة عند الضغط على زر
+  //? فسوف تتم إضافته وإلا سوف يتم حذفه من هذه المصفوفة
+  async function handleHeart() {
+    const user = recipe?.usersWhoPutHeartOnThisRecipe.filter(
+      (item) => item === session?.data?.user?.email
+    );
+
+    if (!user[0]) {
+      console.log('user', user);
+      const response = await fetch('/api/allCookingRecipes', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          _id: recipe?._id,
+          usersWhoPutHeartOnThisRecipe: [
+            ...recipe?.usersWhoPutHeartOnThisRecipe,
+            session?.data?.user?.email,
+          ],
+        }),
+      });
+    } else {
+      const users = recipe?.usersWhoPutHeartOnThisRecipe.filter(
+        (item) => item !== session?.data?.user?.email
+      );
+      console.log('user', user);
+      const response = await fetch('/api/allCookingRecipes', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          _id: recipe?._id,
+          usersWhoPutHeartOnThisRecipe: [...users],
+        }),
+      });
+    }
+  }
+
+  //? إذا كان المستخدم غير موجود في مصفوفة المعجبين  بهذا البوست like يتم تفعيل هذه الدالة عند الضغط على زر
+  //? فسوف تتم إضافته وإلا سوف يتم حذفه من هذه المصفوفة
+  async function handleLike() {
+    const user = recipe?.usersWhoLikesThisRecipe?.filter(
+      (item) => item === session?.data?.user?.email
+    );
+
+    if (!user[0]) {
+      console.log('user', user);
+      const response = await fetch('/api/allCookingRecipes', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          _id: recipe?._id,
+          usersWhoLikesThisRecipe: [
+            ...recipe?.usersWhoLikesThisRecipe,
+            session?.data?.user?.email,
+          ],
+        }),
+      });
+    } else {
+      const users = recipe?.usersWhoLikesThisRecipe?.filter(
+        (item) => item !== session?.data?.user?.email
+      );
+      console.log('user', user);
+      const response = await fetch('/api/allCookingRecipes', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          _id: recipe?._id,
+          usersWhoLikesThisRecipe: [...users],
+        }),
+      });
+    }
+  }
+
+  //? إذا كان المستخدم غير موجود في مصفوفة المعجبين  بهذا البوست emoji يتم تفعيل هذه الدالة عند الضغط على زر
+  //? فسوف تتم إضافته وإلا سوف يتم حذفه من هذه المصفوفة
+  async function handleEmoji() {
+    const user = recipe?.usersWhoPutEmojiOnThisRecipe.filter(
+      (item) => item === session?.data?.user?.email
+    );
+
+    if (!user[0]) {
+      console.log('user', user);
+      const response = await fetch('/api/allCookingRecipes', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          _id: recipe?._id,
+          usersWhoPutEmojiOnThisRecipe: [
+            ...recipe?.usersWhoPutEmojiOnThisRecipe,
+            session?.data?.user?.email,
+          ],
+        }),
+      });
+    } else {
+      const users = recipe?.usersWhoPutEmojiOnThisRecipe.filter(
+        (item) => item !== session?.data?.user?.email
+      );
+      console.log('user', user);
+      const response = await fetch('/api/allCookingRecipes', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          _id: recipe?._id,
+          usersWhoPutEmojiOnThisRecipe: [...users],
+        }),
+      });
     }
   }
 
@@ -149,12 +267,12 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
 
   return (
     <>
-      {!recipe && <Loading />}
+      {recipe === 'undefined' && <Loading />}
       <div
         key={index}
         className="flex flex-col justify-center items-center shadow-md w-full p-4 rounded-lg mt-8 bg-white "
       >
-        <div className="w-full p-2">
+        <div className="flex items-center justify-center w-full p-2">
           <Link
             href={'/profile'}
             className="cursor-pointer flex justify-start items-center gap-2 w-full h-fit "
@@ -173,7 +291,10 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
               <h6 className="text-[14px] text-eight font-semibold select-none">
                 {recipe?.userName}{' '}
               </h6>
-              <h1 className="text-[10px] text-gray-400 font-semibold select-none">
+              <h1
+                className="text-[10px] text-gray-400 font-semibold select-none"
+                dir="ltr"
+              >
                 {formatDistanceToNow(new Date(recipe?.createdAt), {
                   addSuffix: true,
                 })}
@@ -203,7 +324,7 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
                 className="flex justify-center items-center gap-2 cursor-pointer hover:bg-seven p-1 lg:p-2 rounded-lg select-none"
                 onClick={() => {
                   if (session?.status === 'authenticated') {
-                    handleActions();
+                    handleHeart();
                     if (!heart) {
                       setNumberOfHearts(numberOfHearts + 1);
                     } else {
@@ -247,13 +368,14 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
               <div
                 className="flex justify-center items-center gap-2 cursor-pointer hover:bg-seven p-1 lg:p-2 rounded-lg select-none"
                 onClick={() => {
+                  handleLike();
+
                   if (session?.status === 'authenticated') {
-                    handleActions();
                     setLike(!like);
                     if (!like) {
-                      setNumberOfLikes(numberOfLikes + 1);
+                      setNumberOfLikes(+numberOfLikes + 1);
                     } else {
-                      setNumberOfLikes(numberOfLikes - 1);
+                      setNumberOfLikes(+numberOfLikes - 1);
                     }
                   } else {
                     toast.custom((t) => (
@@ -288,7 +410,7 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
                 className="flex justify-center items-center gap-2 cursor-pointer hover:bg-seven py-1 px-2 rounded-lg select-none"
                 onClick={() => {
                   if (session?.status === 'authenticated') {
-                    handleActions();
+                    handleEmoji();
                     setEmoji(!emoji);
                     if (!emoji) {
                       setNumberOfEmojis(numberOfEmojis + 1);

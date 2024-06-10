@@ -15,15 +15,21 @@ export async function DELETE(req) {
 }
 export async function PUT(req) {
   await mongoose.connect(process.env.NEXT_PUBLIC_MONGODB);
-  const { _id, numberOfLikes, numberOfEmojis, numberOfHearts } =
-    await req.json();
-
+  const {
+    _id,
+    usersWhoLikesThisRecipe,
+    usersWhoPutEmojiOnThisRecipe,
+    usersWhoPutHeartOnThisRecipe,
+  } = await req.json();
+  console.log('id from backend', _id);
+  const recipe = await Meal?.findById({ _id });
+  console.log(recipe);
   const updateLikes = await Meal?.findByIdAndUpdate(
     { _id },
     {
-      numberOfLikes: numberOfLikes,
-      numberOfEmojis: numberOfEmojis,
-      numberOfHearts: numberOfHearts,
+      usersWhoLikesThisRecipe: usersWhoLikesThisRecipe,
+      usersWhoPutEmojiOnThisRecipe: usersWhoPutEmojiOnThisRecipe,
+      usersWhoPutHeartOnThisRecipe: usersWhoPutHeartOnThisRecipe,
     }
   );
   // console.log(updateLikes);

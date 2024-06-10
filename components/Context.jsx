@@ -1,5 +1,5 @@
 'use client';
-import React, { act, createContext, useReducer } from 'react';
+import React, { createContext, useReducer } from 'react';
 
 function inputsReducer(currentState, action) {
   switch (action.type) {
@@ -43,7 +43,18 @@ function inputsReducer(currentState, action) {
       return {
         imageError: action?.payload,
       };
-
+    case 'ACTION':
+      return {
+        action: action?.payload,
+      };
+    case 'USER_RECIPES':
+      return {
+        userRecipes: action?.payload,
+      };
+    case 'RERENDER_MY_RECIPES':
+      return {
+        rerenderMyRecipes: action?.payload,
+      };
     default:
       return currentState;
   }
@@ -59,6 +70,9 @@ export function InputsContextProvider({ children }) {
     newRecipe: {},
     deletedRecipe: {},
     deleteFavoritePost: {},
+    action: {},
+    userRecipes: [],
+    rerenderMyRecipes: {},
   });
   // console.log('from Context', state);
 

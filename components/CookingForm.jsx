@@ -7,6 +7,9 @@ import SelectComponent from './SelectComponent';
 import { inputsContext } from '../components/Context';
 import { useSession } from 'next-auth/react';
 import CurrentUser from './CurrentUser';
+import CustomToast from './CustomToast';
+import { Confetti } from './SuccessComponent';
+
 export default function CookingForm({ setIsVisible, isVisible }) {
   const session = useSession();
   const userName = CurrentUser()?.name;
@@ -34,6 +37,7 @@ export default function CookingForm({ setIsVisible, isVisible }) {
   });
   const { data, dispatch } = useContext(inputsContext);
   console.log('data?.modelName', data?.modelName);
+
   useEffect(() => {
     setInputs({
       ...inputs,
@@ -70,7 +74,22 @@ export default function CookingForm({ setIsVisible, isVisible }) {
           console.log('success');
           dispatch({ type: 'New_RECIPE', payload: inputs });
           setIsVisible(false);
-          toast.success('تم إنشاء وصفة جديدة');
+          toast.custom((t) => (
+            <CustomToast t={t} message={'✔ تم إنشاء وصفة جديدة'} />
+          ));
+          handleClick();
+          // setTimeout(() => {
+          //   location.reload();
+          // }, 1300);
+          setInputs({
+            mealName: '',
+            selectedValue: '',
+            image: '',
+            ingredients: '',
+            theWay: '',
+            advise: '',
+            link: '',
+          });
         } else {
           console.log('something went wrong!');
         }
@@ -80,28 +99,71 @@ export default function CookingForm({ setIsVisible, isVisible }) {
     } else {
       if (!inputs.image) {
         setErrors({ ...errors, image: true });
-        toast.error('صورة الطبخة مطلوبة');
+
+        toast.custom((t) => (
+          <CustomToast t={t} message={'صورة الطبخة مطلوبة 😐'} />
+        ));
         dispatch({
           type: 'IMAGE_ERROR',
           payload: { imageError: true, message: 'صورة الطبخة مطلوبة' },
         });
       } else if (!inputs.mealName) {
         setErrors({ ...errors, mealName: true });
-        toast.error('اسم الطبخة مطلوب');
+
+        toast.custom((t) => (
+          <CustomToast t={t} message={'اسم الطبخة مطلوب 😐'} />
+        ));
       } else if (!inputs.selectedValue) {
         setErrors({ ...errors, selectedValue: true });
-        toast.error('اختيار النوع مطلوب');
+        toast.custom((t) => (
+          <CustomToast t={t} message={'اختيار الصنف مطلوب 😐'} />
+        ));
       } else if (!inputs.ingredients) {
         setErrors({ ...errors, ingredients: true });
-        toast.error('حقل المقادير مطلوب');
+        toast.custom((t) => (
+          <CustomToast t={t} message={'حقل المقادير مطلوب 😐'} />
+        ));
       } else if (!inputs.theWay) {
         setErrors({ ...errors, theWay: true });
-        toast.error('حقل الطريقة مطلوب');
+        toast.custom((t) => (
+          <CustomToast t={t} message={'حقل الطريقة مطلوب 😐'} />
+        ));
       }
     }
   }
+
+  //? هذه دالة يتم تفعيلها عند نجاح انشاء وصفة للاحتفال
+  const handleClick = () => {
+    const end = Date.now() + 4 * 1000; // 3 seconds
+    const colors = ['#a786ff', '#fd8bbc', '#eca184', '#f8deb1'];
+
+    const frame = () => {
+      if (Date.now() > end) return;
+
+      Confetti({
+        particleCount: 2,
+        angle: 60,
+        spread: 55,
+        startVelocity: 60,
+        origin: { x: 0, y: 0.5 },
+        colors: colors,
+      });
+      Confetti({
+        particleCount: 2,
+        angle: 120,
+        spread: 55,
+        startVelocity: 60,
+        origin: { x: 1, y: 0.5 },
+        colors: colors,
+      });
+
+      requestAnimationFrame(frame);
+    };
+
+    frame();
+  };
   return (
-    <div className="w-full p-8 h-[1110px] ">
+    <div className="w-full p-8 h-[1200px] ">
       <form
         className="flex flex-col justify-center items-start h-fit w-full mt-4 "
         onSubmit={handleSubmit}

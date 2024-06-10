@@ -72,7 +72,7 @@ export const authOptions = {
     //?هو بروفايل المستخدم الذي قام بالتسجيل او تسجيل الدخول عن طريق جوجل profile
     async signIn({ profile, credentials }) {
       try {
-        console.log('profile', profile);
+        // console.log('profile', profile);
 
         // const userExist = await GoogleUser?.findOne({ email: profile?.email });
         const userExist1 = await User?.findOne({

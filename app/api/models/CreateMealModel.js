@@ -37,22 +37,14 @@ const MealSchema = new Schema(
     link: {
       type: String,
     },
-    numberOfLikes: {
-      type: Number,
-      default: 0,
-    },
-    numberOfHearts: {
-      type: Number,
-      default: 0,
-    },
-    numberOfEmojis: {
-      type: Number,
-      default: 0,
-    },
     favorite: {
       type: Boolean,
       default: false,
     },
+    usersWhoLikesThisRecipe: [String],
+    usersWhoPutEmojiOnThisRecipe: [String],
+    usersWhoPutHeartOnThisRecipe: [String],
+
     // comments: { type: [{}] }, يجب تعريف مخطط الكومنتات قبل نشر أي شيء
   },
   { timestamps: true }

@@ -13,16 +13,17 @@ export default function CurrentUser() {
   }, [profile_image?.image]);
 
   async function getUserData() {
-    const response = await fetch('/api/user')
-      .then((res) => res.json())
-      .then((res) => {
-        console.log('this is res', res);
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('CurrentUser', JSON.stringify(res[0]));
-        }
+    const response = await fetch('/api/user');
+    const json = await response?.json();
 
-        setUser(res[0]);
-      });
+    if (response.ok) {
+      console.log('this is res', json);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('CurrentUser', JSON.stringify(json[0]));
+      }
+
+      setUser(json[0]);
+    }
   }
   return { ...user };
 }

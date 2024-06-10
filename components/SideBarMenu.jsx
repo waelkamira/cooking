@@ -31,7 +31,7 @@ export default function SideBarMenu({ setIsOpen }) {
         <Button path={'/login'} title={'تسجيل الدخول'} />
       )}
       {session?.status === 'authenticated' && (
-        <Button path={'/favoritePosts'} title={'طبخاتي المفضلة'} />
+        <Button path={'/favoritePosts'} title={'وصفات أعجبتني'} />
       )}
 
       {session?.status === 'authenticated' && user?.isAdmin && (
@@ -39,6 +39,8 @@ export default function SideBarMenu({ setIsOpen }) {
       )}
       {session?.status === 'authenticated' && (
         <div>
+          <Button title={'طبخاتي'} path="/myRecipes" />
+
           <Button path={'/whatToCookToday'} title={'شو أطبخ اليوم؟'} />
           <Button path={'/'} title={'تسجيل الخروج'} onClick={() => signOut()} />
         </div>

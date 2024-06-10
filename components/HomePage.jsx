@@ -65,7 +65,7 @@ export default function HomePage() {
       <h1 className="text-md sm:text-lg lg:text-3xl text-nowrap mx-2 font-bold text-white bg-four rounded-full py-2 px-4 select-none">
         أحدث المنشورات
       </h1>
-      <div className="flex flex-col justify-center items-start xl:flex-row mt-8 2xl:h-[1120px] w-full rounded-lg gap-4">
+      <div className="flex flex-col justify-center items-start xl:flex-row mt-8 2xl:h-[1450px] w-full rounded-lg gap-4">
         <Categories />
         <AllCookingRecipes />
       </div>

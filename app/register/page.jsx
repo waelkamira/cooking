@@ -149,7 +149,7 @@ export default function RegisterPage() {
         <div className="flex flex-col sm:flex-row justify-between gap-8 items-center mt-4 w-full">
           <button
             type="submit"
-            className=" text-lg p-2  my-3 text-white text-nowrap bg-five hover:bg-one rounded-full hover:scale-[101%] w-full "
+            className=" text-lg p-2  my-3 text-white text-nowrap bg-five hover:bg-one rounded-lg hover:scale-[101%] w-full "
           >
             تسجيل
           </button>
@@ -158,7 +158,7 @@ export default function RegisterPage() {
             <Link href={'/'}>
               <button
                 type="submit"
-                className=" text-lg p-2  my-3 text-white text-nowrap bg-five hover:bg-one rounded-full hover:scale-[101%] w-full "
+                className=" text-lg p-2  my-3 text-white text-nowrap bg-five hover:bg-one rounded-lg hover:scale-[101%] w-full "
               >
                 إغلاق{' '}
               </button>{' '}

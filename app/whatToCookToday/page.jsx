@@ -31,12 +31,12 @@ export default function whatToCookToday() {
     const response = await fetch('/api/allCookingRecipes');
     const json = await response?.json();
     if (response.ok) {
-      console.log(json);
+      // console.log(json);
       // setRandomCookingRecipes(json);
       const data = json?.filter(
         (item) => item?.selectedValue === 'وجبة رئيسية'
       );
-      console.log(data.length);
+      // console.log(data.length);
       setRandomCookingRecipes(data.slice(0, 3));
     }
   };
@@ -74,7 +74,7 @@ export default function whatToCookToday() {
         >
           أعطني ثلاث أفكار لطبخة اليوم
         </button>
-        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 justify-center items-center w-full ">
+        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 justify-center items-center w-full ">
           {randomCookingRecipes?.length > 0 &&
             randomCookingRecipes.map((recipe, index) => (
               <div className="relative ">

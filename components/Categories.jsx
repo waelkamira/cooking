@@ -124,7 +124,7 @@ export default function Categories() {
         {smallSize.map((category) => (
           <div className=" flex flex-col justify-center items-center rounded-full mx-4 cursor-pointer w-full ">
             <div
-              className="relative border border-one w-full h-[103px] rounded-lg overflow-hidden hover:scale-[101%] transition-all duration-300 shadow-lg"
+              className="relative border border-one w-full h-[150px] rounded-lg overflow-hidden hover:scale-[101%] transition-all duration-300 shadow-lg"
               onClick={() => router.push(`?searchCategory=${category?.name}`)}
             >
               <Image

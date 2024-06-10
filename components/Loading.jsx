@@ -3,7 +3,7 @@ import { FaGear } from 'react-icons/fa6';
 
 export default function Loading() {
   return (
-    <div className="animate-pulse h-full rounded-lg">
+    <div className="animate-pulse h-[300px] rounded-lg">
       <div className="flex flex-col justify-start items-center bg-gray-300 rounded-lg w-full h-full p-8 transition duration-300">
         <div className="flex flex-col justify-center items-center">
           <FaGear className="animate-spin text-5xl mt-8 transition duration-300" />

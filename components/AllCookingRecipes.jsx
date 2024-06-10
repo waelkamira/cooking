@@ -23,7 +23,7 @@ export default function AllCookingRecipes() {
   }
 
   return (
-    <div className="flex flex-col w-full xl:w-[70%] h-[1120px] px-2 sm:px-16 sm:py-8 rounded-lg bg-seven overflow-y-auto z-10">
+    <div className="flex flex-col w-full xl:w-[70%] h-[1450px] px-2 sm:px-16 sm:py-8 rounded-lg bg-seven overflow-y-auto z-10">
       {allCookingRecipes?.length === 0 && <Loading />}
       {allCookingRecipes?.length > 0 &&
         allCookingRecipes.map((recipe, index) => (

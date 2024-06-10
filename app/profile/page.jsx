@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { TbArrowBigLeftLinesFilled } from 'react-icons/tb';
 import CustomToast from '../../components/CustomToast';
 import BackButton from '../../components/BackButton';
+import NewRecipeButton from '../../components/NewRecipeButton';
 
 export default function Profile() {
   const user = CurrentUser();
@@ -64,9 +65,7 @@ export default function Profile() {
               {' '}
               <Button title={'تسجيل الدخول'} />
             </Link>{' '}
-            <div className="flex justify-end w-full items-center bg-sky-300">
-              <BackButton />
-            </div>
+            <BackButton />
           </div>
         </div>
       )}
@@ -75,7 +74,7 @@ export default function Profile() {
           <BackButton />
           <div className="flex flex-col items-center gap-4  justify-center w-full 2xl:w-2/3 h-full rounded-lg overflow-hidden">
             <div className="relative w-full ">
-              <div className="relative h-72 w-full  rounded-full">
+              <div className="relative h-72 w-full  rounded-lg">
                 <Image
                   src={'sm' ? '/profile background.png' : '/cupcake.png'}
                   layout="fill"
@@ -85,15 +84,15 @@ export default function Profile() {
               </div>
 
               <div className="relative">
-                <div className="absolute right-1 -bottom-6 h-20 w-20 bg-four rounded-full cursor-pointer overflow-hidden">
+                <div className="absolute right-1 -bottom-6 h-20 w-20 bg-four rounded-lg cursor-pointer overflow-hidden z-40">
                   <ImageUpload
                     image={user?.image}
                     style={
-                      'peer/image rounded-full w-20 h-20 cursor-pointer overflow-hidden'
+                      'peer/image rounded-lg w-20 h-20 cursor-pointer overflow-hidden'
                     }
                   />
                 </div>
-                <MdOutlineAddPhotoAlternate className="absolute text-one text-xl -top-12 right-1" />
+                <MdOutlineAddPhotoAlternate className="absolute text-one text-xl -top-12 right-1 z-50" />
               </div>
             </div>
 
@@ -104,7 +103,7 @@ export default function Profile() {
                   {session?.data?.user?.name}
                 </h1>
                 <div className="flex items-center w-full">
-                  <hr className="w-full h-0.5 bg-gray-400 rounded-full border-hidden" />
+                  <hr className="w-full h-0.5 bg-gray-400 rounded-lg border-hidden" />
                 </div>
               </div>
               <div className="flex flex-col items-center gap-2 justify-between rounded-lg px-8 py-2 w-full my-2">
@@ -113,7 +112,7 @@ export default function Profile() {
                   {session?.data?.user?.email}
                 </h1>
                 <div className="flex items-center w-full">
-                  <hr className="w-full h-0.5 bg-gray-400 rounded-full border-hidden" />
+                  <hr className="w-full h-0.5 bg-gray-400 rounded-lg border-hidden" />
                 </div>
               </div>
               <div className="flex flex-col items-center gap-2 justify-between rounded-lg px-8 py-2 w-full my-2">
@@ -124,7 +123,7 @@ export default function Profile() {
                   </h1>
                 </Link>
                 <div className="flex items-center w-full">
-                  <hr className="w-full h-0.5 bg-gray-400 rounded-full border-hidden" />
+                  <hr className="w-full h-0.5 bg-gray-400 rounded-lg border-hidden" />
                 </div>
               </div>
               <div className="flex flex-col items-center gap-2 justify-between rounded-lg px-8 py-2 w-full my-2">
@@ -135,7 +134,18 @@ export default function Profile() {
                   </h1>
                 </Link>
                 <div className="flex items-center w-full">
-                  <hr className="w-full h-0.5 bg-gray-400 rounded-full border-hidden" />
+                  <hr className="w-full h-0.5 bg-gray-400 rounded-lg border-hidden" />
+                </div>
+              </div>
+              <div className="flex flex-col items-center gap-2 justify-between rounded-lg px-8 py-2 w-full my-2">
+                <Link href={'/newRecipe'} className="w-full">
+                  <h1 className="text-nowrap text-start w-full select-none cursor-pointer ">
+                    <span className="text-one font-bold text-2xl ml-2 ">#</span>
+                    إنشاء وصفة جديدة
+                  </h1>
+                </Link>
+                <div className="flex items-center w-full">
+                  <hr className="w-full h-0.5 bg-gray-400 rounded-lg border-hidden" />
                 </div>
               </div>
             </div>

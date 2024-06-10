@@ -1,14 +1,18 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { signOut, useSession } from 'next-auth/react';
 import Button from './Button';
 import Image from 'next/image';
 import CurrentUser from '../components/CurrentUser';
 import Link from 'next/link';
 import Element from './Element';
+import TheGarden from './Garden';
+import { inputsContext } from './Context';
 
 export default function SideBar() {
+  const { dispatch, userRecipes } = useContext(inputsContext);
+  console.log('userRecipes', userRecipes);
   const router = useRouter();
   const session = useSession();
   const [newImage, setNewImage] = useState('');
@@ -22,7 +26,7 @@ export default function SideBar() {
   }, []);
 
   return (
-    <div className="hidden xl:block xl:w-1/4 2xl:w-1/5 h-[1945px] bg-gradient-to-t from-two to-five p-4">
+    <div className="hidden xl:block xl:w-1/4 2xl:w-1/5 h-[2270px] bg-gradient-to-t from-two to-five p-4">
       <div className="w-full bg-four rounded-lg">
         {session?.status === 'authenticated' && (
           <div className="flex flex-col justify-between items-center p-4 rounded-lg w-full">
@@ -61,11 +65,26 @@ export default function SideBar() {
             style={' '}
             path="/whatToCookToday"
           />
-          <Button title={'طبخاتي المفضلة'} style={' '} path="/favoritePosts" />
+          <div className="relative h-[450px] w-full rounded-lg overflow-hidden">
+            <Image src={'/menu6.png'} fill alt={'photo'} />
+          </div>
+          <Button title={'وصفات أعجبتني'} style={' '} path="/favoritePosts" />
           <Button title={'طبخاتي'} style={' '} path="/myRecipes" />
+          <Button
+            title={'حديقتي'}
+            style={' '}
+            path="/myGarden"
+            onClick={() => {
+              dispatch({ type: 'RERENDER_MY_RECIPES', payload: 1 });
+            }}
+          />
+
           {session?.status === 'authenticated' && user?.isAdmin && (
             <Button title={'المستخدمين'} style={' '} path="/users" />
           )}
+          <div>
+            <TheGarden />
+          </div>
         </div>
       )}
     </div>

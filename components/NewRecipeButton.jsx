@@ -41,7 +41,7 @@ export default function NewRecipeButton() {
             className={
               (session?.status === 'unauthenticated'
                 ? 'h-[650px]'
-                : 'h-[2620px] sm:h-[2350px] lg:h-[2300px]') +
+                : 'h-[2620px] sm:h-[2350px] lg:h-[2500px]') +
               ' relative w-full 2xl:w-2/3 flex flex-col items-start justify-center sm:flex-row 2xl:my-8 top-0 z-40 overflow-hidden'
             }
             onClick={(e) => e.stopPropagation()}
