@@ -116,6 +116,7 @@ export default function Categories() {
             </div>
           ))}
         </div>
+        <hr className="w-full h-1 m-0 p-0 bg-white border border-white rounded-full" />
       </div>
       <div className="hidden xl:flex flex-col items-center justify-center p-4 w-full bg-four rounded-lg border-[10px] border-one">
         <h1 className="text-lg sm:text-xl text-center p-2 text-white mx-4 font-semibold w-full select-none">
@@ -140,117 +141,6 @@ export default function Categories() {
           </div>
         ))}
       </div>
-      {/* <div className="hidden 2xl:block w-full rounded-lg">
-        <div className="w-full  ">
-          <div className="flex flex-col items-center justify-center p-4 w-full">
-            {categories.map((category) => (
-              <div className=" flex flex-col justify-center items-center rounded-full mx-4 cursor-pointer w-full ">
-                <div className="relative border-2 border-four w-full h-24 sm:h-52 rounded-lg overflow-hidden hover:scale-[101%] transition-all duration-500 shadow-lg">
-                  <Image
-                    src={category.image}
-                    layout="fill"
-                    objectFit="cover"
-                    alt="photo"
-                  />
-                </div>
-                <h1 className="text-lg sm:text-xl text-center rounded-full p-2 text-white mx-4 font-semibold w-full select-none">
-                  {category.name}
-                </h1>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex items-center justify-center w-full">
-            {categories1.map((category) => (
-              <div className=" flex flex-col justify-center items-center rounded-full mx-4 cursor-pointer w-full p-4">
-                <div className="relative border-2 border-four w-full h-24 sm:h-32 rounded-lg overflow-hidden hover:scale-[103%] transition-all duration-500 shadow-lg">
-                  <Image
-                    src={category.image}
-                    layout="fill"
-                    objectFit="cover"
-                    alt="photo"
-                    priority
-                  />
-                </div>
-                <h1 className="text-lg sm:text-xl text-center rounded-full p-2 text-white mx-4 font-semibold w-full select-none">
-                  {category.name}
-                </h1>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="px-8">
-          <div className="bg-four flex items-center justify-center w-full h-12 my-4 overflow-visible rounded-lg">
-            {items.map((category) => (
-              <div className=" flex justify-center items-center rounded-full cursor-pointer w-full p-4">
-                <div className="relative w-full h-16 hover:scale-105 transition-all duration-500">
-                  <Image
-                    src={category.image}
-                    layout="fill"
-                    objectFit="contain"
-                    alt="photo"
-                    priority
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex items-center justify-center w-full ">
-          {categories2.map((category) => (
-            <div className=" flex flex-col justify-center items-center rounded-full mx-4 cursor-pointer w-full p-4 mt-4">
-              <div className="relative border-2 border-four w-full h-24 sm:h-32 rounded-lg overflow-hidden hover:scale-[103%] transition-all duration-500 shadow-lg">
-                <Image
-                  src={category.image}
-                  layout="fill"
-                  objectFit="cover"
-                  alt="photo"
-                  priority
-                />
-              </div>
-              <h1 className="text-lg sm:text-xl text-center rounded-full p-2 text-white mx-4 font-semibold w-full select-none">
-                {category.name}
-              </h1>
-            </div>
-          ))}
-        </div>
-        <div className="px-8">
-          <div className="bg-four flex items-center justify-center w-full h-12 my-4 overflow-visible rounded-lg">
-            {items1.map((category) => (
-              <div className=" flex justify-center items-center rounded-full cursor-pointer w-full p-4">
-                <div className="relative w-full h-16 hover:scale-105 transition-all duration-500 rotate-[25deg]">
-                  <Image
-                    src={category.image}
-                    layout="fill"
-                    objectFit="contain"
-                    alt="photo"
-                    priority
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="flex items-center justify-center w-full mt-4 ">
-          {categories3.map((category) => (
-            <div className=" flex flex-col justify-center items-center rounded-full mx-4 cursor-pointer w-full p-4">
-              <div className="relative border-2 border-four w-full h-24 sm:h-32 rounded-lg overflow-hidden hover:scale-[103%] transition-all duration-500 shadow-lg">
-                <Image
-                  src={category.image}
-                  layout="fill"
-                  objectFit="cover"
-                  alt="photo"
-                  priority
-                />
-              </div>
-              <h1 className="text-lg sm:text-xl text-center rounded-full p-2 text-white mx-4 font-semibold w-full select-none">
-                {category.name}
-              </h1>
-            </div>
-          ))}
-        </div>
-      </div> */}
     </div>
   );
 }

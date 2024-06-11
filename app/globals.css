@@ -6,6 +6,10 @@ body {
   @apply bg-gradient-to-tl from-two to-one py-8 sm:px-32 rubik px-2;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 .rubik {
   font-family: var(' --font-rubik');
 }
@@ -34,4 +38,30 @@ pre {
 }
 .keen-slider__slide {
   border-radius: 0px;
+}
+
+.btn {
+  position: relative;
+  background: rgb(216, 43, 43);
+  color: rgb(255, 255, 255);
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.btn::before {
+  position: absolute;
+  content: '';
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background: rgb(24, 33, 32);
+  color: rgb(255, 255, 255);
+  height: 100%;
+  z-index: -1;
+  transition: 1s;
+}
+.btn:hover::before {
+  width: 100%;
 }

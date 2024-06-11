@@ -4,13 +4,19 @@ import React, { useContext, useEffect, useState } from 'react';
 import { inputsContext } from '../components/Context';
 import SmallItem from './SmallItem';
 import Loading from './Loading';
+import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
+import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
+import Link from 'next/link';
+
 export default function AllCookingRecipes() {
+  const [pageNumber, setPageNumber] = useState(1);
+
   const [allCookingRecipes, setAllCookingRecipes] = useState([]);
   const { dispatch, newRecipe, deletedRecipe } = useContext(inputsContext);
-
+  console.log('pageNumber', pageNumber);
   useEffect(() => {
     fetchAllCookingRecipes();
-  }, [newRecipe, deletedRecipe]);
+  }, [newRecipe, deletedRecipe, pageNumber]);
 
   async function fetchAllCookingRecipes() {
     const response = await fetch('/api/allCookingRecipes');
@@ -18,7 +24,9 @@ export default function AllCookingRecipes() {
     if (response.ok) {
       // console.log(json);
       dispatch({ type: 'SET_RECIPES', payload: json });
-      setAllCookingRecipes(json);
+      const startPage = (pageNumber - 1) * 10;
+      const endPage = startPage + 10;
+      setAllCookingRecipes(json.slice(startPage, endPage));
     }
   }
 
@@ -31,6 +39,30 @@ export default function AllCookingRecipes() {
             <SmallItem recipe={recipe} index={index} />
           </div>
         ))}
+      <div className="flex items-center justify-around my-4 mt-8">
+        {allCookingRecipes?.length >= 10 && (
+          <Link href={'#post1'}>
+            <div
+              className="flex items-center justify-around cursor-pointer"
+              onClick={() => setPageNumber(pageNumber + 1)}
+            >
+              <h1 className="text-gray-600 font-bold">الصفحة التالية</h1>
+              <MdKeyboardDoubleArrowRight className="text-2xl animate-pulse" />
+            </div>
+          </Link>
+        )}
+        {pageNumber > 1 && (
+          <Link href={'#post1'}>
+            <div
+              className="flex items-center justify-around cursor-pointer"
+              onClick={() => setPageNumber(pageNumber - 1)}
+            >
+              <MdKeyboardDoubleArrowLeft className="text-2xl animate-pulse" />
+              <h1 className="text-gray-600 font-bold">الصفحة السابقة</h1>
+            </div>
+          </Link>
+        )}
+      </div>
     </div>
   );
 }

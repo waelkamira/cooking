@@ -2,25 +2,20 @@
 import { useSession } from 'next-auth/react';
 import SmallItem from '../../components/SmallItem';
 import Image from 'next/image';
-import Link from 'next/link';
-import React, { useContext, useEffect, useState } from 'react';
-import { TbArrowBigLeftLinesFilled } from 'react-icons/tb';
+import React, { useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
 import CustomToast from '../../components/CustomToast';
 import BackButton from '../../components/BackButton';
-import { inputsContext } from '../../components/Context';
 
 export default function MyRecipes() {
-  const { dispatch, allCookingRecipes, rerenderMyRecipes } =
-    useContext(inputsContext);
   const [CurrentUser, setCurrentUser] = useState({});
   const session = useSession();
   const [myRecipes, setMyRecipes] = useState([]);
 
   useEffect(() => {
     fetchMyRecipes();
-  }, [allCookingRecipes, rerenderMyRecipes]);
+  }, []);
 
   const fetchMyRecipes = async () => {
     await fetch('/api/allCookingRecipes')
@@ -39,10 +34,6 @@ export default function MyRecipes() {
             (item) => item?.createdBy === email
           );
           setMyRecipes(findUserRecipes?.reverse());
-          dispatch({
-            type: 'USER_RECIPES',
-            payload: findUserRecipes?.reverse(),
-          });
         }
       });
   };

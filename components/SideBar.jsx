@@ -1,18 +1,13 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { signOut, useSession } from 'next-auth/react';
 import Button from './Button';
 import Image from 'next/image';
 import CurrentUser from '../components/CurrentUser';
-import Link from 'next/link';
-import Element from './Element';
 import TheGarden from './Garden';
-import { inputsContext } from './Context';
 
 export default function SideBar() {
-  const { dispatch, userRecipes } = useContext(inputsContext);
-  console.log('userRecipes', userRecipes);
   const router = useRouter();
   const session = useSession();
   const [newImage, setNewImage] = useState('');
@@ -65,25 +60,19 @@ export default function SideBar() {
             style={' '}
             path="/whatToCookToday"
           />
-          <div className="relative h-[450px] w-full rounded-lg overflow-hidden">
-            <Image src={'/menu6.png'} fill alt={'photo'} />
-          </div>
+
           <Button title={'وصفات أعجبتني'} style={' '} path="/favoritePosts" />
           <Button title={'طبخاتي'} style={' '} path="/myRecipes" />
-          <Button
-            title={'حديقتي'}
-            style={' '}
-            path="/myGarden"
-            onClick={() => {
-              dispatch({ type: 'RERENDER_MY_RECIPES', payload: 1 });
-            }}
-          />
+          <Button title={'حديقتي'} style={' '} path="/myGarden" />
 
           {session?.status === 'authenticated' && user?.isAdmin && (
             <Button title={'المستخدمين'} style={' '} path="/users" />
           )}
           <div>
             <TheGarden />
+          </div>
+          <div className="relative h-[450px] w-full rounded-lg overflow-hidden">
+            <Image src={'/menu6.png'} fill alt={'photo'} />
           </div>
         </div>
       )}

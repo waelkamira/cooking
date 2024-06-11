@@ -76,7 +76,7 @@ export default function Profile() {
             <div className="relative w-full ">
               <div className="relative h-72 w-full  rounded-lg">
                 <Image
-                  src={'sm' ? '/profile background.png' : '/cupcake.png'}
+                  src={'/profile background.png'}
                   layout="fill"
                   objectFit="cover"
                   alt={session?.data?.user?.name}
@@ -84,7 +84,7 @@ export default function Profile() {
               </div>
 
               <div className="relative">
-                <div className="absolute right-1 -bottom-6 h-20 w-20 bg-four rounded-lg cursor-pointer overflow-hidden z-40">
+                <div className="absolute right-1 -bottom-6 h-20 w-20 bg-four rounded-full cursor-pointer overflow-hidden z-40">
                   <ImageUpload
                     image={user?.image}
                     style={

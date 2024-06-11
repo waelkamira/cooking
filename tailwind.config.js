@@ -16,7 +16,7 @@ module.exports = {
         six: '#E7701F',
         seven: '#F0F2F5',
         eight: '#979797',
-        nine: '#e4be33',
+        nine: '#FFC83D',
         ten: '#FDF2D6',
         eleven: '#FADDB1',
       },

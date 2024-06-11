@@ -93,12 +93,19 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
         toast.custom((t) => (
           <CustomToast
             t={t}
-            message={'😋 تم إضافة هذه الوصفة إلى وصفاتك المفضلة ✔'}
+            message={'تم إضافة هذه الوصفة إلى قائمة وصفاتك المفضلة'}
+            greenEmoji={'✔'}
+            emoji={'😋'}
           />
         ));
       } else {
         toast.custom((t) => (
-          <CustomToast t={t} message={'😐 حدث خطأ ما حاول مرة أخرى ✖'} />
+          <CustomToast
+            t={t}
+            message={'حدث خطأ ما حاول مرة أخرى'}
+            redEmoji={'✖'}
+            emoji={'😐'}
+          />
         ));
       }
     } else {
@@ -114,7 +121,8 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
         toast.custom((t) => (
           <CustomToast
             t={t}
-            message={'تم إزالة هذه الوصفة من قائمة مفضلاتك بنجاح ✔'}
+            message={'تم إزالة هذه الوصفة من قائمة مفضلاتك بنجاح'}
+            redEmoji={'✖'}
           />
         ));
       } else {
@@ -270,7 +278,8 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
       {recipe === 'undefined' && <Loading />}
       <div
         key={index}
-        className="flex flex-col justify-center items-center shadow-md w-full p-4 rounded-lg mt-8 bg-white "
+        id="post1"
+        className="flex flex-col justify-center items-center shadow-md w-full p-4 rounded-lg mt-8 bg-white transition-all duration-300"
       >
         <div className="flex items-center justify-center w-full p-2">
           <Link
@@ -429,15 +438,15 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
               >
                 <h1
                   className={
-                    (emoji ? 'text-nine' : 'text-gray-400') +
+                    (emoji ? 'text-green-400' : 'grayscale') +
                     ' text-[16px] select-none'
                   }
                 >
-                  😋
+                  🥝
                 </h1>
                 <h1
                   className={
-                    (emoji ? 'text-nine' : 'text-gray-400') +
+                    (emoji ? 'text-green-400' : 'text-gray-400') +
                     '  text-[10px] md:text-[13px] lg:text-[15px] select-none'
                   }
                 >

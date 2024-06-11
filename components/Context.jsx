@@ -47,14 +47,7 @@ function inputsReducer(currentState, action) {
       return {
         action: action?.payload,
       };
-    case 'USER_RECIPES':
-      return {
-        userRecipes: action?.payload,
-      };
-    case 'RERENDER_MY_RECIPES':
-      return {
-        rerenderMyRecipes: action?.payload,
-      };
+
     default:
       return currentState;
   }
@@ -71,8 +64,6 @@ export function InputsContextProvider({ children }) {
     deletedRecipe: {},
     deleteFavoritePost: {},
     action: {},
-    userRecipes: [],
-    rerenderMyRecipes: {},
   });
   // console.log('from Context', state);
 

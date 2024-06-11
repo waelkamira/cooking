@@ -3,7 +3,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import CurrentUser from './CurrentUser';
-export default function CustomToast({ t, message }) {
+export default function CustomToast({
+  t,
+  message,
+  emoji,
+  greenEmoji,
+  redEmoji,
+}) {
   console.log(CurrentUser());
   return (
     <div
@@ -23,7 +29,7 @@ export default function CustomToast({ t, message }) {
               />
             </div>
             <div className="ml-3 flex-1">
-              <p className="text-sm font-medium text-white">بهيجة اشرق لبن</p>
+              <h1 className="text-sm text-white font-bold">بهيجة اشرق لبن</h1>
             </div>
           </div>
         </div>
@@ -41,9 +47,17 @@ export default function CustomToast({ t, message }) {
       </div>
       <div>
         <div>
-          <p className="mt-4 text-sm text-white s:text-nowrap text-center">
+          <h1 className="mt-4 text-sm text-white s:text-nowrap text-center">
+            <span className="text-green-400 text-xl font-bold">
+              {greenEmoji}
+            </span>
+            <span className="text-one text-xl mx-2 font-bold">{redEmoji}</span>
+
             {message}
-          </p>
+            <span className="text-green-400 text-xl mx-2 font-bold">
+              {emoji}
+            </span>
+          </h1>
         </div>
       </div>
     </div>

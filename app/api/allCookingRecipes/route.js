@@ -3,6 +3,8 @@ import { Meal } from '../models/CreateMealModel';
 
 export async function GET() {
   await mongoose.connect(process.env.NEXT_PUBLIC_MONGODB);
+  // const pageNumber = await req.json();
+  // console.log('pageNumber', pageNumber);
   const allCookingRecipes = await Meal?.find();
   return Response.json(allCookingRecipes.reverse());
 }
@@ -21,9 +23,9 @@ export async function PUT(req) {
     usersWhoPutEmojiOnThisRecipe,
     usersWhoPutHeartOnThisRecipe,
   } = await req.json();
-  console.log('id from backend', _id);
+  // console.log('id from backend', _id);
   const recipe = await Meal?.findById({ _id });
-  console.log(recipe);
+  // console.log(recipe);
   const updateLikes = await Meal?.findByIdAndUpdate(
     { _id },
     {
