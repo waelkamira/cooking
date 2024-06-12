@@ -10,10 +10,10 @@ import Link from 'next/link';
 
 export default function AllCookingRecipes() {
   const [pageNumber, setPageNumber] = useState(1);
-
   const [allCookingRecipes, setAllCookingRecipes] = useState([]);
   const { dispatch, newRecipe, deletedRecipe } = useContext(inputsContext);
-  console.log('pageNumber', pageNumber);
+  // console.log('pageNumber', pageNumber);
+
   useEffect(() => {
     fetchAllCookingRecipes();
   }, [newRecipe, deletedRecipe, pageNumber]);

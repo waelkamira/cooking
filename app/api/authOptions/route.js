@@ -3,9 +3,8 @@ import { User } from '../models/UserModel';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import bcrypt from 'bcrypt';
-// import { MongoDBAdapter } from '@auth/mongodb-adapter';
-// import clientPromise from '../../../lib/Mongodb';
-import { GoogleUser } from '../models/UserModelForGoogle';
+import { MongoDBAdapter } from '@auth/mongodb-adapter';
+import clientPromise from '../../../lib/Mongodb';
 import { RegisterGoogleUser } from '../registerGoogleUser/route';
 import { redirect } from 'next/navigation';
 import { signIn } from 'next-auth/react';
@@ -71,33 +70,44 @@ export const authOptions = {
 
     //?هو بروفايل المستخدم الذي قام بالتسجيل او تسجيل الدخول عن طريق جوجل profile
     async signIn({ profile, credentials }) {
-      try {
-        // console.log('profile', profile);
+      console.log(
+        'profile **************************************************',
+        profile
+      );
 
-        // const userExist = await GoogleUser?.findOne({ email: profile?.email });
-        const userExist1 = await User?.findOne({
+      try {
+        const userExist = await User?.findOne({
           email: profile?.email || credentials?.email,
         });
-        if (userExist1) {
+
+        if (userExist) {
           signIn({ redirectTo: '/' });
+          return true;
         }
-        if (!userExist1) {
-          const user = await User.create({
-            email: profile?.email || credentials?.email,
-            name: profile?.name || credentials?.name,
-            image: profile?.picture || credentials?.image,
-            password: credentials?.password,
-          });
-        }
+        const user = await User.create({
+          email: profile?.email || credentials?.email,
+          name: profile?.name || credentials?.name,
+          image: profile?.picture || credentials?.image,
+          password: credentials?.password,
+          googleId: profile?.sub,
+        });
+
         return true;
       } catch (error) {
         console.log(error);
         return false;
       }
     },
-    async redirect({ url, baseUrl }) {
-      return baseUrl;
-    },
+    //? اعادة توجيه المستخدم بعد نجاح تسجيل الدخول
+    // async redirect({ url, baseUrl }) {
+    //   // Redirect to the intended URL or home page by default
+    //   if (url.startsWith('/')) {
+    //     return `${baseUrl}${url}`;
+    //   } else if (url.startsWith(baseUrl)) {
+    //     return url;
+    //   }
+    //   return baseUrl;
+    // },
   },
 
   session: { strategy: 'jwt' },

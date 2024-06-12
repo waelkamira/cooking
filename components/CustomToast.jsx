@@ -51,10 +51,10 @@ export default function CustomToast({
             <span className="text-green-400 text-xl font-bold">
               {greenEmoji}
             </span>
-            <span className="text-one text-xl mx-2 font-bold">{redEmoji}</span>
+            <span className="text-one text-xl mx-1 font-bold">{redEmoji}</span>
 
             {message}
-            <span className="text-green-400 text-xl mx-2 font-bold">
+            <span className="text-green-400 text-xl mx-1 font-bold">
               {emoji}
             </span>
           </h1>

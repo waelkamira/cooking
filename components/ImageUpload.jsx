@@ -41,7 +41,7 @@ export default function ImageUpload({ image, style }) {
       uploadPreset="cooking"
       onSuccess={handleSuccess}
       //? عدد الصور التي يستطيع المستخدم تحميلها في المرة الواحدة
-      options={{ maxFiles: 50 }}
+      options={{ maxFiles: 100 }}
     >
       {/* //? نقوم بانشاء دالة ترجع ديف يحتوي على صورة مثلا عند الضغط عليه يقوم
       //?المسؤولة عن فتح نافذة تحميل الصورة open باطلاق دالة تستدعي الدالة */}

@@ -275,7 +275,7 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
 
   return (
     <>
-      {recipe === 'undefined' && <Loading />}
+      {!recipe && <Loading />}
       <div
         key={index}
         id="post1"
@@ -323,6 +323,7 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
         <h1 className="text-one my-4 text-3xl font-extrabold bg-white select-none">
           {recipe?.mealName}
         </h1>
+        {/* {!recipe?.image && <h1>جاري التحميل</h1>} */}
         <div className="relative w-full h-44 sm:h-96 overflow-hidden rounded-lg">
           <Image src={recipe?.image} fill alt={recipe?.mealName} />
         </div>

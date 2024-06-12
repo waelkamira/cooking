@@ -4,25 +4,30 @@ import SmallItem from '../../components/SmallItem';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import { TbArrowBigLeftLinesFilled } from 'react-icons/tb';
 import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
 import CustomToast from '../../components/CustomToast';
 import BackButton from '../../components/BackButton';
+import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
+import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
 
 export default function page() {
+  const [pageNumber, setPageNumber] = useState(1);
   const session = useSession();
   const [userFavorites, setUserFavorites] = useState([]);
+
   useEffect(() => {
     fetchUserFavorites();
-  }, []);
+  }, [pageNumber]);
 
   const fetchUserFavorites = async () => {
     await fetch('/api/favoritePosts')
       .then((res) => res.json())
       .then((res) => {
+        const startPage = (pageNumber - 1) * 10;
+        const endPage = startPage + 10;
         // console.log('these are user favorites', res);
-        setUserFavorites(res?.reverse());
+        setUserFavorites(res?.reverse()?.slice(startPage, endPage));
       });
   };
 
@@ -99,6 +104,30 @@ export default function page() {
                 />
               </div>
             ))}
+        </div>
+        <div className="flex items-center justify-around my-4 mt-8 text-white">
+          {userFavorites?.length >= 10 && (
+            <Link href={'#post1'}>
+              <div
+                className="flex items-center justify-around cursor-pointer"
+                onClick={() => setPageNumber(pageNumber + 1)}
+              >
+                <h1 className="font-bold">الصفحة التالية</h1>
+                <MdKeyboardDoubleArrowRight className="text-2xl animate-pulse" />
+              </div>
+            </Link>
+          )}
+          {pageNumber > 1 && (
+            <Link href={'#post1'}>
+              <div
+                className="flex items-center justify-around cursor-pointer"
+                onClick={() => setPageNumber(pageNumber - 1)}
+              >
+                <MdKeyboardDoubleArrowLeft className="text-2xl animate-pulse" />
+                <h1 className="font-bold">الصفحة السابقة</h1>
+              </div>
+            </Link>
+          )}
         </div>
       </div>
     </div>

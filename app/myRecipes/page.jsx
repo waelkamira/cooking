@@ -7,15 +7,19 @@ import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
 import CustomToast from '../../components/CustomToast';
 import BackButton from '../../components/BackButton';
+import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
+import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
+import Link from 'next/link';
 
 export default function MyRecipes() {
+  const [pageNumber, setPageNumber] = useState(1);
   const [CurrentUser, setCurrentUser] = useState({});
   const session = useSession();
   const [myRecipes, setMyRecipes] = useState([]);
 
   useEffect(() => {
     fetchMyRecipes();
-  }, []);
+  }, [pageNumber]);
 
   const fetchMyRecipes = async () => {
     await fetch('/api/allCookingRecipes')
@@ -33,7 +37,9 @@ export default function MyRecipes() {
           const findUserRecipes = res?.filter(
             (item) => item?.createdBy === email
           );
-          setMyRecipes(findUserRecipes?.reverse());
+          const startPage = (pageNumber - 1) * 10;
+          const endPage = startPage + 10;
+          setMyRecipes(findUserRecipes?.reverse()?.slice(startPage, endPage));
         }
       });
   };
@@ -101,6 +107,30 @@ export default function MyRecipes() {
                 <SmallItem recipe={recipe} index={index} show={false} />
               </div>
             ))}
+        </div>
+        <div className="flex items-center justify-around my-4 mt-8 text-white">
+          {myRecipes?.length >= 10 && (
+            <Link href={'#post1'}>
+              <div
+                className="flex items-center justify-around cursor-pointer"
+                onClick={() => setPageNumber(pageNumber + 1)}
+              >
+                <h1 className="text-white font-bold">الصفحة التالية</h1>
+                <MdKeyboardDoubleArrowRight className="text-2xl animate-pulse" />
+              </div>
+            </Link>
+          )}
+          {pageNumber > 1 && (
+            <Link href={'#post1'}>
+              <div
+                className="flex items-center justify-around cursor-pointer"
+                onClick={() => setPageNumber(pageNumber - 1)}
+              >
+                <MdKeyboardDoubleArrowLeft className="text-2xl animate-pulse" />
+                <h1 className="text-white font-bold">الصفحة السابقة</h1>
+              </div>
+            </Link>
+          )}
         </div>
       </div>
     </div>

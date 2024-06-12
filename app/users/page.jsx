@@ -2,14 +2,16 @@
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import CurrentUser from '../../components/CurrentUser';
-import Link from 'next/link';
-import { TbArrowBigLeftLinesFilled } from 'react-icons/tb';
 import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
 import CustomToast from '../../components/CustomToast';
 import BackButton from '../../components/BackButton';
+import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
+import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
+import Link from 'next/link';
 
 export default function Users() {
+  const [pageNumber, setPageNumber] = useState(1);
   const [users, setUsers] = useState([]);
   const [findUser, setFindUser] = useState('');
   const admin = CurrentUser();
@@ -17,7 +19,7 @@ export default function Users() {
 
   useEffect(() => {
     fetchAllUsers();
-  }, [findUser]);
+  }, [findUser, pageNumber]);
 
   if (!session?.status === 'authenticated' || !admin?.isAdmin) {
     return;
@@ -28,12 +30,14 @@ export default function Users() {
     const json = await response.json();
     // console.log(json);
     if (response.ok) {
+      const startPage = (pageNumber - 1) * 3;
+      const endPage = startPage + 3;
       if (findUser) {
-        const user = json?.filter((item) => item?.email.match(findUser));
+        const user = json?.filter((item) => item?.email?.match(findUser));
         // console.log(user);
         setUsers(user);
       } else {
-        setUsers(json);
+        setUsers(json?.slice(startPage, endPage));
       }
     }
   }
@@ -75,12 +79,12 @@ export default function Users() {
           className="text-right w-full p-2 rounded-lg text-lg outline-2 focus:outline-one h-10 text-black"
         />
       </div>
-      <div className="flex justify-between items-center p-4 sm:p-8 w-full">
+      <div className="relative flex justify-between items-center p-4 sm:p-8 w-full">
         {' '}
         <h1>جميع المستخدمين :</h1>
         <BackButton />
       </div>
-      <div className="flex justify-start items-center w-full">
+      <div className="flex flex-col justify-start items-center w-full">
         <div className="w-full xl:w-1/2 flex flex-col gap-2 justify-center items-start p-4 sm:p-8 ">
           {users?.length > 0 &&
             users?.map((user) => (
@@ -106,6 +110,30 @@ export default function Users() {
                 )}
               </div>
             ))}
+        </div>
+        <div className="flex items-center justify-around my-4 mt-8 text-white">
+          {users?.length >= 3 && (
+            <Link href={'#post1'}>
+              <div
+                className="flex items-center justify-around cursor-pointer"
+                onClick={() => setPageNumber(pageNumber + 1)}
+              >
+                <h1 className="text-white font-bold">الصفحة التالية</h1>
+                <MdKeyboardDoubleArrowRight className="text-2xl animate-pulse" />
+              </div>
+            </Link>
+          )}
+          {pageNumber > 1 && (
+            <Link href={'#post1'}>
+              <div
+                className="flex items-center justify-around cursor-pointer"
+                onClick={() => setPageNumber(pageNumber - 1)}
+              >
+                <MdKeyboardDoubleArrowLeft className="text-2xl animate-pulse" />
+                <h1 className="text-white font-bold">الصفحة السابقة</h1>
+              </div>
+            </Link>
+          )}
         </div>
       </div>
     </div>

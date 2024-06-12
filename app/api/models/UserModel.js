@@ -23,6 +23,10 @@ const UserSchema = new Schema(
       default:
         'https://res.cloudinary.com/dh2xlutfu/image/upload/v1716844354/cooking/userImage_qeyh2w.png',
     },
+    googleId: {
+      type: String,
+      unique: true,
+    },
   },
   { timestamps: true }
 );
