@@ -9,15 +9,28 @@ import { signIn, useSession } from 'next-auth/react';
 import Button from '../../components/Button';
 import Link from 'next/link';
 import BackButton from '../../components/BackButton';
+import SideBarMenu from '../../components/SideBarMenu';
+import { TfiMenuAlt } from 'react-icons/tfi';
 
 export default function NewRecipe() {
+  const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const session = useSession();
   return (
     <div
-      className=" flex justify-center items-start gap-4 overflow-auto w-full h-full border border-five md:p-8 bg-four/90  right-0 top-0 2xl:-top-8 rounded-lg z-50"
+      className="relative flex justify-center items-start gap-4 overflow-auto w-full h-full border border-five xl:p-8 bg-four/90  right-0 top-0 2xl:-top-8 rounded-lg z-50"
       onClick={() => setIsVisible(false)}
     >
+      <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
+        <TfiMenuAlt
+          className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
+          onClick={() => {
+            console.log('clicked');
+            setIsOpen(!isOpen);
+          }}
+        />
+        {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
+      </div>
       <div
         className={
           (session?.status === 'unauthenticated'
@@ -41,7 +54,7 @@ export default function NewRecipe() {
             priority
           />
         </div>
-        <div className="absolute w-full h-full flex flex-col items-center justify-start rounded-lg grow z-50 ">
+        <div className="absolute w-full h-full flex flex-col items-center justify-start rounded-lg grow z-40 ">
           <div className="relative h-44 sm:h-72 lg:h-96 w-full ">
             <Image
               src={'/decoration.png'}

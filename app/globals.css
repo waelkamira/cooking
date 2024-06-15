@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-gradient-to-tl from-two to-one py-8 sm:px-32 rubik px-2;
+  @apply bg-gradient-to-tl from-two to-one py-8 xl:px-32 rubik px-2;
 }
 
 html {

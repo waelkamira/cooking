@@ -48,7 +48,6 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
     // handleActions();
     fetchFavoritePosts();
     setActions();
-    console.log('reload');
   }, []);
 
   function setActions() {
@@ -155,7 +154,6 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
     );
 
     if (!user[0]) {
-      console.log('user', user);
       const response = await fetch('/api/allCookingRecipes', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -171,7 +169,6 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
       const users = recipe?.usersWhoPutHeartOnThisRecipe.filter(
         (item) => item !== session?.data?.user?.email
       );
-      console.log('user', user);
       const response = await fetch('/api/allCookingRecipes', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -191,7 +188,6 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
     );
 
     if (!user[0]) {
-      console.log('user', user);
       const response = await fetch('/api/allCookingRecipes', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -207,7 +203,6 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
       const users = recipe?.usersWhoLikesThisRecipe?.filter(
         (item) => item !== session?.data?.user?.email
       );
-      console.log('user', user);
       const response = await fetch('/api/allCookingRecipes', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -227,7 +222,6 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
     );
 
     if (!user[0]) {
-      console.log('user', user);
       const response = await fetch('/api/allCookingRecipes', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -243,7 +237,6 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
       const users = recipe?.usersWhoPutEmojiOnThisRecipe.filter(
         (item) => item !== session?.data?.user?.email
       );
-      console.log('user', user);
       const response = await fetch('/api/allCookingRecipes', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -324,8 +317,13 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
           {recipe?.mealName}
         </h1>
         {/* {!recipe?.image && <h1>جاري التحميل</h1>} */}
-        <div className="relative w-full h-44 sm:h-96 overflow-hidden rounded-lg">
-          <Image src={recipe?.image} fill alt={recipe?.mealName} />
+        <div className="relative w-full h-44 sm:h-96 overflow-hidden rounded-lg bg-four/40">
+          <Image
+            src={recipe?.image}
+            layout="fill"
+            objectFit="contain"
+            alt={recipe?.mealName}
+          />
         </div>
         {show && (
           <>

@@ -9,8 +9,11 @@ import BackButton from '../../components/BackButton';
 import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
 import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
 import Link from 'next/link';
+import SideBarMenu from '../../components/SideBarMenu';
+import { TfiMenuAlt } from 'react-icons/tfi';
 
 export default function Users() {
+  const [isOpen, setIsOpen] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
   const [users, setUsers] = useState([]);
   const [findUser, setFindUser] = useState('');
@@ -28,13 +31,11 @@ export default function Users() {
   async function fetchAllUsers() {
     const response = await fetch('/api/allUsers');
     const json = await response.json();
-    // console.log(json);
     if (response.ok) {
-      const startPage = (pageNumber - 1) * 3;
-      const endPage = startPage + 3;
+      const startPage = (pageNumber - 1) * 10;
+      const endPage = startPage + 10;
       if (findUser) {
         const user = json?.filter((item) => item?.email?.match(findUser));
-        // console.log(user);
         setUsers(user);
       } else {
         setUsers(json?.slice(startPage, endPage));
@@ -66,8 +67,19 @@ export default function Users() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center w-full  bg-four rounded-lg text-lg text-white">
-      <div className="flex gap-4 justify-center items-center bg-four rounded-lg text-lg text-white w-full p-4">
+    <div className="relative flex flex-col justify-center items-center w-full bg-four rounded-lg text-lg text-white">
+      <BackButton />
+      <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4">
+        <TfiMenuAlt
+          className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
+          onClick={() => {
+            console.log('clicked');
+            setIsOpen(!isOpen);
+          }}
+        />
+        {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
+      </div>
+      <div className="flex gap-4 justify-center items-center bg-four rounded-lg text-lg text-white w-full p-4 mt-16 xl:mt-24">
         <input
           value={findUser}
           onChange={(e) => setFindUser(e.target.value)}
@@ -82,7 +94,6 @@ export default function Users() {
       <div className="relative flex justify-between items-center p-4 sm:p-8 w-full">
         {' '}
         <h1>جميع المستخدمين :</h1>
-        <BackButton />
       </div>
       <div className="flex flex-col justify-start items-center w-full">
         <div className="w-full xl:w-1/2 flex flex-col gap-2 justify-center items-start p-4 sm:p-8 ">

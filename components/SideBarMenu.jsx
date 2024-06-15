@@ -10,9 +10,8 @@ export default function SideBarMenu({ setIsOpen }) {
   const session = useSession();
   const user = CurrentUser();
 
-  console.log('user', user);
   return (
-    <div className="xl:hidden p-4 w-52 h-fit border-[5px] border-one bg-four rounded-lg z-50">
+    <div className="p-4 w-52 h-fit border-[5px] border-one bg-four rounded-lg z-50">
       {session?.status === 'authenticated' && (
         <Link href={'/profile?username'}>
           <div className="flex flex-col justify-between items-center rounded-lg w-full">
@@ -30,9 +29,6 @@ export default function SideBarMenu({ setIsOpen }) {
       {session?.status === 'unauthenticated' && (
         <Button path={'/login'} title={'تسجيل الدخول'} />
       )}
-      {session?.status === 'authenticated' && (
-        <Button path={'/favoritePosts'} title={'وصفات أعجبتني'} />
-      )}
 
       {session?.status === 'authenticated' && user?.isAdmin && (
         <Button path={'/users'} title={'المستخدمين'} />
@@ -40,12 +36,14 @@ export default function SideBarMenu({ setIsOpen }) {
       {session?.status === 'authenticated' && (
         <div>
           <Button title={'طبخاتي'} path="/myRecipes" />
-
-          <Button path={'/whatToCookToday'} title={'شو أطبخ اليوم؟'} />
-          <Button path={'/'} title={'تسجيل الخروج'} onClick={() => signOut()} />
+          <Button title={'إنشاء وصفة'} path="/newRecipe" />
+          <Button title={'الجوائز التي ربحتها'} path="/myGarden" />
+          <Button title={'وصفات أعجبتني'} path={'/favoritePosts'} />
+          <Button title={'شو أطبخ اليوم؟'} path={'/whatToCookToday'} />
+          <Button title={'تسجيل الخروج'} path={'/'} onClick={() => signOut()} />
         </div>
       )}
-      <Button path={'/'} title={'إغلاق'} onClick={() => setIsOpen(false)} />
+      <Button title={'إغلاق'} onClick={() => setIsOpen(false)} />
     </div>
   );
 }

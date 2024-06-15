@@ -14,7 +14,6 @@ export default function SelectComponent() {
     { value: 'حلويات', label: 'حلويات' },
   ];
 
-  console.log(selectedValue);
   useEffect(() => {
     //مختلفة لسرعة البحث والتصنيف models قمت بعمل جمل شرطية بغرض تصنيف الوجبات في
     if (selectedValue?.value === 'شوربات') {

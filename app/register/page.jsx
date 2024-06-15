@@ -83,7 +83,7 @@ export default function RegisterPage() {
         className="w-full lg:w-1/2 bg-four p-8 rounded-lg border border-one"
       >
         <h1 className="w-full my-2 text-xl sm:text-2xl md:text-3xl xl:text-4xl font-bold text-center select-none">
-          التسجيل 🍔
+          التسجيل 🧀
         </h1>
         <div className="flex flex-col items-start justify-center w-full">
           <h1 className="w-full my-4 select-none text-start text-sm sm:text-lg">
@@ -170,7 +170,7 @@ export default function RegisterPage() {
           <h1 className="mt-4 text-start text-sm sm:text-lg">
             هل لديك حساب بالفعل ؟ قم بتسجيل الدخول{' '}
             <span className="text-one text-lg sm:text-xl hover:scale-105">
-              هنا 🥝
+              🧀 هنا
             </span>
           </h1>
         </Link>

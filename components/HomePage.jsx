@@ -6,8 +6,9 @@ import NewRecipeButton from './NewRecipeButton';
 import Categories from './Categories';
 import AllCookingRecipes from './AllCookingRecipes';
 import { useSession } from 'next-auth/react';
-import { ImMenu } from 'react-icons/im';
+// import { ImMenu } from 'react-icons/im';
 import SideBarMenu from './SideBarMenu';
+import { TfiMenuAlt } from 'react-icons/tfi';
 
 export default function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,8 +20,8 @@ export default function HomePage() {
   return (
     <div className="relative flex flex-col justify-center items-center p-2 sm:p-4 lg:p-8 xl:w-4/5 z-50 sm:my-0 w-full">
       <div className="xl:hidden absolute flex flex-col items-end gap-2 z-50 top-4 left-4 lg:top-12 lg:left-12 w-full">
-        <ImMenu
-          className=" p-2 rounded-lg text-4xl lg:text-four lg:bg-one text-one bg-four "
+        <TfiMenuAlt
+          className=" p-2 rounded-lg text-4xl text-one animate-pulse"
           onClick={() => setIsOpen(!isOpen)}
         />
         {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
@@ -66,7 +67,7 @@ export default function HomePage() {
         أحدث المنشورات
       </h1>
       <div className="flex flex-col justify-center items-start xl:flex-row mt-8 2xl:h-[1450px] w-full rounded-lg gap-4">
-        <Categories />
+        {/* <Categories /> */}
         <AllCookingRecipes />
       </div>
     </div>

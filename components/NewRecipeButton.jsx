@@ -40,7 +40,7 @@ export default function NewRecipeButton() {
           <div
             className={
               (session?.status === 'unauthenticated'
-                ? 'h-[650px]'
+                ? 'h-[700px]'
                 : 'h-[2620px] sm:h-[2350px] lg:h-[2500px]') +
               ' relative w-full 2xl:w-2/3 flex flex-col items-start justify-center sm:flex-row 2xl:my-8 top-0 z-40 overflow-hidden'
             }
@@ -48,7 +48,7 @@ export default function NewRecipeButton() {
           >
             <div
               className={
-                (session?.status === 'authenticated' ? 'h-full' : 'h-[670px]') +
+                (session?.status === 'authenticated' ? 'h-full' : 'h-[700px]') +
                 ' relative border border-five w-full top-0 flex items-start justify-start rounded-lg overflow-hidden'
               }
             >
@@ -75,11 +75,8 @@ export default function NewRecipeButton() {
                 <div className="p-4 bg-four rounded-lg m-2 md:m-8 border border-one text-center">
                   <h1 className="text-lg md:text-2xl p-2  text-white">
                     يجب عليك تسجيل الدخول أولا لكي تتمكن من إنشاء وصفة جديدة
-                  </h1>
-                  <Link href={'/login'}>
-                    {' '}
-                    <Button title={'تسجيل الدخول'} />
-                  </Link>{' '}
+                  </h1>{' '}
+                  <Button title={'تسجيل الدخول'} path={'/login'} style={' '} />
                 </div>
               )}
               {session?.status === 'authenticated' && (

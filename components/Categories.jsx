@@ -93,7 +93,7 @@ export default function Categories() {
     },
   });
   return (
-    <div className="w-full xl:w-1/3 h-full rounded-lg">
+    <div className="w-full h-full rounded-lg">
       <div className="xl:hidden">
         <hr className="w-full h-1 m-0 p-0 bg-white border border-white rounded-full" />
         <div ref={sliderRef} className=" keen-slider ">
@@ -118,14 +118,14 @@ export default function Categories() {
         </div>
         <hr className="w-full h-1 m-0 p-0 bg-white border border-white rounded-full" />
       </div>
-      <div className="hidden xl:flex flex-col items-center justify-center p-4 w-full bg-four rounded-lg border-[10px] border-one">
+      <div className="hidden xl:flex flex-col items-center justify-center p-4 w-full bg-four rounded-lg border-[5px] border-one">
         <h1 className="text-lg sm:text-xl text-center p-2 text-white mx-4 font-semibold w-full select-none">
           ابحث حسب الصنف
         </h1>
         {smallSize.map((category) => (
           <div className=" flex flex-col justify-center items-center rounded-full mx-4 cursor-pointer w-full ">
             <div
-              className="relative border border-one w-full h-[150px] rounded-lg overflow-hidden hover:scale-[101%] transition-all duration-300 shadow-lg"
+              className="relative border border-one w-full h-[120px] rounded-lg overflow-hidden hover:scale-[101%] transition-all duration-300 shadow-lg"
               onClick={() => router.push(`?searchCategory=${category?.name}`)}
             >
               <Image

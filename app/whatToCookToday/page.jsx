@@ -1,18 +1,14 @@
 'use client';
-import { useSession } from 'next-auth/react';
 import SmallItem from '../../components/SmallItem';
 import Image from 'next/image';
-import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import { TbArrowBigLeftLinesFilled } from 'react-icons/tb';
-import { IoMdClose } from 'react-icons/io';
-import toast from 'react-hot-toast';
-import CustomToast from '../../components/CustomToast';
 import BackButton from '../../components/BackButton';
+import SideBarMenu from '../../components/SideBarMenu';
+import { TfiMenuAlt } from 'react-icons/tfi';
 
 export default function whatToCookToday() {
+  const [isOpen, setIsOpen] = useState(false);
   const [randomCookingRecipes, setRandomCookingRecipes] = useState([]);
-  const session = useSession();
 
   useEffect(() => {
     fetchAllMainCookingRecipes();
@@ -31,12 +27,9 @@ export default function whatToCookToday() {
     const response = await fetch('/api/allCookingRecipes');
     const json = await response?.json();
     if (response.ok) {
-      // console.log(json);
-      // setRandomCookingRecipes(json);
       const data = json?.filter(
         (item) => item?.selectedValue === 'وجبة رئيسية'
       );
-      // console.log(data.length);
       setRandomCookingRecipes(data.slice(0, 3));
     }
   };
@@ -66,6 +59,16 @@ export default function whatToCookToday() {
           الأفكار المقترحة لطبخة اليوم:
         </h1>
         <BackButton />
+        <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
+          <TfiMenuAlt
+            className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
+            onClick={() => {
+              console.log('clicked');
+              setIsOpen(!isOpen);
+            }}
+          />
+          {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
+        </div>
       </div>
       <div className="my-8">
         <button

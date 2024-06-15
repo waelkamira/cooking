@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function HomePageSidesPhotos() {
   return (
-    <div className="hidden sm:block">
+    <div className="hidden xl:block">
       <div className="absolute w-72 h-full -left-[130px] top-0 z-10 ">
         <Image
           src={'/vegetables.png'}

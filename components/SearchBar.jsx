@@ -10,7 +10,6 @@ import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
 
 export default function SearchBar() {
   const [pageNumber, setPageNumber] = useState(1);
-  console.log('pageNumber', pageNumber);
   const [isVisible, setIsVisible] = useState(false);
   const [searchByCategory, setSearchByCategory] = useState('');
   const [searchedWord, setSearchedWord] = useState('');

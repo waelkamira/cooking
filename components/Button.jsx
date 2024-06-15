@@ -9,7 +9,7 @@ export default function Button({ style, title, onClick, path = '' }) {
         onClick={onClick}
         className={
           (style ? 'text-lg p-2' : 'text-sm p-0.5') +
-          ' btn my-3 text-white text-nowrap bg-five hover:bg-one rounded-lg hover:scale-[101%] w-full hover:text-white hover:font-bold hover:outline hover:outline-one'
+          ' btn my-3 text-white text-nowrap bg-five hover:bg-one rounded-lg hover:scale-[101%] w-full max-h-12 hover:text-white hover:font-bold hover:outline hover:outline-one'
         }
       >
         {title}

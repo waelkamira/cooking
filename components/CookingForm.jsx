@@ -36,7 +36,6 @@ export default function CookingForm({ setIsVisible, isVisible }) {
     link: '',
   });
   const { data, dispatch } = useContext(inputsContext);
-  console.log('data?.modelName', data?.modelName);
 
   useEffect(() => {
     setInputs({
@@ -71,7 +70,6 @@ export default function CookingForm({ setIsVisible, isVisible }) {
         });
 
         if (response.ok) {
-          console.log('success');
           dispatch({ type: 'New_RECIPE', payload: inputs });
           setIsVisible(false);
           toast.custom((t) => (

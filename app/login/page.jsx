@@ -157,7 +157,7 @@ export default function LogInPage() {
           <h1 className="mt-4 text-start text-sm sm:text-lg">
             ليس لديك حساب؟ قم بالتسجيل
             <span className="text-one text-lg sm:text-xl hover:scale-105">
-              🥧 هنا
+              🧀 هنا
             </span>
           </h1>
         </Link>

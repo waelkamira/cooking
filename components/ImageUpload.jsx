@@ -16,7 +16,6 @@ import { inputsContext } from '../components/Context';
 //? import { CldUploadWidget } from 'next-cloudinary' نستورد
 
 export default function ImageUpload({ image, style }) {
-  console.log('this is image from imageUpload', image);
   const { dispatch, imageError } = useContext(inputsContext);
   // console.log('imageError', imageError);
   const [imageUrl, setImageUrl] = useState();
@@ -26,7 +25,6 @@ export default function ImageUpload({ image, style }) {
   }, [image]);
 
   function handleSuccess(result) {
-    // console.log(result?.info?.secure_url);
     setImageUrl(result?.info?.secure_url);
     if (style) {
       dispatch({ type: 'PROFILE_IMAGE', payload: result?.info?.secure_url });

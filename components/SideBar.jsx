@@ -6,6 +6,7 @@ import Button from './Button';
 import Image from 'next/image';
 import CurrentUser from '../components/CurrentUser';
 import TheGarden from './Garden';
+import Categories from './Categories';
 
 export default function SideBar() {
   const router = useRouter();
@@ -71,9 +72,10 @@ export default function SideBar() {
           <div>
             <TheGarden />
           </div>
-          <div className="relative h-[450px] w-full rounded-lg overflow-hidden">
+          {/* <div className="relative h-[450px] w-full rounded-lg overflow-hidden">
             <Image src={'/menu6.png'} fill alt={'photo'} />
-          </div>
+          </div> */}
+          <Categories />
         </div>
       )}
     </div>

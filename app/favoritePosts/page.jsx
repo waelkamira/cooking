@@ -10,8 +10,11 @@ import CustomToast from '../../components/CustomToast';
 import BackButton from '../../components/BackButton';
 import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
 import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
+import SideBarMenu from '../../components/SideBarMenu';
+import { TfiMenuAlt } from 'react-icons/tfi';
 
 export default function page() {
+  const [isOpen, setIsOpen] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
   const session = useSession();
   const [userFavorites, setUserFavorites] = useState([]);
@@ -53,6 +56,16 @@ export default function page() {
 
   return (
     <div className="relative w-full bg-four h-full p-4 lg:p-8 rounded-lg">
+      <div className="absolute flex flex-col items-start gap-2 z-40 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
+        <TfiMenuAlt
+          className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
+          onClick={() => {
+            console.log('clicked');
+            setIsOpen(!isOpen);
+          }}
+        />
+        {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
+      </div>
       <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
         <Image
           priority
@@ -62,6 +75,7 @@ export default function page() {
           alt="photo"
         />
       </div>
+
       <div className="relative w-full h-52 overflow-hidden xl:mt-8">
         <Image
           priority

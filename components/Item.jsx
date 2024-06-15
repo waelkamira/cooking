@@ -1,13 +1,12 @@
 'use client';
-import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import React from 'react';
-import { TbArrowBigLeftLinesFilled } from 'react-icons/tb';
-import CurrentUser from '../components/CurrentUser';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Button from './Button';
+import BackButton from './BackButton';
+import SideBarMenu from './SideBarMenu';
+import { TfiMenuAlt } from 'react-icons/tfi';
 
 export default function Item({
   image,
@@ -20,12 +19,9 @@ export default function Item({
   userImage,
   userName,
 }) {
-  const user = CurrentUser();
-  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
 
-  console.log(typeof createdAt);
-  console.log(createdAt);
   //? src نريد ان نستخرج منه قيمة ال string لكنه نص  ifram html الذي هو عبارة عن عنصر  link انشأنا ديف مؤقت لوضع ال
   let tempDiv = document.createElement('div');
   tempDiv.innerHTML = link;
@@ -36,7 +32,6 @@ export default function Item({
   //? موجود ifram اذا كان عنصر ال src استخرجنا قيمة ال
   let iframeSrc = iframeElement ? iframeElement.getAttribute('src') : null;
 
-  // console.log(iframeSrc);
   return (
     <>
       {session?.status === 'unauthenticated' && (
@@ -51,7 +46,7 @@ export default function Item({
         </div>
       )}
       {session?.status === 'authenticated' && (
-        <div className="w-full bg-four h-full p-4 lg:p-8 rounded-lg">
+        <div className="relative w-full bg-four h-full p-4 lg:p-8 rounded-lg">
           <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
             <Image
               priority
@@ -60,6 +55,17 @@ export default function Item({
               objectFit="cover"
               alt="photo"
             />
+          </div>
+          <BackButton />
+          <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
+            <TfiMenuAlt
+              className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
+              onClick={() => {
+                console.log('clicked');
+                setIsOpen(!isOpen);
+              }}
+            />
+            {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
           </div>
           <div className="relative w-full h-52 overflow-hidden xl:mt-8">
             <Image
@@ -74,14 +80,6 @@ export default function Item({
             <h1 className="grow text-lg lg:text-2xl w-full text-white ">
               الوصفة:{' '}
             </h1>
-            <Link href={'/'}>
-              <div className="flex items-center justify-center rounded-full overflow-hidden cursor-pointer xl:w-fit ">
-                <button className=" text-white rounded-r-full font-bold text-lg lg:text-xl hover:scale-105 bg-one p-1 lg:p-2">
-                  رجوع
-                </button>
-                <TbArrowBigLeftLinesFilled className=" text-white text-4xl lg:text-[44px] animate-pulse transition-all duration-300 bg-gray-500 rounded-l-full" />
-              </div>
-            </Link>
           </div>
           <div className="flex justify-center w-full">
             <div className="flex flex-col w-full 2xl:w-2/3 border  rounded-lg p-2 sm:p-8 mt-8 bg-white">

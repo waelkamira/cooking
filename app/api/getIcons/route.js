@@ -18,6 +18,6 @@ export async function GET() {
   });
 
   const imageUrls = result.resources.map((resource) => resource.secure_url);
-  console.log('imageUrls', imageUrls);
+  // console.log('imageUrls', imageUrls);
   return Response.json(imageUrls);
 }

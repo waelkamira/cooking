@@ -2,7 +2,7 @@
 import { useSession } from 'next-auth/react';
 import SmallItem from '../../components/SmallItem';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
 import CustomToast from '../../components/CustomToast';
@@ -10,8 +10,13 @@ import BackButton from '../../components/BackButton';
 import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
 import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
 import Link from 'next/link';
+import { inputsContext } from '../../components/Context';
+import { TfiMenuAlt } from 'react-icons/tfi';
+import SideBarMenu from '../../components/SideBarMenu';
 
 export default function MyRecipes() {
+  const [isOpen, setIsOpen] = useState(false);
+  const { dispatch } = useContext(inputsContext);
   const [pageNumber, setPageNumber] = useState(1);
   const [CurrentUser, setCurrentUser] = useState({});
   const session = useSession();
@@ -39,7 +44,8 @@ export default function MyRecipes() {
           );
           const startPage = (pageNumber - 1) * 10;
           const endPage = startPage + 10;
-          setMyRecipes(findUserRecipes?.reverse()?.slice(startPage, endPage));
+          setMyRecipes(findUserRecipes?.slice(startPage, endPage));
+          dispatch({ type: 'MY_RECIPES', payload: findUserRecipes });
         }
       });
   };
@@ -63,6 +69,16 @@ export default function MyRecipes() {
 
   return (
     <div className="relative w-full bg-four h-full p-4 lg:p-8 rounded-lg">
+      <div className="absolute flex flex-col items-start gap-2 z-40 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
+        <TfiMenuAlt
+          className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
+          onClick={() => {
+            console.log('clicked');
+            setIsOpen(!isOpen);
+          }}
+        />
+        {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
+      </div>
       <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
         <Image
           priority

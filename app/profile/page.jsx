@@ -5,21 +5,19 @@ import Button from '../../components/Button';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import React, { useContext, useEffect, useState } from 'react';
-import { MdEdit } from 'react-icons/md';
 import { MdOutlineAddPhotoAlternate } from 'react-icons/md';
 import { inputsContext } from '../../components/Context';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
-import { TbArrowBigLeftLinesFilled } from 'react-icons/tb';
 import CustomToast from '../../components/CustomToast';
 import BackButton from '../../components/BackButton';
-import NewRecipeButton from '../../components/NewRecipeButton';
+import SideBarMenu from '../../components/SideBarMenu';
+import { TfiMenuAlt } from 'react-icons/tfi';
 
 export default function Profile() {
+  const [isOpen, setIsOpen] = useState(false);
   const user = CurrentUser();
-  // console.log('this is user from profile', user);
   const { profile_image, dispatch } = useContext(inputsContext);
-  // console.log('this is profile_image', profile_image?.image);
   const session = useSession();
   const [newImage, setNewImage] = useState('');
 
@@ -72,9 +70,19 @@ export default function Profile() {
       {session?.status === 'authenticated' && (
         <div className="relative flex justify-center items-center w-full h-full bg-four  xl:p-8 rounded-lg text-md sm:text-lg lg:text-xl">
           <BackButton />
+          <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
+            <TfiMenuAlt
+              className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
+              onClick={() => {
+                console.log('clicked');
+                setIsOpen(!isOpen);
+              }}
+            />
+            {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
+          </div>
           <div className="flex flex-col items-center gap-4  justify-center w-full 2xl:w-2/3 h-full rounded-lg overflow-hidden">
             <div className="relative w-full ">
-              <div className="relative h-72 w-full  rounded-lg">
+              <div className="relative h-96 w-full  rounded-lg">
                 <Image
                   src={'/profile background.png'}
                   layout="fill"
