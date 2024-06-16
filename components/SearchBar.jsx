@@ -49,7 +49,7 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="w-full lg:mt-8">
+    <div className="w-full lg:mt-8  bg-four rounded-lg pl-4">
       <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full sticky mb-4">
         <div className="relative w-full xl:w-96 h-52 overflow-hidden">
           <Image

@@ -12,6 +12,7 @@ import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
 import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
 import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
+import HomePageSidesPhotos from '../../components/HomePageSidesPhotos';
 
 export default function page() {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,7 +56,7 @@ export default function page() {
   }
 
   return (
-    <div className="relative w-full bg-four h-full p-4 lg:p-8 rounded-lg">
+    <div className="relative w-full bg-four h-full p-4 lg:p-8 rounded-lg z-50">
       <div className="absolute flex flex-col items-start gap-2 z-40 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
         <TfiMenuAlt
           className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"

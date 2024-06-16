@@ -14,17 +14,13 @@ export default function NewRecipeButton() {
   const session = useSession();
 
   return (
-    <div className=" my-4 w-full rounded-lg z-40 ">
-      <h1 className="hidden lg:block w-full text-start pb-8 text-gray-400 text-lg sm:text-xl font-semibold select-none">
-        شو طابخة اليوم يا مرررراااااا
-      </h1>
-
-      <button
-        className="w-full bg-five hover:scale-[100.5%] hover:bg-one shadow-lg transition-all duration-300 rounded-full text-lg md:text-2xl px-4 py-2 text-white text-nowrap"
+    <div className="w-full rounded-lg z-50 ">
+      <Button
+        title={'إنشاء وصفة جديدة'}
+        style={' '}
         onClick={() => setIsVisible(true)}
-      >
-        إنشاء وصفة طبخ جديدة
-      </button>
+      />
+
       {isVisible && (
         <div
           className="absolute flex justify-center items-start gap-4 overflow-auto w-full h-full border md:p-8 bg-four/90 border-five right-0 top-0 2xl:-top-8 rounded-lg z-50"

@@ -49,7 +49,7 @@ export default function TheGarden() {
   };
 
   return (
-    <div className="text-white mb-4">
+    <div className="text-white mt-2 mb-4">
       <div className="grid grid-cols-3 bg-one rounded-lg">
         {icons?.length > 0 &&
           icons

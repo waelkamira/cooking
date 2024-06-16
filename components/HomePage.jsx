@@ -3,12 +3,11 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import SearchBar from './SearchBar';
 import NewRecipeButton from './NewRecipeButton';
-import Categories from './Categories';
 import AllCookingRecipes from './AllCookingRecipes';
 import { useSession } from 'next-auth/react';
-// import { ImMenu } from 'react-icons/im';
 import SideBarMenu from './SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
+import CategoriesSlides from './CategoriesSlides';
 
 export default function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,56 +17,35 @@ export default function HomePage() {
   }
 
   return (
-    <div className="relative flex flex-col justify-center items-center p-2 sm:p-4 lg:p-8 xl:w-4/5 z-50 sm:my-0 w-full">
-      <div className="xl:hidden absolute flex flex-col items-end gap-2 z-50 top-4 left-4 lg:top-12 lg:left-12 w-full">
-        <TfiMenuAlt
-          className=" p-2 rounded-lg text-4xl text-one animate-pulse"
-          onClick={() => setIsOpen(!isOpen)}
-        />
-        {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
-      </div>
-      <div className="relative hidden lg:block w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
-        <Image
-          priority
-          src={'/1.png'}
-          layout="fill"
-          objectFit="cover"
-          alt="photo"
-        />
-      </div>
-      <SearchBar />
-      <div className="w-full">
-        <div className=" lg:hidden flex flex-col justify-between items-center w-full h-full rounded-lg">
-          <NewRecipeButton />
+    <div className="relative flex flex-col justify-center items-center xl:w-4/5 z-40 sm:my-0 w-full ">
+      <div className="w-full p-2 sm:p-4 lg:p-8">
+        <div className="xl:hidden absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 lg:top-12 lg:right-12 w-full">
+          <TfiMenuAlt
+            className=" p-2 rounded-lg text-4xl lg:text-5xl text-one animate-pulse"
+            onClick={() => setIsOpen(!isOpen)}
+          />
+          {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
         </div>
-        <div className="hidden lg:flex justify-between items-center w-full h-full rounded-lg p-2 ">
-          <div className=" relative w-full lg:w-56 h-24 sm:h-[200px] ">
-            <Image
-              priority
-              src={'/نصوح.png'}
-              layout="fill"
-              objectFit="contain"
-              alt="photo"
-            />
-          </div>
-          <NewRecipeButton />
+        <div className="relative hidden lg:block w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
+          <Image
+            priority
+            src={'/1.png'}
+            layout="fill"
+            objectFit="cover"
+            alt="photo"
+          />
+        </div>
+        <SearchBar />
 
-          <div className=" relative w-full lg:w-72 h-24 sm:h-[200px] ">
-            <Image
-              priority
-              src={'/بهيجة2.png'}
-              layout="fill"
-              objectFit="contain"
-              alt="photo"
-            />
-          </div>
-        </div>
+        <h1 className="hidden xl:block text-md sm:text-lg lg:text-3xl text-nowrap mx-2 font-bold text-white bg-four rounded-full py-2 px-4 select-none text-center">
+          أحدث المنشورات
+        </h1>
       </div>
-      <h1 className="text-md sm:text-lg lg:text-3xl text-nowrap mx-2 font-bold text-white bg-four rounded-full py-2 px-4 select-none">
-        أحدث المنشورات
-      </h1>
-      <div className="flex flex-col justify-center items-start xl:flex-row mt-8 2xl:h-[1450px] w-full rounded-lg gap-4">
-        {/* <Categories /> */}
+      <div className="flex flex-col justify-center items-center w-full rounded-lg sm:p-8 gap-4 bg-[url(/backgroundHome.png)]">
+        <CategoriesSlides />
+        <h1 className="xl:hidden text-md sm:text-lg lg:text-3xl text-nowrap mx-2 font-bold text-white bg-four rounded-full py-2 px-4 select-none text-center">
+          أحدث المنشورات
+        </h1>
         <AllCookingRecipes />
       </div>
     </div>

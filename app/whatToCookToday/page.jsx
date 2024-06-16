@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import BackButton from '../../components/BackButton';
 import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
+import Button from '../../components/Button';
 
 export default function whatToCookToday() {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,10 +37,10 @@ export default function whatToCookToday() {
 
   return (
     <div className="relative w-full bg-four h-full p-4 lg:p-8 rounded-lg">
-      <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
+      <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden">
         <Image
           priority
-          src={'/1.png'}
+          src={'/66.png'}
           layout="fill"
           objectFit="cover"
           alt="photo"
@@ -54,10 +55,16 @@ export default function whatToCookToday() {
           alt="photo"
         />
       </div>
-      <div className="flex justify-between items-center w-full gap-4 my-8">
-        <h1 className="grow text-sm sm:text-lg lg:text-2xl w-full text-white ">
-          الأفكار المقترحة لطبخة اليوم:
+      <div className=" w-full gap-4 my-8">
+        <h1 className="text-white sm:text-lg">
+          اضغط هنا للحصول على ثلاث أفكار جديدة لطبخة اليوم
         </h1>
+        <Button
+          onClick={() => shuffleArray(randomCookingRecipes)}
+          title={'اقتراح أفكار جديدة'}
+          style={'text-white bg-one rounded-full p-2 text-lg w-full lg:w-1/3'}
+        />
+
         <BackButton />
         <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
           <TfiMenuAlt
@@ -70,13 +77,10 @@ export default function whatToCookToday() {
           {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
         </div>
       </div>
+      <h1 className="grow text-sm sm:text-lg lg:text-2xl w-full text-white text-center select-none">
+        الأفكار المقترحة لطبخة اليوم
+      </h1>
       <div className="my-8">
-        <button
-          className="text-white bg-one rounded-lg p-2 text-lg w-full"
-          onClick={() => shuffleArray(randomCookingRecipes)}
-        >
-          أعطني ثلاث أفكار لطبخة اليوم
-        </button>
         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 justify-center items-center w-full ">
           {randomCookingRecipes?.length > 0 &&
             randomCookingRecipes.map((recipe, index) => (

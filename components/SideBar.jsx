@@ -7,6 +7,7 @@ import Image from 'next/image';
 import CurrentUser from '../components/CurrentUser';
 import TheGarden from './Garden';
 import Categories from './Categories';
+import NewRecipeButton from './NewRecipeButton';
 
 export default function SideBar() {
   const router = useRouter();
@@ -22,7 +23,7 @@ export default function SideBar() {
   }, []);
 
   return (
-    <div className="hidden xl:block xl:w-1/4 2xl:w-1/5 h-[2270px] bg-gradient-to-t from-two to-five p-4">
+    <div className="hidden xl:block xl:w-1/4 2xl:w-1/5 h-fit bg-gradient-to-t from-two to-five p-4">
       <div className="w-full bg-four rounded-lg">
         {session?.status === 'authenticated' && (
           <div className="flex flex-col justify-between items-center p-4 rounded-lg w-full">
@@ -56,15 +57,37 @@ export default function SideBar() {
       </div>
       {session?.status === 'authenticated' && (
         <div className="w-full bg-four rounded-lg p-4 my-4">
+          <div className=" relative w-full h-32">
+            <Image
+              priority
+              src={'/nasoh and bahiga.png'}
+              layout="fill"
+              objectFit="contain"
+              alt="photo"
+            />
+          </div>
+          <div className="hidden lg:flex flex-col justify-between items-center w-full h-full rounded-lg">
+            {/* <div className=" relative w-full lg:w-72 h-24 sm:h-[200px] ">
+              <Image
+                priority
+                src={'/بهيجة2.png'}
+                layout="fill"
+                objectFit="contain"
+                alt="photo"
+              />
+            </div> */}
+            <NewRecipeButton />
+          </div>
+
           <Button
             title={'شو أطبخ اليوم؟'}
             style={' '}
             path="/whatToCookToday"
           />
 
-          <Button title={'وصفات أعجبتني'} style={' '} path="/favoritePosts" />
           <Button title={'طبخاتي'} style={' '} path="/myRecipes" />
-          <Button title={'الجوائز التي ربحتها'} style={' '} path="/myGarden" />
+          <Button title={'وصفات أعجبتني'} style={' '} path="/favoritePosts" />
+          <Button title={'الجوائز'} style={' '} path="/myGarden" />
 
           {session?.status === 'authenticated' && user?.isAdmin && (
             <Button title={'المستخدمين'} style={' '} path="/users" />

@@ -35,11 +35,11 @@ export default function SideBarMenu({ setIsOpen }) {
       )}
       {session?.status === 'authenticated' && (
         <div>
-          <Button title={'طبخاتي'} path="/myRecipes" />
           <Button title={'إنشاء وصفة'} path="/newRecipe" />
-          <Button title={'الجوائز التي ربحتها'} path="/myGarden" />
-          <Button title={'وصفات أعجبتني'} path={'/favoritePosts'} />
           <Button title={'شو أطبخ اليوم؟'} path={'/whatToCookToday'} />
+          <Button title={'طبخاتي'} path="/myRecipes" />
+          <Button title={'وصفات أعجبتني'} path={'/favoritePosts'} />
+          <Button title={'الجوائز'} path="/myGarden" />
           <Button title={'تسجيل الخروج'} path={'/'} onClick={() => signOut()} />
         </div>
       )}
