@@ -73,12 +73,14 @@ export default function CookingForm({ setIsVisible, isVisible }) {
           dispatch({ type: 'New_RECIPE', payload: inputs });
           setIsVisible(false);
           toast.custom((t) => (
-            <CustomToast t={t} message={'✔ تم إنشاء وصفة جديدة'} />
+            <CustomToast
+              t={t}
+              emoji={'🧀'}
+              message={'تم إنشاء وصفة جديدة'}
+              greenEmoji={'✔'}
+            />
           ));
           handleClick();
-          // setTimeout(() => {
-          //   location.reload();
-          // }, 1300);
           setInputs({
             mealName: '',
             selectedValue: '',
@@ -224,7 +226,9 @@ export default function CookingForm({ setIsVisible, isVisible }) {
         <div className="w-full my-4">
           <div className="relative w-full h-28">
             <Image
-              src={'/vege1.png'}
+              src={
+                'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716954/cooking/vege1_jvpnhw.png'
+              }
               layout="fill"
               objectFit="contain"
               alt="photo"
@@ -264,7 +268,9 @@ export default function CookingForm({ setIsVisible, isVisible }) {
         <div className="w-full my-4">
           <div className="relative w-full h-28">
             <Image
-              src={'/spices.png'}
+              src={
+                'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716956/cooking/spices_v4n9lm.png'
+              }
               layout="fill"
               objectFit="contain"
               alt="photo"
@@ -327,7 +333,7 @@ export default function CookingForm({ setIsVisible, isVisible }) {
             {' '}
             <h1 className="text-right text-xl text-white font-bold my-2">
               <span className="text-one font-bold text-2xl ml-2">#</span>
-              أضف رابط الطبخة من يوتيوب:
+              أضف رابط الطبخة من يوتيوب:.
             </h1>
           </div>
           <input
@@ -363,7 +369,13 @@ export default function CookingForm({ setIsVisible, isVisible }) {
             </pre>
           </div>
           <div className="relative w-full h-96 rounded-lg overflow-hidden">
-            <Image src={'/info.png'} fill alt="photo" />
+            <Image
+              src={
+                'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716953/cooking/info_ci1rzp.png'
+              }
+              fill
+              alt="photo"
+            />
           </div>
         </div>
         <div className="flex flex-col sm:flex-row justify-around items-center gap-8 w-full my-12">

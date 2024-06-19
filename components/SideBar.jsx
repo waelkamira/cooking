@@ -23,7 +23,7 @@ export default function SideBar() {
   }, []);
 
   return (
-    <div className="hidden xl:block xl:w-1/4 2xl:w-1/5 h-fit bg-gradient-to-t from-two to-five p-4">
+    <div className="hidden xl:block xl:w-1/4 2xl:w-1/5 h-fit bg-gradient-to-t from-five to-five p-4">
       <div className="w-full bg-four rounded-lg">
         {session?.status === 'authenticated' && (
           <div className="flex flex-col justify-between items-center p-4 rounded-lg w-full">
@@ -60,22 +60,15 @@ export default function SideBar() {
           <div className=" relative w-full h-32">
             <Image
               priority
-              src={'/nasoh and bahiga.png'}
+              src={
+                'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716955/cooking/nasoh_and_bahiga_cn3e7h.png'
+              }
               layout="fill"
               objectFit="contain"
               alt="photo"
             />
           </div>
           <div className="hidden lg:flex flex-col justify-between items-center w-full h-full rounded-lg">
-            {/* <div className=" relative w-full lg:w-72 h-24 sm:h-[200px] ">
-              <Image
-                priority
-                src={'/بهيجة2.png'}
-                layout="fill"
-                objectFit="contain"
-                alt="photo"
-              />
-            </div> */}
             <NewRecipeButton />
           </div>
 

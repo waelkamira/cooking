@@ -29,7 +29,9 @@ export default function HomePage() {
         <div className="relative hidden lg:block w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
           <Image
             priority
-            src={'/1.png'}
+            src={
+              'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716946/cooking/1_trrjyx.png'
+            }
             layout="fill"
             objectFit="cover"
             alt="photo"
@@ -41,7 +43,7 @@ export default function HomePage() {
           أحدث المنشورات
         </h1>
       </div>
-      <div className="flex flex-col justify-center items-center w-full rounded-lg sm:p-8 gap-4 bg-[url(/backgroundHome.png)]">
+      <div className="flex flex-col justify-center items-center w-full rounded-lg sm:p-8 gap-4 bg-[url(https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716953/cooking/backgroundHome_viagtg.png)]">
         <CategoriesSlides />
         <h1 className="xl:hidden text-md sm:text-lg lg:text-3xl text-nowrap mx-2 font-bold text-white bg-four rounded-full py-2 px-4 select-none text-center">
           أحدث المنشورات

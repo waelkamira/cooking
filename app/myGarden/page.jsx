@@ -62,7 +62,9 @@ export default function TheGarden() {
       <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
         <Image
           priority
-          src={'/1.png'}
+          src={
+            'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716950/cooking/99_onuwhf.png'
+          }
           layout="fill"
           objectFit="cover"
           alt="photo"
@@ -71,7 +73,9 @@ export default function TheGarden() {
       <div className="relative w-full h-52 overflow-hidden xl:mt-8">
         <Image
           priority
-          src={'/logo1.png'}
+          src={
+            'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716956/cooking/logo1_uwwlyk.png'
+          }
           layout="fill"
           objectFit="contain"
           alt="photo"

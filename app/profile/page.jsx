@@ -84,7 +84,9 @@ export default function Profile() {
             <div className="relative w-full ">
               <div className="relative h-96 w-full  rounded-lg">
                 <Image
-                  src={'/profile background.png'}
+                  src={
+                    'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716961/cooking/profile_background_ifl7zl.png'
+                  }
                   layout="fill"
                   objectFit="cover"
                   alt={session?.data?.user?.name}

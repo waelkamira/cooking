@@ -6,72 +6,38 @@ import 'keen-slider/keen-slider.min.css';
 import { useRouter } from 'next/navigation';
 const animation = { duration: 50000, easing: (t) => t };
 
-const items = [
-  {
-    image: '/item1.png',
-  },
-  {
-    image: '/item2.png',
-  },
-  { image: '/item3.png' },
-];
-
-const items1 = [
-  { image: '/item5.png' },
-  { image: '/item10.png' },
-  { image: '/item9.png' },
-];
-const categories = [{ name: 'الوجبة الرئيسية', image: '/10.png' }];
-const categories1 = [
-  { name: 'المعجنات', image: '/2.png' },
-  {
-    name: 'المقبلات',
-    image: '/7.png',
-  },
-];
-const categories2 = [
-  {
-    name: 'السلطات',
-    image: '/6.png',
-  },
-  {
-    name: 'الحلويات',
-    image: '/5.png',
-  },
-];
-const categories3 = [
-  {
-    name: 'الشوربات',
-    image: '/3.png',
-  },
-  {
-    name: 'العصائر',
-    image: '/4.png',
-  },
-];
-
 const smallSize = [
-  { name: 'وجبة رئيسية', image: '/1.png' },
-  { name: 'معجنات', image: '/2.png' },
   {
-    name: 'شوربات',
-    image: '/3.png',
+    image:
+      'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716946/cooking/1_trrjyx.png',
+  },
+  {
+    image:
+      'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718726082/huap39y7d4csoxckmshu.png',
+  },
+  {
+    image:
+      'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716946/cooking/3_dj2pgz.png',
   },
   {
     name: 'مقبلات',
-    image: '/7.png',
+    image:
+      'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716948/cooking/7_viimv5.png',
   },
   {
     name: 'سلطات',
-    image: '/6.png',
+    image:
+      'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716947/cooking/6_svkguu.png',
   },
   {
     name: 'حلويات',
-    image: '/5.png',
+    image:
+      'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716946/cooking/5_os6okj.png',
   },
   {
     name: 'عصائر و مشروبات',
-    image: '/4.png',
+    image:
+      'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718718789/cooking/xtg1v4qttyutalljjt2x.png',
   },
 ];
 

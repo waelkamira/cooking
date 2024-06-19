@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { inputsContext } from '../../components/Context';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import SideBarMenu from '../../components/SideBarMenu';
+import Button from '../../components/Button';
 
 export default function MyRecipes() {
   const [isOpen, setIsOpen] = useState(false);
@@ -82,7 +83,9 @@ export default function MyRecipes() {
       <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
         <Image
           priority
-          src={'/1.png'}
+          src={
+            'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716952/cooking/77_xvcngl.png'
+          }
           layout="fill"
           objectFit="cover"
           alt="photo"
@@ -91,16 +94,20 @@ export default function MyRecipes() {
       <div className="relative w-full h-52 overflow-hidden xl:mt-8">
         <Image
           priority
-          src={'/logo1.png'}
+          src={
+            'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716956/cooking/logo1_uwwlyk.png'
+          }
           layout="fill"
           objectFit="contain"
           alt="photo"
         />
       </div>
       <div className="flex justify-between items-center w-full gap-4 my-8">
-        <h1 className="grow text-lg lg:text-2xl w-full text-white ">وصفاتي:</h1>
+        <Button title={'إنشاء وصفة جديدة'} style={' '} path="/newRecipe" />
+
         <BackButton />
       </div>
+      <h1 className="grow text-lg lg:text-2xl w-full text-white ">وصفاتي</h1>
       <div className="my-8">
         {myRecipes?.length === 0 && (
           <h1 className="text-2xl md:text-3xl w-full text-center text-white mt-8 ">

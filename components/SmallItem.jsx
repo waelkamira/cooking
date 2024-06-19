@@ -266,6 +266,14 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
     }
   }
 
+  //? هذه الدالة للتأكد إذا كان التاريخ المدخل صحيحا أو لا
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return isNaN(date)
+      ? 'Invalid date'
+      : formatDistanceToNow(date, { addSuffix: true });
+  };
+
   return (
     <>
       {!recipe && <Loading />}
@@ -280,7 +288,7 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
             className="cursor-pointer flex justify-start items-center gap-2 w-full h-fit "
           >
             <div className="overflow-hidden rounded-full">
-              <div className="relative size-12  rounded-full">
+              <div className="relative size-12 rounded-full overflow-hidden">
                 <Image
                   src={recipe?.userImage}
                   layout="fill"
@@ -289,7 +297,7 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
                 />
               </div>
             </div>
-            <div className="flex flex-col justify-center">
+            <div className="flex flex-col justify-center items-start">
               <h6 className="text-[14px] text-eight font-semibold select-none">
                 {recipe?.userName}{' '}
               </h6>
@@ -297,9 +305,7 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
                 className="text-[10px] text-gray-400 font-semibold select-none"
                 dir="ltr"
               >
-                {formatDistanceToNow(new Date(recipe?.createdAt), {
-                  addSuffix: true,
-                })}
+                {formatDate(recipe?.createdAt)}
               </h1>
             </div>
           </Link>

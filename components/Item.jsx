@@ -7,6 +7,7 @@ import Button from './Button';
 import BackButton from './BackButton';
 import SideBarMenu from './SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
+import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 
 export default function Item({
   image,
@@ -32,6 +33,14 @@ export default function Item({
   //? موجود ifram اذا كان عنصر ال src استخرجنا قيمة ال
   let iframeSrc = iframeElement ? iframeElement.getAttribute('src') : null;
 
+  //? هذه الدالة للتأكد إذا كان التاريخ المدخل صحيحا أو لا
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return isNaN(date)
+      ? 'Invalid date'
+      : formatDistanceToNow(date, { addSuffix: true });
+  };
+
   return (
     <>
       {session?.status === 'unauthenticated' && (
@@ -50,7 +59,7 @@ export default function Item({
           <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
             <Image
               priority
-              src={'/1.png'}
+              src={'/100.png'}
               layout="fill"
               objectFit="cover"
               alt="photo"
@@ -84,33 +93,34 @@ export default function Item({
           <div className="flex justify-center w-full">
             <div className="flex flex-col w-full 2xl:w-2/3 border  rounded-lg p-2 sm:p-8 mt-8 bg-white">
               <div className="flex justify-start items-center gap-2 w-full mb-4">
-                <div className="relative w-10 h-10 overflow-hidden rounded-full">
-                  <Image
-                    src={userImage}
-                    fill
-                    alt={mealName}
-                    className="bg-one"
-                  />
+                <div className="relative size-14 overflow-hidden rounded-full">
+                  <Image src={userImage} fill alt={mealName} />
                 </div>
-                <div className="flex flex-col justify-center w-full">
+                <div className="flex flex-col justify-center">
                   <h6 className="text-[12px] sm:text-[15px] text-eight font-semibold select-none">
                     {userName}
                   </h6>
-                  {/* <h1 className="text-[12px] sm:text-[12px] text-gray-400 font-semibold select-none">
-                {formatDistanceToNow(new Date(createdAt), {
-                  addSuffix: true,
-                })}
-              </h1> */}
+                  <h1
+                    className="text-[12px] sm:text-[12px] text-gray-400 font-semibold select-none text-end"
+                    dir="ltr"
+                  >
+                    {formatDate(createdAt)}
+                  </h1>
                 </div>
               </div>
-              <div className="relative w-full h-44 sm:h-96 overflow-hidden rounded-lg border ">
-                <Image src={image} fill alt={mealName} />
+              <div className="relative w-full h-44 sm:h-96 overflow-hidden rounded-lg border bg-gray-400">
+                <Image
+                  src={image}
+                  layout="fill"
+                  objectFit="contain"
+                  alt={mealName}
+                />
               </div>
               <h1 className="text-four my-4 text-3xl md:text-5xl font-bold text-center select-none  rounded-lg p-2">
                 {mealName}
               </h1>
               <div className="bg-white rounded-lg p-2 lg:p-8">
-                <div className="flex justify-between items-center mb-16 bg-four h-16 rounded-lg w-full overflow-visible">
+                <div className="flex justify-between items-center mb-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
                   <h1 className="text-white font-bold text-xl sm:text-3xl w-full my-2 select-none">
                     <span className="text-one font-bold text-2xl mx-2 select-none">
                       #
@@ -118,13 +128,18 @@ export default function Item({
                     المقادير
                   </h1>
                   <div className="relative size-24 md:size-32 xl:w-44 xl:size-44 overflow-hidden rounded-lg grow">
-                    <Image src={'/item7.png'} fill alt={mealName} />
+                    <Image
+                      src={'/item7.png'}
+                      layout="fill"
+                      objectFit="contain"
+                      alt={mealName}
+                    />
                   </div>
                 </div>
                 <pre className="text-md lg:text-lg font-bold w-full select-none">
                   {ingredients}
                 </pre>
-                <div className="flex justify-between items-center my-16 bg-four h-16 rounded-lg w-full overflow-visible">
+                <div className="flex justify-between items-center my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
                   <h1 className="text-white font-bold text-xl sm:text-3xl w-full my-2 select-none">
                     <span className="text-one font-bold text-2xl mx-2 select-none">
                       #
@@ -132,50 +147,63 @@ export default function Item({
                     الطريقة
                   </h1>
                   <div className="relative size-24 md:size-32 xl:w-44 xl:size-44 overflow-hidden rounded-lg rotate-45">
-                    <Image src={'/item9.png'} fill alt={mealName} />
+                    <Image
+                      src={'/item9.png'}
+                      layout="fill"
+                      objectFit="contain"
+                      alt={mealName}
+                    />
                   </div>
                 </div>
                 <pre className="text-lg font-bold w-full select-none">
                   {theWay}
                 </pre>
-                <div className="flex justify-between items-center my-16 bg-four h-16 rounded-lg w-full overflow-visible">
+                <div className="flex justify-between items-center my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
                   <h1 className="text-white font-bold text-xl sm:text-3xl w-full my-2 select-none">
                     <span className="text-one font-bold text-2xl mx-2 select-none">
                       #
                     </span>
                     نصائح
                   </h1>
-                  <div className="relative w-24 h-24 md:w-32 md:h-32 xl:w-44 xl:h-44 overflow-hidden rounded-lg">
-                    <Image src={'/item8.png'} fill alt={mealName} />
+                  <div className="relative w-28 h-28 md:w-32 md:h-32 xl:w-44 xl:h-44 overflow-hidden rounded-lg rotate-[10deg]">
+                    <Image
+                      src={'/item5.png'}
+                      layout="fill"
+                      objectFit="contain"
+                      alt={mealName}
+                    />
                   </div>
                 </div>
                 <pre className="text-lg font-bold w-full mt-10 select-none">
                   {advise}
                 </pre>
-                <div className="flex justify-between items-center my-16 bg-four h-16 rounded-lg w-full overflow-visible">
+                <div className="flex justify-between items-center my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
                   <h1 className="text-white font-bold text-2xl lg:text-3xl w-full my-2 select-none">
                     <span className="text-one font-bold text-2xl mx-2 select-none">
                       #
                     </span>
                     فيديو
                   </h1>
-                  <div className="relative w-24 h-24 md:w-32 md:h-32 xl:w-44 xl:h-44 overflow-hidden rounded-lg rotate-45">
-                    <Image src={'/item10.png'} fill alt={mealName} />
+                  <div className="relative w-24 h-24 md:w-32 md:h-32 xl:w-44 xl:h-44 overflow-hidden rounded-lg rotate-20">
+                    <Image
+                      src={'/item10.png'}
+                      layout="fill"
+                      objectFit="contain"
+                      alt={mealName}
+                    />
                   </div>
                 </div>
 
                 <div className="flex justify-center items-center w-full mt-16">
                   <iframe
-                    // width="560"
-                    // height="315"
                     src={iframeSrc}
                     title="YouTube video player"
                     frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerpolicy="strict-origin-when-cross-origin"
                     allowfullscreen
-                    className="rounded-lg w-full h-full sm:h-52 lg:h-72 xl:h-96 2xl:h-[500px]"
-                  ></iframe>
+                    className="rounded-lg w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
+                  />
                 </div>
               </div>
             </div>

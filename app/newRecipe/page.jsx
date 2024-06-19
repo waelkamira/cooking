@@ -47,7 +47,9 @@ export default function NewRecipe() {
           }
         >
           <Image
-            src={'/background.png'}
+            src={
+              'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718746034/u8vqq4vy3ocohf8dsxcj.png'
+            }
             layout="fill"
             objectFit={'cover'}
             alt="photo"
@@ -57,7 +59,9 @@ export default function NewRecipe() {
         <div className="absolute w-full h-full flex flex-col items-center justify-start rounded-lg grow z-40 ">
           <div className="relative h-44 sm:h-72 lg:h-96 w-full ">
             <Image
-              src={'/decoration.png'}
+              src={
+                'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716953/cooking/decoration_w0jwvc.png'
+              }
               fill
               alt="decoration"
               priority

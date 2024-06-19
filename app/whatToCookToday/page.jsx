@@ -37,10 +37,12 @@ export default function whatToCookToday() {
 
   return (
     <div className="relative w-full bg-four h-full p-4 lg:p-8 rounded-lg">
-      <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden">
+      <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
         <Image
           priority
-          src={'/66.png'}
+          src={
+            'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716949/cooking/66_pkcjqt.png'
+          }
           layout="fill"
           objectFit="cover"
           alt="photo"
@@ -49,7 +51,9 @@ export default function whatToCookToday() {
       <div className="relative w-full h-52 overflow-hidden xl:mt-8">
         <Image
           priority
-          src={'/logo1.png'}
+          src={
+            'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716956/cooking/logo1_uwwlyk.png'
+          }
           layout="fill"
           objectFit="contain"
           alt="photo"
