@@ -12,7 +12,7 @@ import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
 import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
 import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
-import HomePageSidesPhotos from '../../components/HomePageSidesPhotos';
+import Loading from '../../components/Loading';
 
 export default function page() {
   const [isOpen, setIsOpen] = useState(false);
@@ -98,9 +98,9 @@ export default function page() {
       </div>
       <div className="my-8">
         {userFavorites?.length === 0 && (
-          <h1 className="text-2xl md:text-3xl w-full text-center text-white mt-8 ">
-            😉 لا يوجد نتائج لعرضها ,لم تقم بحفظ أي وصفة بعد
-          </h1>
+          <Loading
+            myMessage={'لا يوجد نتائج لعرضها 😉 لم تقم بحفظ أي وصفة بعد'}
+          />
         )}
         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 justify-center items-center w-full ">
           {userFavorites?.length > 0 &&

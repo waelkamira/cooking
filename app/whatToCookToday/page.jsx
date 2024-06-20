@@ -6,6 +6,7 @@ import BackButton from '../../components/BackButton';
 import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import Button from '../../components/Button';
+import Loading from '../../components/Loading';
 
 export default function whatToCookToday() {
   const [isOpen, setIsOpen] = useState(false);
@@ -85,6 +86,7 @@ export default function whatToCookToday() {
         الأفكار المقترحة لطبخة اليوم
       </h1>
       <div className="my-8">
+        {randomCookingRecipes?.length === 0 && <Loading />}
         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 justify-center items-center w-full ">
           {randomCookingRecipes?.length > 0 &&
             randomCookingRecipes.map((recipe, index) => (

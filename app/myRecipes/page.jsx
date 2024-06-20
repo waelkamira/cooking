@@ -14,6 +14,7 @@ import { inputsContext } from '../../components/Context';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import SideBarMenu from '../../components/SideBarMenu';
 import Button from '../../components/Button';
+import Loading from '../../components/Loading';
 
 export default function MyRecipes() {
   const [isOpen, setIsOpen] = useState(false);
@@ -110,10 +111,11 @@ export default function MyRecipes() {
       <h1 className="grow text-lg lg:text-2xl w-full text-white ">وصفاتي</h1>
       <div className="my-8">
         {myRecipes?.length === 0 && (
-          <h1 className="text-2xl md:text-3xl w-full text-center text-white mt-8 ">
-            😉 لا يوجد نتائج لعرضها ,لم تقم بإنشاء أي وصفة بعد
-          </h1>
+          <Loading
+            myMessage={'😉 لا يوجد نتائج لعرضها ,لم تقم بإنشاء أي وصفة بعد'}
+          />
         )}
+
         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 justify-center items-center w-full ">
           {myRecipes?.length > 0 &&
             myRecipes.map((recipe, index) => (

@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import React, { useContext, useEffect, useState } from 'react';
 import { inputsContext } from './Context';
+import Loading from './Loading';
 
 export default function TheGarden() {
   const { myRecipes } = useContext(inputsContext);
@@ -50,27 +51,30 @@ export default function TheGarden() {
 
   return (
     <div className="text-white mt-2 mb-4">
-      <div className="grid grid-cols-3 bg-one rounded-lg">
-        {icons?.length > 0 &&
-          icons
-            ?.slice(0, userRecipes?.length <= 9 ? userRecipes?.length : 9)
-            ?.map((icon, index) => (
-              <div className="bg-four p-2 m-2 rounded-lg overflow-hidden">
-                <div
-                  className="relative  m-1 w-[50px] h-[50px] transition-all duration-200 hover:scale-110"
-                  key={index}
-                >
-                  <Image
-                    src={icon}
-                    layout="fill"
-                    objectFit="contain"
-                    alt="icon"
-                  />
+      {icons?.length === 0 && <Loading />}
+      {icons?.length > 0 && (
+        <div className="grid grid-cols-3 bg-one rounded-lg">
+          {icons?.length > 0 &&
+            icons
+              ?.slice(0, userRecipes?.length <= 9 ? userRecipes?.length : 9)
+              ?.map((icon, index) => (
+                <div className="bg-four p-2 m-2 rounded-lg overflow-hidden">
+                  <div
+                    className="relative  m-1 w-[50px] h-[50px] transition-all duration-200 hover:scale-110"
+                    key={index}
+                  >
+                    <Image
+                      src={icon}
+                      layout="fill"
+                      objectFit="contain"
+                      alt="icon"
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
-        {result()}
-      </div>
+              ))}
+          {result()}
+        </div>
+      )}
     </div>
   );
 }

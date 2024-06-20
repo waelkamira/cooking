@@ -11,6 +11,7 @@ import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
 import Link from 'next/link';
 import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
+import Loading from '../../components/Loading';
 
 export default function Users() {
   const [isOpen, setIsOpen] = useState(false);
@@ -96,6 +97,7 @@ export default function Users() {
         <h1>جميع المستخدمين :</h1>
       </div>
       <div className="flex flex-col justify-start items-center w-full">
+        {users?.length === 0 && <Loading />}
         <div className="w-full xl:w-1/2 flex flex-col gap-2 justify-center items-start p-4 sm:p-8 ">
           {users?.length > 0 &&
             users?.map((user) => (

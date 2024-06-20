@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
+import Loading from '@/components/Loading';
 
 export default function TheGarden() {
   const [isOpen, setIsOpen] = useState(false);
@@ -99,29 +100,34 @@ export default function TheGarden() {
         </div>
       </div>
       <div className="flex justify-center items-center text-white w-full h-full ">
-        {result()?.length === 0 && (
-          <h1>لم تربح أي جائزة بعد لأنك لم تقم بنشر أي وصفة طبخ حتى الأن</h1>
+        {icons?.length === 0 && (
+          <Loading
+            myMessage={
+              'لم تربح أي جائزة بعد لأنك لم تقم بنشر أي وصفة طبخ حتى الأن 😉'
+            }
+          />
         )}
-
-        <div className=" flex flex-wrap items-center justify-center w-full xl:w-2/3 xl:w-1/2  h-full bg-one rounded-lg p-4">
-          {icons?.length > 0 &&
-            icons?.slice(0, userRecipes?.length)?.map((icon, index) => (
-              <div className="p-2 rounded-lg bg-four overflow-hidden m-1">
-                <div
-                  className="relative w-[50px] h-[50px] sm:w-[70px] sm:h-[70px] transition-all duration-300 hover:scale-110"
-                  key={index}
-                >
-                  <Image
-                    src={icon}
-                    layout="fill"
-                    objectFit="contain"
-                    alt="icon"
-                  />
+        {icons?.length > 0 && result()?.length > 0 && (
+          <div className=" flex flex-wrap items-center justify-center w-full xl:w-2/3  h-full bg-one rounded-lg p-4">
+            {icons?.length > 0 &&
+              icons?.slice(0, userRecipes?.length)?.map((icon, index) => (
+                <div className="p-2 rounded-lg bg-four overflow-hidden m-1">
+                  <div
+                    className="relative w-[50px] h-[50px] sm:w-[70px] sm:h-[70px] transition-all duration-300 hover:scale-110"
+                    key={index}
+                  >
+                    <Image
+                      src={icon}
+                      layout="fill"
+                      objectFit="contain"
+                      alt="icon"
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
-          {result()}
-        </div>
+              ))}
+            {result()}
+          </div>
+        )}
       </div>
     </div>
   );
