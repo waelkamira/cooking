@@ -10,10 +10,14 @@ import CurrentUser from './CurrentUser';
 import CustomToast from './CustomToast';
 import { Confetti } from './SuccessComponent';
 
-export default function CookingForm({ setIsVisible, isVisible }) {
+export default function CookingForm({
+  setIsVisible,
+  isVisible,
+  cancel = true,
+}) {
   const session = useSession();
   const userName = CurrentUser()?.name;
-  const userImage = CurrentUser()?.image;
+  const userImage = CurrentUser()?.image || session?.data?.user?.image;
   const createdBy = CurrentUser()?.email;
   const [errors, setErrors] = useState({
     mealName: false,
@@ -81,6 +85,12 @@ export default function CookingForm({ setIsVisible, isVisible }) {
             />
           ));
           handleClick();
+          setErrors({
+            mealName: false,
+            selectedValue: false,
+            ingredients: false,
+            theWay: false,
+          });
           setInputs({
             mealName: '',
             selectedValue: '',
@@ -381,16 +391,30 @@ export default function CookingForm({ setIsVisible, isVisible }) {
         <div className="flex flex-col sm:flex-row justify-around items-center gap-8 w-full my-12">
           <button
             type="submit"
-            className="bg-five rounded-lg text-white shadow-lg hover:bg-one text-xl py-2 px-16 w-full"
+            className="btn bg-five rounded-lg text-white shadow-lg hover:outline outline-one hover:bg-one text-xl py-2 px-16 w-full"
           >
             حفظ
           </button>
-          <button
-            className="bg-five rounded-lg text-white shadow-lg hover:bg-one text-xl py-2 px-16 w-full"
-            onClick={() => setIsVisible(false)}
-          >
-            إلغاء
-          </button>
+          {cancel && (
+            <button
+              type="text"
+              className="btn bg-five rounded-lg text-white shadow-lg hover:outline outline-one text-xl py-2 px-16 w-full"
+              onClick={() => {
+                setIsVisible(false);
+                setInputs({
+                  mealName: '',
+                  selectedValue: '',
+                  image: '',
+                  ingredients: '',
+                  theWay: '',
+                  advise: '',
+                  link: '',
+                });
+              }}
+            >
+              إلغاء
+            </button>
+          )}
         </div>
       </form>
     </div>

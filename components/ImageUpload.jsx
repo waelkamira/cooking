@@ -64,7 +64,7 @@ export default function ImageUpload({ image, style }) {
             )}
             {!imageUrl && (
               <div className="flex flex-col justify-center items-center h-full">
-                <MdOutlineAddPhotoAlternate className="text-one text-3xl" />
+                <MdOutlineAddPhotoAlternate className="text-one text-3xl z-50" />
                 <h1 className="text-white font-bold m-2 text-lg">
                   {style ? '' : 'أضف صورة للطبخة'}
                 </h1>

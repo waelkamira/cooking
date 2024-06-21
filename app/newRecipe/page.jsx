@@ -36,11 +36,11 @@ export default function NewRecipe() {
           (session?.status === 'unauthenticated'
             ? 'h-[650px]'
             : 'h-[2620px] sm:h-[2350px] lg:h-[2500px]') +
-          ' relative w-full 2xl:w-2/3 flex flex-col items-start justify-center sm:flex-row top-0 overflow-hidden'
+          ' relative border border-one rounded-lg w-full 2xl:w-2/3 flex flex-col items-start justify-center sm:flex-row top-0 overflow-hidden'
         }
         onClick={(e) => e.stopPropagation()}
       >
-        <div
+        {/* <div
           className={
             (session?.status === 'authenticated' ? 'h-full' : 'h-[670px]') +
             ' relative border border-five w-full top-0 flex items-start justify-start rounded-lg overflow-hidden'
@@ -55,7 +55,7 @@ export default function NewRecipe() {
             alt="photo"
             priority
           />
-        </div>
+        </div> */}
         <div className="absolute w-full h-full flex flex-col items-center justify-start rounded-lg grow z-40 ">
           <div className="relative h-44 sm:h-72 lg:h-96 w-full ">
             <Image
@@ -87,7 +87,11 @@ export default function NewRecipe() {
                 <TbArrowBigLeftLinesFilled className="hidden xl:block text-one text-5xl mx-32 animate-pulse transition-all duration-300" />
                 <ImageUpload />
               </div>
-              <CookingForm setIsVisible={setIsVisible} isVisible={isVisible} />
+              <CookingForm
+                setIsVisible={setIsVisible}
+                isVisible={isVisible}
+                cancel={false}
+              />
             </div>
           )}
         </div>

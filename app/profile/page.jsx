@@ -20,7 +20,7 @@ export default function Profile() {
   const { profile_image, dispatch } = useContext(inputsContext);
   const session = useSession();
   const [newImage, setNewImage] = useState('');
-
+  console.log(user);
   useEffect(() => {
     editProfileImage();
     setNewImage(profile_image?.image);
@@ -89,11 +89,20 @@ export default function Profile() {
                   }
                   layout="fill"
                   objectFit="cover"
-                  alt={session?.data?.user?.name}
+                  alt={user?.name}
                 />
               </div>
-
               <div className="relative">
+                <div className="absolute right-1 -bottom-6 h-20 w-20 bg-four border-2 border-one rounded-full cursor-pointer overflow-hidden z-40">
+                  <Image
+                    src={user?.image}
+                    layout="fill"
+                    objectFit="cover"
+                    alt={user?.name}
+                  />
+                </div>
+              </div>
+              {/* <div className="relative">
                 <div className="absolute right-1 -bottom-6 h-20 w-20 bg-four rounded-full cursor-pointer overflow-hidden z-40">
                   <ImageUpload
                     image={user?.image}
@@ -103,7 +112,7 @@ export default function Profile() {
                   />
                 </div>
                 <MdOutlineAddPhotoAlternate className="absolute text-one text-xl -top-12 right-1 z-50" />
-              </div>
+              </div> */}
             </div>
 
             <div className="flex flex-col justify-center items-center w-full text-start text-white">

@@ -27,7 +27,7 @@ export default function NewRecipeButton() {
           onClick={() => setIsVisible(false)}
         >
           <div
-            className="absolute top-2 right-2 sm:top-16 sm:right-16 flex justify-center items-center z-50 bg-five hover:bg-one cursor-pointer h-fit px-4 py-1 text-white font-semibold rounded-lg hover:scale-105 shadow-lg"
+            className="absolute top-2 right-2 sm:top-16 sm:right-16 flex justify-center items-center z-50 bg-five hover:bg-one cursor-pointer h-fit px-4 py-1 text-white font-semibold rounded-lg hover:scale-105 shadow-lg "
             onClick={() => setIsVisible(false)}
           >
             <h1>إغلاق</h1>
@@ -38,18 +38,20 @@ export default function NewRecipeButton() {
               (session?.status === 'unauthenticated'
                 ? 'h-[700px]'
                 : 'h-[2620px] sm:h-[2350px] lg:h-[2500px]') +
-              ' relative w-full 2xl:w-2/3 flex flex-col items-start justify-center sm:flex-row 2xl:my-8 top-0 z-40 overflow-hidden'
+              ' relative w-full 2xl:w-2/3 flex flex-col items-start justify-center sm:flex-row 2xl:my-8 top-0 z-40 overflow-hidden border border-one'
             }
             onClick={(e) => e.stopPropagation()}
           >
             <div
               className={
                 (session?.status === 'authenticated' ? 'h-full' : 'h-[700px]') +
-                ' relative border border-five w-full top-0 flex items-start justify-start rounded-lg overflow-hidden'
+                ' relative border border-one w-full top-0 flex items-start justify-start rounded-lg overflow-hidden bg-one'
               }
             >
               <Image
-                src={'/background.png'}
+                src={
+                  'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718959983/background_uzv9vh.png'
+                }
                 layout="fill"
                 objectFit={'cover'}
                 alt="photo"
@@ -57,10 +59,12 @@ export default function NewRecipeButton() {
               />
             </div>
 
-            <div className="absolute w-full h-full flex flex-col items-center justify-start rounded-lg grow z-50 ">
-              <div className="relative h-44 sm:h-72 lg:h-96 w-full ">
+            <div className="absolute w-full h-full flex flex-col items-center justify-start rounded-lg grow z-50 bg-four ">
+              <div className="relative h-44 sm:h-72 lg:h-[500px] w-full ">
                 <Image
-                  src={'/decoration.png'}
+                  src={
+                    'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716953/cooking/decoration_w0jwvc.png'
+                  }
                   fill
                   alt="decoration"
                   priority

@@ -32,11 +32,9 @@ export default function SideBar() {
               onClick={() => router.push('/profile?username')}
             >
               <div className="relative size-14 overflow-hidden rounded-full">
-                <Image src={user?.image} fill alt={session?.data?.user?.name} />
+                <Image src={user?.image} fill alt={user?.name} />
               </div>
-              <h1 className=" text-white text-nowrap">
-                {session?.data?.user?.name}{' '}
-              </h1>
+              <h1 className=" text-white text-nowrap">{user?.name} </h1>
             </div>
 
             <div className="w-full">
