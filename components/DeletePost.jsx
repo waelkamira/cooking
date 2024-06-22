@@ -2,6 +2,7 @@
 import toast from 'react-hot-toast';
 import { inputsContext } from './Context';
 import { useContext } from 'react';
+import CustomToast from './CustomToast';
 
 export async function HandleDeletePost(recipe) {
   const { dispatch } = useContext(inputsContext);
@@ -12,9 +13,13 @@ export async function HandleDeletePost(recipe) {
   });
 
   if (response.ok) {
-    toast.success('تم حذف هذا البوست');
+    toast.custom((t) => (
+      <CustomToast t={t} message={'تم حذف هذا البوست بنجاح'} greenEmoji={'✔'} />
+    ));
     dispatch({ type: 'DELETE_RECIPE', payload: recipe });
   } else {
-    toast.error('حدث خطأ ما');
+    toast.custom((t) => (
+      <CustomToast t={t} message={'😐 حدث خطأ ما '} redEmoji={'✖'} />
+    ));
   }
 }

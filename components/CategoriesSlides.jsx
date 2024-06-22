@@ -8,14 +8,20 @@ const animation = { duration: 50000, easing: (t) => t };
 
 const smallSize = [
   {
+    name: 'وجبة رئيسية',
+
     image:
       'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716946/cooking/1_trrjyx.png',
   },
   {
+    name: 'معجنات',
+
     image:
       'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718726082/huap39y7d4csoxckmshu.png',
   },
   {
+    name: 'شوربات',
+
     image:
       'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716946/cooking/3_dj2pgz.png',
   },
@@ -59,12 +65,13 @@ export default function Categories() {
     },
   });
   return (
-    <div className="w-full xl:w-1/3 h-full rounded-lg">
+    <div className="w-full xl:w-1/3 h-full rounded-lg bg-four">
       <div className="xl:hidden">
         <hr className="w-full h-1 m-0 p-0 bg-white border border-white rounded-full" />
         <div ref={sliderRef} className=" keen-slider ">
-          {smallSize.map((category) => (
+          {smallSize.map((category, index) => (
             <div
+              key={index}
               className="keen-slider__slide flex flex-col gap-2 justify-center items-center bg-four rounded-lg cursor-pointer h-full "
               onClick={() => router.push(`?searchCategory=${category?.name}`)}
             >
@@ -84,29 +91,6 @@ export default function Categories() {
         </div>
         <hr className="w-full h-1 m-0 p-0 bg-white border border-white rounded-full" />
       </div>
-      {/* <div className="hidden xl:flex flex-col items-center justify-center p-4 w-full bg-four rounded-lg border-[10px] border-one">
-        <h1 className="text-lg sm:text-xl text-center p-2 text-white mx-4 font-semibold w-full select-none">
-          ابحث حسب الصنف
-        </h1>
-        {smallSize.map((category) => (
-          <div className=" flex flex-col justify-center items-center rounded-full mx-4 cursor-pointer w-full ">
-            <div
-              className="relative border border-one w-full h-[150px] rounded-lg overflow-hidden hover:scale-[101%] transition-all duration-300 shadow-lg"
-              onClick={() => router.push(`?searchCategory=${category?.name}`)}
-            >
-              <Image
-                src={category.image}
-                layout="fill"
-                objectFit="cover"
-                alt="photo"
-              />
-            </div>
-            <h1 className="text-lg sm:text-xl text-center p-2 text-white mx-4 font-ةي w-full select-none">
-              {category.name}
-            </h1>
-          </div>
-        ))}
-      </div> */}
     </div>
   );
 }

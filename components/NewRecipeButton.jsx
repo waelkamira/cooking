@@ -60,10 +60,10 @@ export default function NewRecipeButton() {
             </div>
 
             <div className="absolute w-full h-full flex flex-col items-center justify-start rounded-lg grow z-50 bg-four ">
-              <div className="relative h-44 sm:h-72 lg:h-[500px] w-full ">
+              <div className="relative h-44 sm:h-72 lg:h-[550px] w-full ">
                 <Image
                   src={
-                    'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716953/cooking/decoration_w0jwvc.png'
+                    'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718994271/cooking/yrcziegsjcyzwszl4bjh.png'
                   }
                   fill
                   alt="decoration"

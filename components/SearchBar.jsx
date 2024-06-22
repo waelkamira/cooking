@@ -49,8 +49,8 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="w-full lg:mt-8  bg-four rounded-lg pl-4">
-      <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full sticky mb-4">
+    <div className="flex flex-col items-start justify-center w-full lg:mt-8 bg-four rounded-lg ">
+      <div className="flex flex-col justify-center items-center sm:flex-row gap-4 w-full mb-4 ">
         <div className="relative w-full xl:w-96 h-52 overflow-hidden">
           <Image
             priority
@@ -99,7 +99,7 @@ export default function SearchBar() {
             </h1>
           </div>
           {searchedValues?.map((recipe, index) => (
-            <div className="w-full 2xl:w-2/3">
+            <div className="w-full 2xl:w-2/3" key={index}>
               <SmallItem recipe={recipe} index={index} />
             </div>
           ))}

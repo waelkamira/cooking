@@ -23,7 +23,7 @@ export default function CustomToast({
             <div className="relative w-14 h-14 flex-shrink-0 pt-0.5 rounded-full ">
               <Image
                 className="h-10 w-10 rounded-full"
-                src="https://res.cloudinary.com/dh2xlutfu/image/upload/v1717530051/cooking/bahiga_hih1ki.png"
+                src="https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716951/cooking/bahiga_cmzcf4.png"
                 alt="photo"
                 fill
               />

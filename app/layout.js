@@ -4,12 +4,13 @@ import { Rubik } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import { InputsContextProvider } from '../components/Context';
 import AuthContextProvider from '../components/authContext/AuthContext';
-import HomePageSidesPhotos from '../components/HomePageSidesPhotos';
 
 const inter = Inter({ subsets: ['latin'] });
 const rubik = Rubik({
   subsets: ['latin'],
-  weight: '300',
+  weight: ['300', '400', '500', '700'],
+  subsets: ['latin'],
+  display: 'swap',
   variable: '--font-rubik',
 });
 

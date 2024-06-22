@@ -55,11 +55,13 @@ export default function Item({
         </div>
       )}
       {session?.status === 'authenticated' && (
-        <div className="relative w-full bg-four h-full p-4 lg:p-8 rounded-lg">
+        <div className="relative flex flex-col items-start w-full bg-four h-full p-2 lg:p-8 rounded-lg">
           <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
             <Image
               priority
-              src={'/100.png'}
+              src={
+                'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716950/cooking/99_onuwhf.png'
+              }
               layout="fill"
               objectFit="cover"
               alt="photo"
@@ -76,18 +78,20 @@ export default function Item({
             />
             {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
           </div>
-          <div className="relative w-full h-52 overflow-hidden xl:mt-8">
+          <div className="relative w-full h-52 overflow-hidden my-4 xl:mt-8">
             <Image
               priority
-              src={'/logo1.png'}
+              src={
+                'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716956/cooking/logo1_uwwlyk.png'
+              }
               layout="fill"
               objectFit="contain"
               alt="photo"
             />
           </div>
-          <div className="flex justify-between items-center w-full gap-4 my-8">
-            <h1 className="grow text-lg lg:text-2xl w-full text-white ">
-              الوصفة:{' '}
+          <div className="flex justify-between items-center w-full gap-4 sm:my-8">
+            <h1 className="grow text-lg lg:text-3xl w-full text-white select-none">
+              الوصفة:
             </h1>
           </div>
           <div className="flex justify-center w-full">
@@ -97,96 +101,105 @@ export default function Item({
                   <Image src={userImage} fill alt={mealName} />
                 </div>
                 <div className="flex flex-col justify-center">
-                  <h6 className="text-[12px] sm:text-[15px] text-eight font-semibold select-none">
+                  <h6 className="text-[13px] sm:text-[18px] text-eight select-none">
                     {userName}
                   </h6>
                   <h1
-                    className="text-[12px] sm:text-[12px] text-gray-400 font-semibold select-none text-end"
+                    className="text-[8px] sm:text-[12px] text-gray-400 select-none text-end"
                     dir="ltr"
                   >
                     {formatDate(createdAt)}
                   </h1>
                 </div>
               </div>
-              <div className="relative w-full h-44 sm:h-96 overflow-hidden rounded-lg border bg-gray-400">
+              <h1 className="text-white bg-four my-4 sm:my-8 text-3xl sm:text-4xl lg:text-5xl font-medium text-center select-none  rounded-lg p-2 sm:p-4">
+                {mealName}
+              </h1>
+              <div className="relative w-full h-44 sm:h-96 overflow-hidden rounded-lg border bg-gray-100">
                 <Image
                   src={image}
                   layout="fill"
-                  objectFit="contain"
+                  objectFit="cover"
                   alt={mealName}
                 />
               </div>
-              <h1 className="text-four my-4 text-3xl md:text-5xl font-bold text-center select-none  rounded-lg p-2">
-                {mealName}
-              </h1>
-              <div className="bg-white rounded-lg p-2 lg:p-8">
-                <div className="flex justify-between items-center mb-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
+
+              <div className="bg-white rounded-lg mt-16">
+                <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
                   <h1 className="text-white font-bold text-xl sm:text-3xl w-full my-2 select-none">
                     <span className="text-one font-bold text-2xl mx-2 select-none">
                       #
                     </span>
                     المقادير
                   </h1>
-                  <div className="relative size-24 md:size-32 xl:w-44 xl:size-44 overflow-hidden rounded-lg grow">
+                  <div className="relative size-40 md:size-44 xl:size-48 overflow-hidden rounded-lg grow">
                     <Image
-                      src={'/item7.png'}
+                      src={
+                        'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716954/cooking/item7_eg8p34.png'
+                      }
                       layout="fill"
                       objectFit="contain"
                       alt={mealName}
                     />
                   </div>
                 </div>
-                <pre className="text-md lg:text-lg font-bold w-full select-none">
+                <pre className="text-md lg:text-lg xl:text-xl w-full select-none ">
                   {ingredients}
                 </pre>
-                <div className="flex justify-between items-center my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
+                <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
                   <h1 className="text-white font-bold text-xl sm:text-3xl w-full my-2 select-none">
                     <span className="text-one font-bold text-2xl mx-2 select-none">
                       #
                     </span>
                     الطريقة
                   </h1>
-                  <div className="relative size-24 md:size-32 xl:w-44 xl:size-44 overflow-hidden rounded-lg rotate-45">
+                  <div className="relative size-28 md:size-40 xl:size-48  overflow-hidden rounded-lg rotate-45">
                     <Image
-                      src={'/item9.png'}
+                      src={
+                        'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716954/cooking/item9_fl6au4.png'
+                      }
                       layout="fill"
                       objectFit="contain"
                       alt={mealName}
                     />
                   </div>
                 </div>
-                <pre className="text-lg font-bold w-full select-none">
+                <pre className="text-md lg:text-lg xl:text-xl w-full select-none ">
                   {theWay}
                 </pre>
-                <div className="flex justify-between items-center my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
+                <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
                   <h1 className="text-white font-bold text-xl sm:text-3xl w-full my-2 select-none">
                     <span className="text-one font-bold text-2xl mx-2 select-none">
                       #
                     </span>
                     نصائح
                   </h1>
-                  <div className="relative w-28 h-28 md:w-32 md:h-32 xl:w-44 xl:h-44 overflow-hidden rounded-lg rotate-[10deg]">
+                  <div className="relative size-28 md:size-32 xl:size-44 overflow-hidden rounded-lg">
                     <Image
-                      src={'/item5.png'}
+                      src={
+                        'https://res.cloudinary.com/dh2xlutfu/image/upload/v1719047940/cooking/qtkwhiyf7hywaeh3yvd0.png'
+                      }
                       layout="fill"
                       objectFit="contain"
                       alt={mealName}
                     />
                   </div>
                 </div>
-                <pre className="text-lg font-bold w-full mt-10 select-none">
+                <pre className="text-md lg:text-lg xl:text-xl w-full select-none ">
                   {advise}
                 </pre>
-                <div className="flex justify-between items-center my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
+                <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
                   <h1 className="text-white font-bold text-2xl lg:text-3xl w-full my-2 select-none">
                     <span className="text-one font-bold text-2xl mx-2 select-none">
                       #
                     </span>
                     فيديو
                   </h1>
-                  <div className="relative w-24 h-24 md:w-32 md:h-32 xl:w-44 xl:h-44 overflow-hidden rounded-lg rotate-20">
+                  <div className="relative size-28 md:size-32 xl:size-44 overflow-hidden rounded-lg rotate-20">
                     <Image
-                      src={'/item10.png'}
+                      src={
+                        'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716954/cooking/item10_zjts4w.png'
+                      }
                       layout="fill"
                       objectFit="contain"
                       alt={mealName}

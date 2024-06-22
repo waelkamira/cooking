@@ -44,14 +44,17 @@ export default function CategoriesSlid() {
   const router = useRouter();
 
   return (
-    <div className="hidden xl:flex flex-col items-center justify-center p-4 w-full bg-four rounded-lg border-[8px] border-one">
+    <div className="hidden xl:flex flex-col items-center justify-center p-4 w-full bg-four rounded-lg ">
       <h1 className="text-lg sm:text-xl text-center p-2 text-white mx-4 font-semibold w-full select-none">
         ابحث حسب الصنف
       </h1>
-      {smallSize.map((category) => (
-        <div className=" flex flex-col justify-center items-center rounded-full mx-4 cursor-pointer w-full ">
+      {smallSize.map((category, index) => (
+        <div
+          className=" flex flex-col justify-center items-center rounded-full mx-4 cursor-pointer w-full "
+          key={index}
+        >
           <div
-            className="relative border border-one w-full h-[150px] rounded-lg overflow-hidden hover:scale-[101%] transition-all duration-300 shadow-lg"
+            className="relative border border-one w-full h-[144px] rounded-lg overflow-hidden hover:scale-[101%] transition-all duration-300 shadow-lg"
             onClick={() => router.push(`?searchCategory=${category?.name}`)}
           >
             <Image

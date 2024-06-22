@@ -23,7 +23,7 @@ export default function SideBar() {
   }, []);
 
   return (
-    <div className="hidden xl:block xl:w-1/4 2xl:w-1/5 h-fit bg-gradient-to-t from-five to-five p-4">
+    <div className="hidden xl:block xl:w-1/3 2xl:w-1/5 h-fit  border-l-[5px] border-one">
       <div className="w-full bg-four rounded-lg">
         {session?.status === 'authenticated' && (
           <div className="flex flex-col justify-between items-center p-4 rounded-lg w-full">
@@ -54,42 +54,44 @@ export default function SideBar() {
         )}
       </div>
       {session?.status === 'authenticated' && (
-        <div className="w-full bg-four rounded-lg p-4 my-4">
-          <div className=" relative w-full h-32">
-            <Image
-              priority
-              src={
-                'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716955/cooking/nasoh_and_bahiga_cn3e7h.png'
-              }
-              layout="fill"
-              objectFit="contain"
-              alt="photo"
+        <div className="w-full rounded-lg my-4">
+          <div className="p-4 rounded-lg bg-four overflow-hidden my-4">
+            <div className=" relative w-full h-32">
+              <Image
+                priority
+                src={
+                  'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716955/cooking/nasoh_and_bahiga_cn3e7h.png'
+                }
+                layout="fill"
+                objectFit="contain"
+                alt="photo"
+              />
+            </div>
+            <div className="hidden lg:flex flex-col justify-between items-center w-full h-full rounded-lg">
+              <NewRecipeButton />
+            </div>
+
+            <Button
+              title={'شو أطبخ اليوم؟'}
+              style={' '}
+              path="/whatToCookToday"
             />
+
+            <Button title={'طبخاتي'} style={' '} path="/myRecipes" />
+            <Button title={'وصفات أعجبتني'} style={' '} path="/favoritePosts" />
+            <Button title={'الجوائز'} style={' '} path="/myGarden" />
+
+            {session?.status === 'authenticated' && user?.isAdmin && (
+              <Button title={'المستخدمين'} style={' '} path="/users" />
+            )}
           </div>
-          <div className="hidden lg:flex flex-col justify-between items-center w-full h-full rounded-lg">
-            <NewRecipeButton />
-          </div>
 
-          <Button
-            title={'شو أطبخ اليوم؟'}
-            style={' '}
-            path="/whatToCookToday"
-          />
-
-          <Button title={'طبخاتي'} style={' '} path="/myRecipes" />
-          <Button title={'وصفات أعجبتني'} style={' '} path="/favoritePosts" />
-          <Button title={'الجوائز'} style={' '} path="/myGarden" />
-
-          {session?.status === 'authenticated' && user?.isAdmin && (
-            <Button title={'المستخدمين'} style={' '} path="/users" />
-          )}
-          <div>
+          <div className="p-4 rounded-lg bg-four overflow-hidden my-4">
             <TheGarden />
           </div>
-          {/* <div className="relative h-[450px] w-full rounded-lg overflow-hidden">
-            <Image src={'/menu6.png'} fill alt={'photo'} />
-          </div> */}
-          <Categories />
+          <div className="p-4 rounded-lg bg-four overflow-hidden my-4">
+            <Categories />
+          </div>
         </div>
       )}
     </div>

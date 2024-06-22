@@ -41,7 +41,7 @@ export default function TheGarden() {
   const result = () => {
     for (let i = 0; i < numberOfSquares; i++) {
       arr.push(
-        <div className="flex justify-center items-center size-[74px] bg-four m-2 rounded-lg text-center ">
+        <div className="flex justify-center items-center size-[71px] bg-four m-2 rounded-lg text-center ">
           <h1 className="text-4xl">🍕</h1>
         </div>
       );
@@ -50,17 +50,20 @@ export default function TheGarden() {
   };
 
   return (
-    <div className="text-white mt-2 mb-4">
+    <div className=" text-white mt-2 mb-4">
       {icons?.length === 0 && <Loading />}
       {icons?.length > 0 && (
-        <div className="grid grid-cols-3 bg-one rounded-lg">
+        <div className="flex flex-wrap justify-center items-center bg-one rounded-lg">
           {icons?.length > 0 &&
             icons
               ?.slice(0, userRecipes?.length <= 9 ? userRecipes?.length : 9)
               ?.map((icon, index) => (
-                <div className="bg-four p-2 m-2 rounded-lg overflow-hidden">
+                <div
+                  className="bg-four p-1 m-2 rounded-lg overflow-hidden"
+                  key={index}
+                >
                   <div
-                    className="relative  m-1 w-[50px] h-[50px] transition-all duration-200 hover:scale-110"
+                    className="relative size-[62px] transition-all duration-200 hover:scale-110"
                     key={index}
                   >
                     <Image
