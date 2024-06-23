@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import SideBarMenu from '../../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 
-export default function page() {
+export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
   const [oneCookingRecipe, setOneCookingRecipe] = useState({});
   const { id } = useParams();

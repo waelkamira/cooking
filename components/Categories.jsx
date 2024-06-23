@@ -44,8 +44,8 @@ export default function CategoriesSlid() {
   const router = useRouter();
 
   return (
-    <div className="hidden xl:flex flex-col items-center justify-center p-4 w-full bg-four rounded-lg ">
-      <h1 className="text-lg sm:text-xl text-center p-2 text-white mx-4 font-semibold w-full select-none">
+    <div className="hidden xl:flex flex-col items-center justify-center px-2 w-full bg-four rounded-lg ">
+      <h1 className="text-lg sm:text-xl text-center py-4 mt- text-white mx-4 font-semibold w-full select-none">
         ابحث حسب الصنف
       </h1>
       {smallSize.map((category, index) => (

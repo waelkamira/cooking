@@ -152,7 +152,7 @@ export default function SearchBar() {
           {isVisible &&
             searchByCategory !== '' &&
             searchByCategory?.map((recipe, index) => (
-              <div className="w-full 2xl:w-2/3">
+              <div className="w-full 2xl:w-2/3" key={index}>
                 <SmallItem recipe={recipe} index={index} />
               </div>
             ))}

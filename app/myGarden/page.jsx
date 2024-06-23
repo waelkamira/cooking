@@ -111,7 +111,10 @@ export default function TheGarden() {
           <div className=" flex flex-wrap items-center justify-center w-full xl:w-2/3  h-full bg-one rounded-lg p-4">
             {icons?.length > 0 &&
               icons?.slice(0, userRecipes?.length)?.map((icon, index) => (
-                <div className="p-2 rounded-lg bg-four overflow-hidden m-1">
+                <div
+                  className="p-2 rounded-lg bg-four overflow-hidden m-1"
+                  key={index}
+                >
                   <div
                     className="relative w-[50px] h-[50px] sm:w-[70px] sm:h-[70px] transition-all duration-300 hover:scale-110"
                     key={index}

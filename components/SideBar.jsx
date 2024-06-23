@@ -23,10 +23,10 @@ export default function SideBar() {
   }, []);
 
   return (
-    <div className="hidden xl:block xl:w-1/3 2xl:w-1/5 h-fit  border-l-[5px] border-one">
-      <div className="w-full bg-four rounded-lg">
+    <div className="hidden xl:block w-80 h-fit border-l-[16px] border-one">
+      <div className="w-full bg-four rounded-r-lg">
         {session?.status === 'authenticated' && (
-          <div className="flex flex-col justify-between items-center p-4 rounded-lg w-full">
+          <div className="flex flex-col justify-between items-center p-4 rounded-r-lg w-full">
             <div
               className="flex justify-start items-center w-full cursor-pointer gap-2 line-clamp-1"
               onClick={() => router.push('/profile?username')}
@@ -54,8 +54,8 @@ export default function SideBar() {
         )}
       </div>
       {session?.status === 'authenticated' && (
-        <div className="w-full rounded-lg my-4">
-          <div className="p-4 rounded-lg bg-four overflow-hidden my-4">
+        <div className="w-full rounded-r-lg my-4">
+          <div className="p-4 rounded-r-lg bg-four overflow-hidden my-4">
             <div className=" relative w-full h-32">
               <Image
                 priority
@@ -67,7 +67,7 @@ export default function SideBar() {
                 alt="photo"
               />
             </div>
-            <div className="hidden lg:flex flex-col justify-between items-center w-full h-full rounded-lg">
+            <div className="hidden lg:flex flex-col justify-between items-center w-full h-full rounded-r-lg">
               <NewRecipeButton />
             </div>
 
@@ -86,10 +86,10 @@ export default function SideBar() {
             )}
           </div>
 
-          <div className="p-4 rounded-lg bg-four overflow-hidden my-4">
+          <div className="p-4 rounded-r-lg bg-four overflow-hidden my-4">
             <TheGarden />
           </div>
-          <div className="p-4 rounded-lg bg-four overflow-hidden my-4">
+          <div className="px-2 rounded-r-lg bg-four overflow-hidden my-4">
             <Categories />
           </div>
         </div>

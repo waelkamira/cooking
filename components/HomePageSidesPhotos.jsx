@@ -7,7 +7,7 @@ export default function HomePageSidesPhotos() {
       <div className="absolute w-72 h-full -left-[130px] top-0 z-10 ">
         <Image
           src={
-            'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716947/cooking/vegetables_dxjmpi.png'
+            'https://res.cloudinary.com/dh2xlutfu/image/upload/v1719060136/lzyndtjo7n0cr0kkczzd.png'
           }
           layout="fill"
           objectFit="cover"
@@ -18,7 +18,7 @@ export default function HomePageSidesPhotos() {
       <div className="absolute w-72 h-full -right-[130px] top-0 z-10 rotate-180">
         <Image
           src={
-            'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716947/cooking/vegetables_dxjmpi.png'
+            'https://res.cloudinary.com/dh2xlutfu/image/upload/v1719060136/lzyndtjo7n0cr0kkczzd.png'
           }
           layout="fill"
           objectFit="cover"

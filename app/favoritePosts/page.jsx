@@ -14,7 +14,7 @@ import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import Loading from '../../components/Loading';
 
-export default function page() {
+export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
   const session = useSession();
@@ -105,7 +105,7 @@ export default function page() {
         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 justify-center items-center w-full ">
           {userFavorites?.length > 0 &&
             userFavorites.map((recipe, index) => (
-              <div className="relative ">
+              <div className="relative " key={index}>
                 {session?.status === 'authenticated' && (
                   <div
                     className="absolute top-12 left-4 flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"

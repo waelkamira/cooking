@@ -8,7 +8,7 @@ import { TfiMenuAlt } from 'react-icons/tfi';
 import Button from '../../components/Button';
 import Loading from '../../components/Loading';
 
-export default function whatToCookToday() {
+export default function WhatToCookToday() {
   const [isOpen, setIsOpen] = useState(false);
   const [randomCookingRecipes, setRandomCookingRecipes] = useState([]);
 

@@ -118,7 +118,7 @@ export default function MyRecipes() {
         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 justify-center items-center w-full ">
           {myRecipes?.length > 0 &&
             myRecipes.map((recipe, index) => (
-              <div className="relative ">
+              <div className="relative " key={index}>
                 {session?.status === 'authenticated' && (
                   <div
                     className="absolute top-12 left-4 flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"

@@ -100,8 +100,11 @@ export default function Users() {
         {users?.length === 0 && <Loading />}
         <div className="w-full xl:w-1/2 flex flex-col gap-2 justify-center items-start p-4 sm:p-8 ">
           {users?.length > 0 &&
-            users?.map((user) => (
-              <div className="flex justify-between items-center bg-four my-2 text-wite w-full h-24 border-[3px] border-one p-2 rounded-lg">
+            users?.map((user, index) => (
+              <div
+                className="flex justify-between items-center bg-four my-2 text-wite w-full h-24 border-[3px] border-one p-2 rounded-lg"
+                key={index}
+              >
                 <div>
                   <h1 className="text-sm sm-text-md lg:text-lg">
                     اسم المستخدم: {user?.name}

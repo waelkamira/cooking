@@ -20,7 +20,7 @@ export default function Profile() {
   const { profile_image, dispatch } = useContext(inputsContext);
   const session = useSession();
   const [newImage, setNewImage] = useState('');
-  console.log(user);
+
   useEffect(() => {
     editProfileImage();
     setNewImage(profile_image?.image);

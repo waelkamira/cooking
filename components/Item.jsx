@@ -119,7 +119,7 @@ export default function Item({
                 <Image
                   src={image}
                   layout="fill"
-                  objectFit="cover"
+                  objectFit="contain"
                   alt={mealName}
                 />
               </div>

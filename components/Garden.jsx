@@ -50,10 +50,10 @@ export default function TheGarden() {
   };
 
   return (
-    <div className=" text-white mt-2 mb-4">
+    <div className=" text-white ">
       {icons?.length === 0 && <Loading />}
       {icons?.length > 0 && (
-        <div className="flex flex-wrap justify-center items-center bg-one rounded-lg">
+        <div className="flex flex-wrap justify-center items-center bg-one rounded-lg size-[270px]">
           {icons?.length > 0 &&
             icons
               ?.slice(0, userRecipes?.length <= 9 ? userRecipes?.length : 9)

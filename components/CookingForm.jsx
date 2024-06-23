@@ -391,14 +391,14 @@ export default function CookingForm({
         <div className="flex flex-col sm:flex-row justify-around items-center gap-8 w-full my-12">
           <button
             type="submit"
-            className="btn bg-five rounded-lg text-white shadow-lg hover:outline outline-one hover:bg-one text-xl py-2 px-16 w-full"
+            className="btn bg-five rounded-lg text-white shadow-lg hover:outline outline-one text-xl hover:font-bold py-2 px-16 w-full"
           >
             حفظ
           </button>
           {cancel && (
             <button
               type="text"
-              className="btn bg-five rounded-lg text-white shadow-lg hover:outline outline-one text-xl py-2 px-16 w-full"
+              className="btn bg-five rounded-lg text-white shadow-lg hover:outline  outline-one text-xl hover:font-bold py-2 px-16 w-full"
               onClick={() => {
                 setIsVisible(false);
                 setInputs({
