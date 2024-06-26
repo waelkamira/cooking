@@ -72,7 +72,6 @@ export default function Item({
             <TfiMenuAlt
               className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
               onClick={() => {
-                console.log('clicked');
                 setIsOpen(!isOpen);
               }}
             />
@@ -112,7 +111,7 @@ export default function Item({
                   </h1>
                 </div>
               </div>
-              <h1 className="text-white bg-four my-4 sm:my-8 text-3xl sm:text-4xl lg:text-5xl font-medium text-center select-none  rounded-lg p-2 sm:p-4">
+              <h1 className="text-one my-4 sm:my-8 text-3xl sm:text-4xl lg:text-5xl text-center select-none  rounded-lg p-2 sm:p-4">
                 {mealName}
               </h1>
               <div className="relative w-full h-44 sm:h-96 overflow-hidden rounded-lg border bg-gray-100">
@@ -124,7 +123,7 @@ export default function Item({
                 />
               </div>
 
-              <div className="bg-white rounded-lg mt-16">
+              <div className="bg-white rounded-lg mt-4 sm:mt-16">
                 <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
                   <h1 className="text-white font-bold text-xl sm:text-3xl w-full my-2 select-none">
                     <span className="text-one font-bold text-2xl mx-2 select-none">
@@ -167,27 +166,31 @@ export default function Item({
                 <pre className="text-md lg:text-lg xl:text-xl w-full select-none ">
                   {theWay}
                 </pre>
-                <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
-                  <h1 className="text-white font-bold text-xl sm:text-3xl w-full my-2 select-none">
-                    <span className="text-one font-bold text-2xl mx-2 select-none">
-                      #
-                    </span>
-                    نصائح
-                  </h1>
-                  <div className="relative size-28 md:size-32 xl:size-44 overflow-hidden rounded-lg">
-                    <Image
-                      src={
-                        'https://res.cloudinary.com/dh2xlutfu/image/upload/v1719047940/cooking/qtkwhiyf7hywaeh3yvd0.png'
-                      }
-                      layout="fill"
-                      objectFit="contain"
-                      alt={mealName}
-                    />
-                  </div>
-                </div>
-                <pre className="text-md lg:text-lg xl:text-xl w-full select-none ">
-                  {advise}
-                </pre>
+                {advise && (
+                  <>
+                    <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible mb-16">
+                      <h1 className="text-white font-bold text-xl sm:text-3xl w-full my-2 select-none">
+                        <span className="text-one font-bold text-2xl mx-2 select-none">
+                          #
+                        </span>
+                        نصائح
+                      </h1>
+                      <div className="relative size-28 md:size-32 xl:size-44 overflow-hidden rounded-lg">
+                        <Image
+                          src={
+                            'https://res.cloudinary.com/dh2xlutfu/image/upload/v1719047940/cooking/qtkwhiyf7hywaeh3yvd0.png'
+                          }
+                          layout="fill"
+                          objectFit="contain"
+                          alt={mealName}
+                        />
+                      </div>
+                    </div>
+                    <pre className="text-md lg:text-lg xl:text-xl w-full select-none ">
+                      {advise}
+                    </pre>{' '}
+                  </>
+                )}
                 <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
                   <h1 className="text-white font-bold text-2xl lg:text-3xl w-full my-2 select-none">
                     <span className="text-one font-bold text-2xl mx-2 select-none">

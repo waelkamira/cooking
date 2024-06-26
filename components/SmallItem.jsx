@@ -486,7 +486,7 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
               ));
             }
           }}
-          className="sm:text-2xl p-2 bg-five hover:bg-one hover:scale-[102%] text-white font-medium text-center select-none w-full rounded-full shadow-lg transition-all duration-300"
+          className="sm:text-2xl p-2 bg-one text-white hover:scale-[102%] hover:text-white font-medium text-center select-none w-full rounded-lg shadow-lg transition-all duration-300 "
         >
           عرض الوصفة
         </button>

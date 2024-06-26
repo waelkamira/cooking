@@ -10,7 +10,7 @@ export default function CustomToast({
   greenEmoji,
   redEmoji,
 }) {
-  console.log(CurrentUser());
+  // console.log(CurrentUser());
   return (
     <div
       className={`${

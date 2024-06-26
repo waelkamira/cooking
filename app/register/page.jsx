@@ -136,7 +136,9 @@ export default function RegisterPage() {
         >
           <div className="relative h-8 w-8">
             <Image
-              src={'/google.png'}
+              src={
+                'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716952/cooking/google_qnzyrs.png'
+              }
               alt="google image"
               layout="fill"
               objectFit="contain"

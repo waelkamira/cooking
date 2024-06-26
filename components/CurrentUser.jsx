@@ -7,7 +7,7 @@ export default function CurrentUser() {
   const { profile_image } = useContext(inputsContext);
   const [user, setUser] = useState();
   // const session = useSession();
-  console.log('user', user);
+  // console.log('user', user);
   useEffect(() => {
     getUserData();
   }, [profile_image?.image]);

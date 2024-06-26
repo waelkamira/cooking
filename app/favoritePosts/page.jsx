@@ -61,7 +61,6 @@ export default function Page() {
         <TfiMenuAlt
           className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
           onClick={() => {
-            console.log('clicked');
             setIsOpen(!isOpen);
           }}
         />
