@@ -5,16 +5,24 @@ import SmallItem from './SmallItem';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
-import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
+import {
+  MdKeyboardDoubleArrowRight,
+  MdKeyboardDoubleArrowLeft,
+} from 'react-icons/md';
 import { Suspense } from 'react';
+
+// Function to normalize Arabic text
+const normalizeArabic = (text) => {
+  if (!text) return '';
+  return text.replace(/[أ]/g, 'ا');
+};
 
 export default function SearchBar() {
   const [pageNumber, setPageNumber] = useState(1);
   const [isVisible, setIsVisible] = useState(false);
-  const [searchByCategory, setSearchByCategory] = useState('');
+  const [searchByCategory, setSearchByCategory] = useState([]);
   const [searchedWord, setSearchedWord] = useState('');
-  const [searchedValues, setSearchedValues] = useState('');
+  const [searchedValues, setSearchedValues] = useState([]);
   const searchCate = useSearchParams();
   const searchCategory = searchCate.get('searchCategory');
   const router = useRouter();
@@ -24,28 +32,42 @@ export default function SearchBar() {
   }, [searchedWord, searchCategory, pageNumber]);
 
   const response = async () => {
-    await fetch('/api/allCookingRecipes')
-      .then((res) => res.json())
-      .then((res) => {
-        const startPage = (pageNumber - 1) * 10;
-        const endPage = startPage + 10;
-        if (searchedWord) {
-          setIsVisible(true);
-          setSearchByCategory([]);
-          const search = res?.filter((item) =>
-            item?.mealName?.match(searchedWord)
-          );
-          setSearchedValues(search.slice(startPage, endPage));
-        } else if (searchCategory) {
-          setIsVisible(true);
-          setSearchedValues([]);
-          setSearchedWord('');
-          const categoryValues = res?.filter(
-            (item) => item?.selectedValue === searchCategory
-          );
-          setSearchByCategory(categoryValues.slice(startPage, endPage));
-        }
-      });
+    const res = await fetch('/api/allCookingRecipes').then((res) => res.json());
+    const startPage = (pageNumber - 1) * 10;
+    const endPage = startPage + 10;
+
+    const normalizedSearchedWord = normalizeArabic(searchedWord);
+    const normalizedCategory = normalizeArabic(searchCategory);
+
+    if (!searchCategory && !searchedWord) {
+      setIsVisible(false);
+    }
+
+    if (searchedWord) {
+      setIsVisible(true);
+      const searchResults = res.filter((item) =>
+        normalizeArabic(item.mealName).includes(normalizedSearchedWord)
+      );
+      setSearchedValues(searchResults.slice(startPage, endPage));
+      setSearchByCategory([]); // Clear category search results
+    }
+
+    if (searchCategory) {
+      setIsVisible(true);
+      const categoryResults = res.filter(
+        (item) => normalizeArabic(item.selectedValue) === normalizedCategory
+      );
+      setSearchByCategory(categoryResults.slice(startPage, endPage));
+      setSearchedValues([]); // Clear text search results
+    }
+  };
+
+  const handleClose = () => {
+    setIsVisible(false);
+    setSearchByCategory([]);
+    setSearchedValues([]);
+    setSearchedWord('');
+    router.push('/');
   };
 
   return (
@@ -55,9 +77,7 @@ export default function SearchBar() {
           <div className="relative w-full xl:w-96 h-52 overflow-hidden">
             <Image
               priority
-              src={
-                'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716956/cooking/logo1_uwwlyk.png'
-              }
+              src="https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716956/cooking/logo1_uwwlyk.png"
               layout="fill"
               objectFit="contain"
               alt="photo"
@@ -72,7 +92,7 @@ export default function SearchBar() {
               id="search_meal"
               name="search_meal"
               placeholder="ابحث عن وصفة طبخ   ..."
-              className="w-full rounded-full border-2 text-lg md:text-xl placeholder:text-lg  py-1 md:py-2 px-10 outline-2 placeholder:px-2 focus:outline-one text-right"
+              className="w-full rounded-full border-2 text-lg md:text-xl placeholder:text-lg py-1 md:py-2 px-10 outline-2 placeholder:px-2 focus:outline-one text-right"
             />
             <div className="absolute top-3 md:top-4 right-4">
               <IoIosSearch className="text-one font-bold size-5" />
@@ -80,17 +100,11 @@ export default function SearchBar() {
           </div>
         </div>
 
-        {isVisible && searchedValues?.length > 0 && searchedWord !== '' && (
+        {isVisible && (
           <div className="relative w-full flex flex-col items-center justify-start p-4 overflow-y-auto h-screen bg-seven rounded-lg content-center">
-            <div className="sticky top-0 flex flex-row-reverse justify-between w-full ">
+            <div className="sticky top-0 flex flex-row-reverse justify-between w-full z-50">
               <button
-                onClick={() => {
-                  setIsVisible(false);
-                  setSearchByCategory([]);
-                  setSearchedValues([]);
-                  setSearchedWord('');
-                  router.push('/');
-                }}
+                onClick={handleClose}
                 className="p-2 text-white bg-five w-24 rounded-full font-bold text-lg hover:bg-one hover:scale-55"
               >
                 إغلاق
@@ -99,68 +113,24 @@ export default function SearchBar() {
                 نتائج البحث:
               </h1>
             </div>
-            {searchedValues?.map((recipe, index) => (
-              <div className="w-full 2xl:w-2/3" key={index}>
-                <SmallItem recipe={recipe} index={index} />
-              </div>
-            ))}
-            <div className="flex items-center justify-around my-4 mt-8 w-full">
-              {(searchByCategory?.length >= 10 ||
-                searchedValues?.length >= 10) && (
-                <Link href={'#post1'}>
-                  <div
-                    className="flex items-center justify-around cursor-pointer"
-                    onClick={() => setPageNumber(pageNumber + 1)}
-                  >
-                    <h1 className="text-gray-600 font-bold">الصفحة التالية</h1>
-                    <MdKeyboardDoubleArrowRight className="text-2xl animate-pulse" />
-                  </div>
-                </Link>
-              )}
-              {pageNumber > 1 && (
-                <Link href={'#post1'}>
-                  <div
-                    className="flex items-center justify-around cursor-pointer"
-                    onClick={() => setPageNumber(pageNumber - 1)}
-                  >
-                    <MdKeyboardDoubleArrowLeft className="text-2xl animate-pulse" />
-                    <h1 className="text-gray-600 font-bold">الصفحة السابقة</h1>
-                  </div>
-                </Link>
-              )}
-            </div>
-          </div>
-        )}
-        {isVisible && searchByCategory?.length > 0 && searchCategory !== '' && (
-          <div className="relative w-full flex flex-col items-center justify-start p-4 overflow-y-auto h-screen bg-seven rounded-lg content-center">
-            <div className="sticky top-0 flex flex-row-reverse justify-between items-center w-full ">
-              <button
-                onClick={() => {
-                  setIsVisible(false);
-                  setSearchByCategory([]);
-                  setSearchedValues([]);
-                  setSearchedWord('');
-                  router.push('/');
-                }}
-                className="p-2 text-white bg-five w-24 rounded-full font-bold text-sm sm:text-lg hover:bg-one hover:scale-55"
-              >
-                إغلاق
-              </button>
-              <h1 className="text-sm sm:text-2xl text-nowrap mx-2 font-bold text-eight">
-                نتائج البحث:
-              </h1>
-            </div>
-            {isVisible &&
-              searchByCategory !== '' &&
-              searchByCategory?.map((recipe, index) => (
+            {searchedWord &&
+              searchedValues.length > 0 &&
+              searchedValues.map((recipe, index) => (
+                <div className="w-full 2xl:w-2/3" key={index}>
+                  <SmallItem recipe={recipe} index={index} />
+                </div>
+              ))}
+            {searchCategory &&
+              searchByCategory.length > 0 &&
+              searchByCategory.map((recipe, index) => (
                 <div className="w-full 2xl:w-2/3" key={index}>
                   <SmallItem recipe={recipe} index={index} />
                 </div>
               ))}
             <div className="flex items-center justify-around my-4 mt-8 w-full">
-              {(searchByCategory?.length >= 10 ||
-                searchedValues?.length >= 10) && (
-                <Link href={'#post1'}>
+              {(searchByCategory.length >= 10 ||
+                searchedValues.length >= 10) && (
+                <Link href="#post1">
                   <div
                     className="flex items-center justify-around cursor-pointer"
                     onClick={() => setPageNumber(pageNumber + 1)}
@@ -171,7 +141,7 @@ export default function SearchBar() {
                 </Link>
               )}
               {pageNumber > 1 && (
-                <Link href={'#post1'}>
+                <Link href="#post1">
                   <div
                     className="flex items-center justify-around cursor-pointer"
                     onClick={() => setPageNumber(pageNumber - 1)}

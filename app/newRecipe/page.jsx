@@ -18,7 +18,7 @@ export default function NewRecipe() {
   const session = useSession();
   return (
     <div
-      className="relative flex justify-center items-start gap-4 overflow-auto w-full h-full border border-five xl:p-8 bg-four/90  right-0 top-0 2xl:-top-8 rounded-lg z-50"
+      className="relative flex justify-center items-start gap-4 overflow-auto w-full h-full border border-five xl:p-8 bg-four  right-0 top-0 2xl:-top-8 rounded-lg z-50"
       onClick={() => setIsVisible(false)}
     >
       <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
@@ -39,27 +39,11 @@ export default function NewRecipe() {
         }
         onClick={(e) => e.stopPropagation()}
       >
-        {/* <div
-          className={
-            (session?.status === 'authenticated' ? 'h-full' : 'h-[670px]') +
-            ' relative border border-five w-full top-0 flex items-start justify-start rounded-lg overflow-hidden'
-          }
-        >
-          <Image
-            src={
-              'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718746034/u8vqq4vy3ocohf8dsxcj.png'
-            }
-            layout="fill"
-            objectFit={'cover'}
-            alt="photo"
-            priority
-          />
-        </div> */}
         <div className="absolute w-full h-full flex flex-col items-center justify-start rounded-lg grow z-40 ">
           <div className="relative h-44 sm:h-72 lg:h-96 w-full ">
             <Image
               src={
-                'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716953/cooking/decoration_w0jwvc.png'
+                'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718994271/cooking/yrcziegsjcyzwszl4bjh.png'
               }
               fill
               alt="decoration"
