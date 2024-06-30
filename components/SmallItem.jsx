@@ -319,14 +319,21 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
             </div>
           )}
         </div>
-        <h1 className="text-one my-2 sm:my-4 text-3xl font-medium bg-white select-none">
+        <h1 className="text-one my-2 sm:my-4 text-3xl font-medium bg-white select-none line-clamp-1">
           {recipe?.mealName}
         </h1>
-        <div className="relative w-full h-44 sm:h-96 overflow-hidden rounded-lg bg-gray-100">
+        <div
+          className={`relative w-full h-52 sm:h-56 lg:h-64 xl-72 2xl:h-80 overflow-hidden rounded-lg bg-gray-100`}
+          style={{
+            backgroundImage: `url(/${recipe?.image})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
           <Image
             src={recipe?.image}
             layout="fill"
-            objectFit="contain"
+            objectFit="cover"
             alt={recipe?.mealName}
           />
         </div>

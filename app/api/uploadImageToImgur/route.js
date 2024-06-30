@@ -1,14 +1,18 @@
 import { NextResponse } from 'next/server';
+import imgurClientManager from '../../../components/ImgurClientManager';
 
 export async function POST(req) {
   const formData = await req.formData();
   const file = formData.get('image');
 
+  // Get the next available Client ID
+  const clientId = imgurClientManager.getClientId();
+  console.log('clientId', clientId);
   try {
     const imgurResponse = await fetch('https://api.imgur.com/3/image', {
       method: 'POST',
       headers: {
-        Authorization: `Client-ID ${process.env.NEXT_PUBLIC_IMGUR_CLIENT_ID}`,
+        Authorization: `Client-ID ${clientId}`,
       },
       body: file,
     });

@@ -2,7 +2,6 @@
 import Image from 'next/image';
 import React, { useState } from 'react';
 import { RxCross2 } from 'react-icons/rx';
-import ImageUpload from '../../components/ImageUpload';
 import CookingForm from '../../components/CookingForm';
 import { TbArrowBigLeftLinesFilled } from 'react-icons/tb';
 import { signIn, useSession } from 'next-auth/react';
@@ -11,6 +10,8 @@ import Link from 'next/link';
 import BackButton from '../../components/BackButton';
 import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
+import ImageUpload from '../../components/ImageUpload';
+import UploadingAndDisplayingImage from '../../components/UploadingAndDisplayingImage';
 
 export default function NewRecipe() {
   const [isOpen, setIsOpen] = useState(false);
@@ -68,7 +69,8 @@ export default function NewRecipe() {
             <div className="w-full">
               <div className="flex justify-center items-center w-full px-8">
                 <TbArrowBigLeftLinesFilled className="hidden xl:block text-one text-5xl mx-32 animate-pulse transition-all duration-300" />
-                <ImageUpload />
+                {/* <ImageUpload /> */}
+                <UploadingAndDisplayingImage />
               </div>
               <CookingForm
                 setIsVisible={setIsVisible}

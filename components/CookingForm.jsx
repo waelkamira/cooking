@@ -210,7 +210,7 @@ export default function CookingForm({
                 autoFocus
                 className="text-right w-full p-2 rounded-lg text-lg outline-2 focus:outline-one h-10"
               />
-              <div className="flex items-center gap-2 w-full justify-start">
+              {/* <div className="flex items-center gap-2 w-full justify-start">
                 <h1 className="text-right text-xl text-white font-bold my-2 ">
                   <span className="text-one font-bold text-2xl ml-2">#</span>
                   رابط الصورة:{' '}
@@ -228,7 +228,7 @@ export default function CookingForm({
                 placeholder="...رابط الصورة"
                 autoFocus
                 className="text-right w-full p-2 rounded-lg text-lg outline-2 focus:outline-one h-10"
-              />
+              /> */}
             </div>
             <div className="flex flex-col items-center justify-center w-full my-2 ">
               {errors.mealName && (
