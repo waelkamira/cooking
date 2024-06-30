@@ -283,7 +283,7 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
       <div
         key={index}
         id="post1"
-        className="flex flex-col justify-center items-center shadow-md w-full p-4 rounded-lg mt-8 bg-white transition-all duration-300"
+        className="flex flex-col justify-center items-center shadow-md w-full p-4 rounded-lg mt-4 bg-white transition-all duration-300"
       >
         <div className="flex items-center justify-center w-full p-2">
           <Link
@@ -309,6 +309,7 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
               </h1>
             </div>
           </Link>
+
           {currentUser?.isAdmin === true && path === '/' && (
             <div
               className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
@@ -319,11 +320,11 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
             </div>
           )}
         </div>
-        <h1 className="text-one my-2 sm:my-4 text-3xl font-medium bg-white select-none line-clamp-1">
+        <h1 className="text-one my-2 sm:my-4 text-xl sm:text-3xl font-medium bg-white select-none line-clamp-1">
           {recipe?.mealName}
         </h1>
         <div
-          className={`relative w-full h-52 sm:h-56 lg:h-64 xl-72 2xl:h-80 overflow-hidden rounded-lg bg-gray-100`}
+          className={`relative w-full h-52 sm:h-72 lg:h-96 overflow-hidden rounded-lg bg-gray-100`}
           style={{
             backgroundImage: `url(/${recipe?.image})`,
             backgroundSize: 'cover',
@@ -473,7 +474,7 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
           </>
         )}
         <div className="bg-white rounded-lg p-4 w-full">
-          <h1 className="text-one font-bold text-xl text-start w-full my-2 select-none">
+          <h1 className="text-one sm:font-bold text-xl text-start w-full my-2 select-none">
             المقادير:
           </h1>
           <pre className="text-sm sm:text-lg text-start w-full line-clamp-5 select-none">

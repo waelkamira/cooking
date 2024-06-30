@@ -15,6 +15,8 @@ import { TfiMenuAlt } from 'react-icons/tfi';
 import SideBarMenu from '../../components/SideBarMenu';
 import Button from '../../components/Button';
 import Loading from '../../components/Loading';
+import { useRouter } from 'next/navigation';
+import { MdEdit } from 'react-icons/md';
 
 export default function MyRecipes() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,6 +25,7 @@ export default function MyRecipes() {
   const [CurrentUser, setCurrentUser] = useState({});
   const session = useSession();
   const [myRecipes, setMyRecipes] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     fetchMyRecipes();
@@ -32,15 +35,10 @@ export default function MyRecipes() {
     await fetch('/api/allCookingRecipes')
       .then((res) => res.json())
       .then((res) => {
-        // console.log('these are my recipes', res);
-        // console.log('CurrentUser', CurrentUser);
         if (typeof window !== 'undefined') {
           const userData = JSON.parse(localStorage.getItem('CurrentUser'));
-          // console.log('userData', userData);
           setCurrentUser(userData);
           const email = userData?.email;
-          // console.log('email', email);
-
           const findUserRecipes = res?.filter(
             (item) => item?.createdBy === email
           );
@@ -115,17 +113,30 @@ export default function MyRecipes() {
           />
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 justify-center items-center w-full ">
+        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-8 justify-center items-center w-full ">
           {myRecipes?.length > 0 &&
             myRecipes.map((recipe, index) => (
-              <div className="relative " key={index}>
+              <div
+                className="relative flex flex-col items-start justify-start gap-0 bg-white rounded-lg overflow-hidden"
+                key={index}
+              >
                 {session?.status === 'authenticated' && (
-                  <div
-                    className="absolute top-12 left-4 flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
-                    onClick={() => handleDeletePost(recipe)}
-                  >
-                    <IoMdClose className="" />
-                    <h6 className="text-sm select-none">حذف</h6>
+                  <div className="flex justify-between items-center bg-green-500 w-full p-4">
+                    <div
+                      className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
+                      onClick={() => router.push(`/editRecipe/${recipe?._id}`)}
+                    >
+                      <MdEdit className="" />
+
+                      <h6 className="text-sm select-none">تعديل</h6>
+                    </div>
+                    <div
+                      className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
+                      onClick={() => handleDeletePost(recipe)}
+                    >
+                      <IoMdClose className="" />
+                      <h6 className="text-sm select-none">حذف</h6>
+                    </div>
                   </div>
                 )}
                 <SmallItem recipe={recipe} index={index} show={false} />

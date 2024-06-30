@@ -83,7 +83,7 @@ export default function NewRecipeButton() {
               )}
               {session?.status === 'authenticated' && (
                 <div className="w-full">
-                  <div className="flex justify-center items-center w-full px-8">
+                  <div className="flex justify-center items-center w-full px-8 mt-8">
                     <TbArrowBigLeftLinesFilled className="hidden xl:block text-one text-5xl mx-32 animate-pulse transition-all duration-300" />
                     {/* <ImageUpload /> */}
                     <UploadingAndDisplayingImage />

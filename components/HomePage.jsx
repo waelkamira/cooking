@@ -43,6 +43,9 @@ export default function HomePage() {
           </div>
           <SearchBar />
           {/* <VideoPlayer /> */}
+          <div className={'xl:hidden'}>
+            <NewRecipeButton />
+          </div>
           <h1 className="hidden xl:block text-md sm:text-lg lg:text-3xl text-nowrap mx-2 font-bold text-white bg-four rounded-full py-2 px-4 select-none text-center">
             أحدث المنشورات
           </h1>

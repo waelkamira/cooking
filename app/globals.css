@@ -77,10 +77,12 @@ input[type='file'] {
   white-space: nowrap;
   font-weight: bold;
   display: inline-block;
+  /* background-color: aqua; */
   padding: 100px;
   cursor: pointer;
   color: white; /* White text */
   font-size: 14px;
   text-align: center;
   overflow: hidden;
+  z-index: 50;
 }

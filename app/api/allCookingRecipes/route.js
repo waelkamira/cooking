@@ -22,9 +22,10 @@ export async function PUT(req) {
     usersWhoLikesThisRecipe,
     usersWhoPutEmojiOnThisRecipe,
     usersWhoPutHeartOnThisRecipe,
+    ...rest
   } = await req.json();
   // console.log('id from backend', _id);
-  const recipe = await Meal?.findById({ _id });
+  // const recipe = await Meal?.findById({ _id });
   // console.log(recipe);
   const updateLikes = await Meal?.findByIdAndUpdate(
     { _id },
@@ -32,6 +33,7 @@ export async function PUT(req) {
       usersWhoLikesThisRecipe: usersWhoLikesThisRecipe,
       usersWhoPutEmojiOnThisRecipe: usersWhoPutEmojiOnThisRecipe,
       usersWhoPutHeartOnThisRecipe: usersWhoPutHeartOnThisRecipe,
+      ...rest,
     }
   );
   // console.log(updateLikes);
