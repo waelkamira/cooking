@@ -33,14 +33,12 @@ export default function NewRecipe() {
       </div>
       <div
         className={
-          (session?.status === 'unauthenticated'
-            ? 'h-[650px]'
-            : 'h-[2620px] sm:h-[2350px] lg:h-[2500px]') +
+          (session?.status === 'unauthenticated' ? 'h-fit' : 'h-fit ') +
           ' relative border border-one rounded-lg w-full 2xl:w-2/3 flex flex-col items-start justify-center sm:flex-row top-0 overflow-hidden'
         }
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="absolute w-full h-full flex flex-col items-center justify-start rounded-lg grow z-40 ">
+        <div className=" w-full h-full flex flex-col items-center justify-start rounded-lg grow z-40 ">
           <div className="relative h-44 sm:h-72 lg:h-96 w-full ">
             <Image
               src={

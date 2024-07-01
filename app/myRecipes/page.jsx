@@ -100,11 +100,10 @@ export default function MyRecipes() {
           alt="photo"
         />
       </div>
-      <div className="flex justify-between items-center w-full gap-4 my-8">
+      <div className="w-full sm:w-1/3 gap-4 my-8">
         <Button title={'إنشاء وصفة جديدة'} style={' '} path="/newRecipe" />
-
-        <BackButton />
       </div>
+      <BackButton />
       <h1 className="grow text-lg lg:text-2xl w-full text-white ">وصفاتي</h1>
       <div className="my-8">
         {myRecipes?.length === 0 && (

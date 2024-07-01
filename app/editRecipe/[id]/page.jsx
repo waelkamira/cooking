@@ -14,10 +14,14 @@ import toast from 'react-hot-toast';
 import { MdEdit } from 'react-icons/md';
 import UploadingAndDisplayingImage from '../../../components/UploadingAndDisplayingImage';
 import { inputsContext } from '../../../components/Context';
+import { getYoutubeVideoId } from '../../../components/youtubeUtils';
 
 export default function EditRecipe() {
-  const { data } = useContext(inputsContext);
+  const [url, setUrl] = useState('');
+  const [embedLink, setEmbedLink] = useState('');
+  const [error, setError] = useState('');
 
+  const { data } = useContext(inputsContext);
   const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
   const [editedRecipe, setEditedRecipe] = useState([]);
@@ -68,6 +72,7 @@ export default function EditRecipe() {
       setEditedRecipe(findRecipe[0]);
     }
   };
+
   async function handleEditRecipe() {
     console.log('success');
     const response = await fetch('/api/allCookingRecipes', {
@@ -89,6 +94,29 @@ export default function EditRecipe() {
       ));
     }
   }
+
+  //? embed link هاتان الدالاتان للتعامل مع رابط اليويتوب الذي يقوم المستخدم بنسخه لتحويله الى
+
+  const handleInputChange = (e) => {
+    const inputValue = e.target.value;
+    setUrl(inputValue);
+    handleGenerateEmbed(inputValue); // Pass inputValue to generate embed link
+  };
+
+  const handleGenerateEmbed = (inputValue) => {
+    const videoId = getYoutubeVideoId(inputValue);
+
+    if (videoId) {
+      const youtubeEmbedLink = `https://www.youtube.com/embed/${videoId}`;
+
+      setEmbedLink(youtubeEmbedLink);
+      setInputs({ ...inputs, link: youtubeEmbedLink });
+      setError('');
+    } else {
+      setEmbedLink('');
+      setError('Invalid YouTube URL');
+    }
+  };
   return (
     <>
       {session?.status === 'unauthenticated' && (
@@ -337,7 +365,7 @@ export default function EditRecipe() {
                     />
                   </div>
                 </div>
-                <input
+                {/* <input
                   onChange={(e) =>
                     setInputs({ ...inputs, link: e.target.value })
                   }
@@ -346,6 +374,13 @@ export default function EditRecipe() {
                   id=""
                   className="w-full border h-16 p-2 rounded-lg"
                   placeholder="الصق رابط الفيديو الجديد هنا ..."
+                /> */}
+                <input
+                  type="text"
+                  placeholder="الصق رابط الفيديو الجديد هنا ..."
+                  value={url}
+                  onChange={handleInputChange}
+                  className="text-right mt-4 mb-8 w-full p-2 rounded-lg text-lg outline-2 focus:outline-one h-10"
                 />
                 <button
                   onClick={() => handleEditRecipe()}
@@ -353,17 +388,32 @@ export default function EditRecipe() {
                 >
                   حفظ التعديلات
                 </button>
-                <div className="flex justify-center items-center w-full mt-16">
-                  <iframe
-                    src={iframeSrc}
-                    title="YouTube video player"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerpolicy="strict-origin-when-cross-origin"
-                    allowfullscreen
-                    className="rounded-lg w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
-                  />
-                </div>
+                {inputs?.link && (
+                  <div>
+                    <iframe
+                      width="560"
+                      height="315"
+                      src={inputs?.link}
+                      frameBorder="0"
+                      allowFullScreen
+                      title="Embedded YouTube Video"
+                      className="rounded-lg w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
+                    />
+                  </div>
+                )}
+                {!inputs?.link && editedRecipe?.link && (
+                  <div>
+                    <iframe
+                      width="560"
+                      height="315"
+                      src={editedRecipe?.link}
+                      frameBorder="0"
+                      allowFullScreen
+                      title="Embedded YouTube Video"
+                      className="rounded-lg w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>

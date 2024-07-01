@@ -13,6 +13,7 @@ import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
 import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import Loading from '../../components/Loading';
+import Button from '../../components/Button';
 
 export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
@@ -94,6 +95,9 @@ export default function Page() {
           وصفاتي المفضلة:
         </h1>
         <BackButton />
+      </div>
+      <div className="w-full sm:w-1/3 gap-4 my-8">
+        <Button title={'إنشاء وصفة جديدة'} style={' '} path="/newRecipe" />
       </div>
       <div className="my-8">
         {userFavorites?.length === 0 && (

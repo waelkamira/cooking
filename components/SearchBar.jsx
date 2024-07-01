@@ -92,7 +92,7 @@ export default function SearchBar() {
               id="search_meal"
               name="search_meal"
               placeholder="ابحث عن وصفة طبخ   ..."
-              className="w-full rounded-full border-2 text-lg md:text-xl placeholder:text-lg py-1 md:py-2 px-10 outline-2 placeholder:px-2 focus:outline-one text-right"
+              className="w-full rounded-full border-2 text-lg md:text-xl placeholder:text-lg py-2 px-10 outline-2 placeholder:px-2 focus:outline-one text-right"
             />
             <div className="absolute top-3 md:top-4 right-4">
               <IoIosSearch className="text-one font-bold size-5" />

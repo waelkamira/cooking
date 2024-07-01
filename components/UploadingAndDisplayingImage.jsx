@@ -34,6 +34,9 @@ export default function UploadingAndDisplayingImage({ img }) {
       if (data.success) {
         setUploadedImage(data?.data?.link);
         dispatch({ type: 'IMAGE', payload: data?.data?.link });
+        // if (typeof window !== 'undefined') {
+        //   localStorage.setItem('image', JSON.stringify(data?.data?.link));
+        // }
       } else {
         console.error('Error uploading image:', data.error);
       }
@@ -43,14 +46,14 @@ export default function UploadingAndDisplayingImage({ img }) {
   };
 
   return (
-    <div className="relative flex justify-center items-center h-56 sm:h-96 w-full text-center ">
+    <div className="relative flex justify-center items-center w-full h-72 sm:h-96 text-center ">
       <div className="absolute top-0 left-0 flex flex-col justify-center items-center text-white z-50">
         <input type="file" id="file-upload" onChange={onFileChange} />
         <input
           type="file"
           id="file-upload"
           onChange={onFileChange}
-          className="flex justify-center items-center w-96 h-44 sm:h-96 border-2 border-one rounded-lg placeholder:text-white "
+          className="flex justify-center items-center w-96 h-72 sm:h-96 border-2 border-one rounded-lg placeholder:text-white "
         />
         {imageError?.imageError && (
           <h1 className="text-one text-2xl text-center my-2 w-full animate-bounce font-bold">
@@ -58,23 +61,25 @@ export default function UploadingAndDisplayingImage({ img }) {
           </h1>
         )}
       </div>
-      <div className="absolute top-0 mx-auto w-full h-64 sm:h-72 lg:h-96 border-2 border-one rounded-lg overflow-hidden z-20 ">
-        {!uploadedImage && (
-          <div class="absolute top-0 left-0 custom-file-upload w-full h-full">
-            <div className="flex flex-col justify-center items-center size-full">
-              <label for="file-upload" class="absolute top-0 size-full"></label>
-              <MdOutlineAddPhotoAlternate className="text-one text-3xl" />
-              <h1 className="text-white"> أضف صورة للطبخة</h1>
-            </div>
+      <div className="absolute top-0 mx-auto w-full h-72 sm:h-96 border-2 border-one rounded-lg overflow-hidden z-20 ">
+        <div class="absolute top-0 left-0 custom-file-upload w-full h-full">
+          <div className="flex flex-col justify-center items-center size-full ">
+            <label
+              for="file-upload"
+              class="absolute top-0 size-full cursor-pointer"
+            ></label>
+            <MdOutlineAddPhotoAlternate className="text-one text-3xl" />
+            <h1 className="text-white text-xl"> أضف صورة للطبخة</h1>
           </div>
-        )}
+        </div>
+
         {img && !uploadedImage && (
-          <div className="w-full h-44 sm:h-96 border rounded-lg border-green-400">
+          <div className="w-full h-72 sm:h-96 border rounded-lg border-green-400">
             <Image src={img} alt="Uploaded" layout="fill" objectFit="cover" />
           </div>
         )}
         {uploadedImage && (
-          <div className="relative w-full h-64 sm:h-72 lg:h-96">
+          <div className="relative w-full h-72 sm:h-96">
             <Image
               src={uploadedImage}
               alt="Uploaded"

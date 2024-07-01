@@ -21,6 +21,12 @@ export default function SelectComponent() {
         type: 'SELECTED_VALUE',
         payload: { selectedValue: selectedValue, modelName: 'createSoup' },
       });
+      //  if (typeof window !== 'undefined') {
+      //    localStorage.setItem(
+      //      'selectedValue',
+      //      JSON.stringify(data?.data?.link)
+      //    );
+      //  }
     } else if (selectedValue?.value === 'معجنات') {
       dispatch({
         type: 'SELECTED_VALUE',

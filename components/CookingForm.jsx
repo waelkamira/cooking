@@ -9,12 +9,17 @@ import { useSession } from 'next-auth/react';
 import CurrentUser from './CurrentUser';
 import CustomToast from './CustomToast';
 import { Confetti } from './SuccessComponent';
+import YoutubeEmbedder from './YoutubeEmbedder';
+import { getYoutubeVideoId } from './youtubeUtils';
 
 export default function CookingForm({
   setIsVisible,
   isVisible,
   cancel = true,
 }) {
+  const [url, setUrl] = useState('');
+  const [embedLink, setEmbedLink] = useState('');
+  const [error, setError] = useState('');
   const session = useSession();
   const userName = CurrentUser()?.name;
   const userImage = CurrentUser()?.image || session?.data?.user?.image;
@@ -39,7 +44,8 @@ export default function CookingForm({
     advise: '',
     link: '',
   });
-  const { data, dispatch } = useContext(inputsContext);
+  const { data, dispatch, videoLink } = useContext(inputsContext);
+  console.log('videoLink', videoLink);
 
   useEffect(() => {
     setInputs({
@@ -47,7 +53,8 @@ export default function CookingForm({
       selectedValue: data?.selectedValue?.label,
       image: data?.image,
     });
-  }, [data?.selectedValue, data?.image]);
+    handleGenerateEmbed();
+  }, [url, data?.selectedValue, data?.image]);
 
   if ((isVisible = false)) {
     setErrors({ mealName: false, ingredients: false, theWay: false });
@@ -55,7 +62,10 @@ export default function CookingForm({
 
   async function handleSubmit(e) {
     e.preventDefault();
-
+    //  if (typeof window !== 'undefined') {
+    //    const img = JSON.parse(localStorage.getItem('image'));
+    //    setInputs({...inputs,image:img})
+    //  }
     if (
       inputs.mealName &&
       inputs.ingredients &&
@@ -70,7 +80,12 @@ export default function CookingForm({
         const response = await fetch('/api/createMeal', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...inputs, userName, userImage, createdBy }),
+          body: JSON.stringify({
+            ...inputs,
+            userName,
+            userImage,
+            createdBy,
+          }),
         });
 
         if (response.ok) {
@@ -172,8 +187,30 @@ export default function CookingForm({
 
     frame();
   };
+
+  //? embed link هاتان الدالاتان للتعامل مع رابط اليويتوب الذي يقوم المستخدم بنسخه لتحويله الى
+  const handleInputChange = (e) => {
+    const inputValue = e.target.value;
+    setUrl(inputValue);
+    handleGenerateEmbed(inputValue); // Pass inputValue to generate embed link
+  };
+
+  const handleGenerateEmbed = (inputValue) => {
+    const videoId = getYoutubeVideoId(inputValue);
+
+    if (videoId) {
+      const youtubeEmbedLink = `https://www.youtube.com/embed/${videoId}`;
+
+      setEmbedLink(youtubeEmbedLink);
+      setInputs({ ...inputs, link: youtubeEmbedLink });
+      setError('');
+    } else {
+      setEmbedLink('');
+      setError('Invalid YouTube URL');
+    }
+  };
   return (
-    <div className="w-full p-8 h-[1200px] ">
+    <div className="w-full p-2 sm:p-8 h-fit ">
       <form
         className="flex flex-col justify-center items-start h-fit w-full mt-4 "
         onSubmit={handleSubmit}
@@ -365,7 +402,29 @@ export default function CookingForm({
               أضف رابط الطبخة من يوتيوب:.
             </h1>
           </div>
+          {/* <YoutubeEmbedder /> */}
+
           <input
+            type="text"
+            placeholder="Paste YouTube link here"
+            value={url}
+            onChange={handleInputChange}
+            className="text-right mt-4 mb-8 w-full p-2 rounded-lg text-lg outline-2 focus:outline-one h-10"
+          />
+          {inputs?.link && (
+            <div>
+              <iframe
+                width="560"
+                height="315"
+                src={inputs?.link}
+                frameBorder="0"
+                allowFullScreen
+                title="Embedded YouTube Video"
+                className="rounded-lg w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
+              />
+            </div>
+          )}
+          {/* <input
             value={inputs.link}
             onChange={(e) => setInputs({ ...inputs, link: e.target.value })}
             type="text"
@@ -373,9 +432,9 @@ export default function CookingForm({
             name="رابط الفيديو"
             placeholder="... رابط الفيديو"
             className="text-right w-full p-2 rounded-lg text-xl outline-2 focus:outline-one"
-          />
+          /> */}
         </div>
-        <div className="w-full flex flex-col items-start justify-center lg:flex-row gap-4 my-10 rounded-lg">
+        {/* <div className="w-full flex flex-col items-start justify-center lg:flex-row gap-4 my-10 rounded-lg">
           <div className="w-full bg-four p-4 rounded-lg mb-4 border border-one">
             <h1 className="text-one md:text-xl font-bold w-full">
               {' '}
@@ -406,7 +465,7 @@ export default function CookingForm({
               alt="photo"
             />
           </div>
-        </div>
+        </div> */}
         <div className="flex flex-col sm:flex-row justify-around items-center gap-8 w-full my-12">
           <button
             type="submit"

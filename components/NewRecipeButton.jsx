@@ -87,7 +87,6 @@ export default function NewRecipeButton() {
                     <TbArrowBigLeftLinesFilled className="hidden xl:block text-one text-5xl mx-32 animate-pulse transition-all duration-300" />
                     {/* <ImageUpload /> */}
                     <UploadingAndDisplayingImage />
-                    {/* <PostimageUploadingAndDisplayingImage /> */}
                   </div>
                   <CookingForm
                     setIsVisible={setIsVisible}
