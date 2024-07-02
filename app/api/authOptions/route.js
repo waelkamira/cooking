@@ -119,9 +119,6 @@ import clientPromise from '../../../lib/Mongodb';
 import { signIn } from 'next-auth/react';
 
 export const authOptions = {
-  secret: process.env.NEXT_PUBLIC_SECRET,
-  adapter: MongoDBAdapter(clientPromise),
-
   providers: [
     GoogleProvider({
       clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
@@ -157,7 +154,8 @@ export const authOptions = {
       },
     }),
   ],
-
+  secret: process.env.NEXT_PUBLIC_SECRET,
+  adapter: MongoDBAdapter(clientPromise),
   callbacks: {
     async session({ session }) {
       return session;
