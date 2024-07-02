@@ -44,8 +44,7 @@ export default function CookingForm({
     advise: '',
     link: '',
   });
-  const { data, dispatch, videoLink } = useContext(inputsContext);
-  console.log('videoLink', videoLink);
+  const { data, dispatch } = useContext(inputsContext);
 
   useEffect(() => {
     setInputs({

@@ -52,10 +52,6 @@ function inputsReducer(currentState, action) {
       return {
         myRecipes: action?.payload,
       };
-    case 'VIDEO_LINK':
-      return {
-        videoLink: action?.payload,
-      };
 
     default:
       return currentState;
@@ -74,7 +70,6 @@ export function InputsContextProvider({ children }) {
     deleteFavoritePost: {},
     action: {},
     myRecipes: [],
-    videoLink: '',
   });
   // console.log('from Context', state);
   console.log('videoLinkContext', state);
