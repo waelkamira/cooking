@@ -65,10 +65,7 @@ export default function EditRecipe() {
     const res = await fetch('/api/allCookingRecipes');
     const json = await res?.json();
     if (res.ok) {
-      //   console.log('res', json);
-      //   console.log('id', id);
       const findRecipe = await json?.filter((item) => item?._id === id);
-      //   console.log('findRecipe', findRecipe);
       setEditedRecipe(findRecipe[0]);
     }
   };

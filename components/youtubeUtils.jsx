@@ -1,5 +1,5 @@
 // utils/youtubeUtils.js
-
+'use client';
 export const getYoutubeVideoId = (url) => {
   let videoId = null;
 
