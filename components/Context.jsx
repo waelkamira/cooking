@@ -72,7 +72,6 @@ export function InputsContextProvider({ children }) {
     myRecipes: [],
   });
   // console.log('from Context', state);
-  console.log('videoLinkContext', state);
 
   return (
     <inputsContext.Provider value={{ ...state, dispatch }}>

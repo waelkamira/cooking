@@ -1,3 +1,4 @@
+'use client';
 import React, { useContext, useEffect, useState } from 'react';
 import Select from 'react-select';
 import { inputsContext } from './Context.jsx';

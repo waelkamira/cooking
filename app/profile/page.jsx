@@ -59,10 +59,8 @@ export default function Profile() {
             يجب عليك تسجيل الدخول أولا لرؤية هذا البروفايل
           </h1>
           <div className="flex flex-col justify-between items-center gap-4 w-full">
-            <Link href={'/login'}>
-              {' '}
-              <Button title={'تسجيل الدخول'} />
-            </Link>{' '}
+            <Button title={'تسجيل الدخول'} style={' '} path="/login" />
+
             <BackButton />
           </div>
         </div>

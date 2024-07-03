@@ -1,3 +1,5 @@
+'use client';
+
 import confetti from 'canvas-confetti';
 
 interface ConfettiOptions extends confetti.Options {

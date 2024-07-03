@@ -15,11 +15,11 @@ export default function TheGarden() {
 
   const fetchUserRecipes = async () => {
     const response = await fetch('/api/allCookingRecipes');
-    const json = await response.json();
+    const json = await response?.json();
 
     if (response?.ok) {
       if (typeof window !== 'undefined') {
-        const userData = JSON.parse(localStorage.getItem('CurrentUser'));
+        const userData = JSON?.parse(localStorage.getItem('CurrentUser'));
         const email = userData?.email;
         const findUserRecipes = json?.filter(
           (item) => item?.createdBy === email
@@ -28,7 +28,7 @@ export default function TheGarden() {
 
         //? هذه الدالة لجلب كل الايقونات من الباك اند
         const res = await fetch('/api/getIcons');
-        const data = await res.json();
+        const data = await res?.json();
         if (res.ok) {
           setIcons(data);
         }

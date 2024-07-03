@@ -9,7 +9,6 @@ import { useSession } from 'next-auth/react';
 import CurrentUser from './CurrentUser';
 import CustomToast from './CustomToast';
 import { Confetti } from './SuccessComponent';
-import YoutubeEmbedder from './YoutubeEmbedder';
 import { getYoutubeVideoId } from './youtubeUtils';
 
 export default function CookingForm({
