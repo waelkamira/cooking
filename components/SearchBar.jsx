@@ -10,6 +10,7 @@ import {
   MdKeyboardDoubleArrowLeft,
 } from 'react-icons/md';
 import { Suspense } from 'react';
+import Button from './Button';
 
 // Function to normalize Arabic text
 const normalizeArabic = (text) => {
@@ -23,13 +24,13 @@ export default function SearchBar() {
   const [searchByCategory, setSearchByCategory] = useState([]);
   const [searchedWord, setSearchedWord] = useState('');
   const [searchedValues, setSearchedValues] = useState([]);
-  const searchCate = useSearchParams();
-  const searchCategory = searchCate.get('searchCategory');
+  const searchCategory = useSearchParams();
+  const searchedCategory = searchCategory.get('searchedCategory');
   const router = useRouter();
 
   useEffect(() => {
     response();
-  }, [searchedWord, searchCategory, pageNumber]);
+  }, [searchedWord, searchedCategory, pageNumber]);
 
   const response = async () => {
     const res = await fetch('/api/allCookingRecipes').then((res) => res.json());
@@ -37,9 +38,9 @@ export default function SearchBar() {
     const endPage = startPage + 10;
 
     const normalizedSearchedWord = normalizeArabic(searchedWord);
-    const normalizedCategory = normalizeArabic(searchCategory);
+    const normalizedCategory = normalizeArabic(searchedCategory);
 
-    if (!searchCategory && !searchedWord) {
+    if (!searchedCategory && !searchedWord) {
       setIsVisible(false);
     }
 
@@ -52,7 +53,7 @@ export default function SearchBar() {
       setSearchByCategory([]); // Clear category search results
     }
 
-    if (searchCategory) {
+    if (searchedCategory) {
       setIsVisible(true);
       const categoryResults = res.filter(
         (item) => normalizeArabic(item.selectedValue) === normalizedCategory
@@ -72,18 +73,27 @@ export default function SearchBar() {
 
   return (
     <Suspense>
-      <div className="flex flex-col items-start justify-center w-full lg:mt-8 bg-four rounded-lg ">
-        <div className="flex flex-col justify-center items-center sm:flex-row gap-4 w-full mb-4 ">
-          <div className="relative w-full xl:w-96 h-52 overflow-hidden">
-            <Image
-              priority
-              src="https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716956/cooking/logo1_uwwlyk.png"
-              layout="fill"
-              objectFit="contain"
-              alt="photo"
-            />
-          </div>
-          <div className="relative w-full">
+      <div
+        className={
+          (searchedWord || searchedCategory
+            ? 'absolute z-50 top-4 left-0 '
+            : '') +
+          ' flex flex-col items-start justify-center w-full lg:mt-8 bg-four rounded-lg '
+        }
+      >
+        <div className="flex flex-col justify-center items-center sm:flex-row gap-4 w-full">
+          {!searchedCategory && !searchedWord && (
+            <div className="relative w-full xl:w-96 h-52 overflow-hidden">
+              <Image
+                priority
+                src="https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716956/cooking/logo1_uwwlyk.png"
+                layout="fill"
+                objectFit="contain"
+                alt="photo"
+              />
+            </div>
+          )}
+          <div className="relative w-full sm:px-4 bg-four">
             <input
               value={searchedWord}
               onChange={(e) => setSearchedWord(e.target.value)}
@@ -99,28 +109,29 @@ export default function SearchBar() {
             </div>
           </div>
         </div>
-
         {isVisible && (
-          <div className="relative w-full flex flex-col items-center justify-start p-4 overflow-y-auto h-screen bg-seven rounded-lg content-center">
-            <div className="sticky top-0 flex flex-row-reverse justify-between w-full z-50">
-              <button
-                onClick={handleClose}
-                className="p-2 text-white bg-five w-24 rounded-full font-bold text-lg hover:bg-one hover:scale-55"
-              >
-                إغلاق
-              </button>
-              <h1 className="text-sm sm:text-2xl text-nowrap mx-2 font-bold text-eight">
-                نتائج البحث:
-              </h1>
-            </div>
+          <div className="sticky top-0 flex flex-row-reverse justify-between items-center mt-1 w-full z-50 bg-four p-4">
+            <button
+              onClick={handleClose}
+              className="py-1 px-4 text-white bg-five w-24 rounded-full sm:text-lg hover:bg-one hover:scale-55"
+            >
+              إغلاق
+            </button>
+            <h1 className="text-sm sm:text-2xl text-nowrap mx-2 font-bold text-white">
+              نتائج البحث:
+            </h1>
+          </div>
+        )}
+        {isVisible && (
+          <div className="relative w-full flex flex-col items-center justify-start p-2 overflow-y-auto h-screen bg-four rounded-lg content-center">
             {searchedWord &&
               searchedValues.length > 0 &&
               searchedValues.map((recipe, index) => (
-                <div className="w-full 2xl:w-2/3" key={index}>
+                <div className="w-full 2xl:w-2/3 " key={index}>
                   <SmallItem recipe={recipe} index={index} />
                 </div>
               ))}
-            {searchCategory &&
+            {searchedCategory &&
               searchByCategory.length > 0 &&
               searchByCategory.map((recipe, index) => (
                 <div className="w-full 2xl:w-2/3" key={index}>

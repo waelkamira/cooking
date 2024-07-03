@@ -73,7 +73,7 @@ export default function Categories() {
             <div
               key={index}
               className="keen-slider__slide flex flex-col gap-2 justify-center items-center bg-four rounded-lg cursor-pointer h-full "
-              onClick={() => router.push(`?searchCategory=${category?.name}`)}
+              onClick={() => router.push(`?searchedCategory=${category?.name}`)}
             >
               <div className="relative border-2 border-four mt-4 w-52 h-24 sm:w-72 sm:h-32 md:w-80 md:h-44 lg:w-[500px] lg:h-62 xl:w-[900px]  rounded-lg overflow-hidden hover:scale-[101%] transition-all duration-500">
                 <Image
