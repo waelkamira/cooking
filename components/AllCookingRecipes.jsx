@@ -7,11 +7,15 @@ import Loading from './Loading';
 import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
 import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 export default function AllCookingRecipes() {
   const [pageNumber, setPageNumber] = useState(1);
   const [allCookingRecipes, setAllCookingRecipes] = useState([]);
   const { dispatch, newRecipe, deletedRecipe } = useContext(inputsContext);
+  const session = useSession();
+  const router = useRouter();
+
   // console.log('pageNumber', pageNumber);
 
   useEffect(() => {

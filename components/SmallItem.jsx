@@ -295,7 +295,7 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
                 <Image
                   src={recipe?.userImage}
                   layout="fill"
-                  objectFit="contain"
+                  objectFit="cover"
                   alt={recipe?.mealName}
                 />
               </div>

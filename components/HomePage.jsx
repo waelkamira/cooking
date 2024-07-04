@@ -11,10 +11,18 @@ import CategoriesSlides from './CategoriesSlides';
 import { Suspense } from 'react';
 import VideoPlayer from './VideoPlayer';
 import UploadingAndDisplayingImage from './UploadingAndDisplayingImage';
+import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
+  const router = useRouter();
+
+  console.log(session?.data?.user?.email);
+  if (session?.data?.user?.email === undefined) {
+    router.push('/login');
+  }
+
   if (typeof window !== 'undefined') {
     localStorage.setItem('image', JSON.stringify(session?.data?.user?.image));
   }

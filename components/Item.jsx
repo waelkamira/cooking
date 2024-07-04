@@ -1,7 +1,7 @@
 'use client';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Button from './Button';
 import BackButton from './BackButton';
@@ -216,10 +216,12 @@ export default function Item({
                       src={iframeSrc}
                       title="YouTube video player"
                       frameborder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      referrerpolicy="strict-origin-when-cross-origin"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                       allowfullscreen
-                      className="rounded-lg w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
+                      referrerpolicy="strict-origin-when-cross-origin"
+                      className={
+                        ' rounded-lg w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]'
+                      }
                     />
                   )}
                   {!iframeSrc && (
@@ -227,10 +229,12 @@ export default function Item({
                       src={link}
                       title="YouTube video player"
                       frameborder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      referrerpolicy="strict-origin-when-cross-origin"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                       allowfullscreen
-                      className="rounded-lg w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
+                      referrerpolicy="strict-origin-when-cross-origin"
+                      className={
+                        ' rounded-lg w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]'
+                      }
                     />
                   )}
                 </div>
