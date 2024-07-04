@@ -8,6 +8,7 @@ import BackButton from './BackButton';
 import SideBarMenu from './SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
+import Loading from './Loading';
 
 export default function Item({
   image,
@@ -114,14 +115,17 @@ export default function Item({
               <h1 className="text-one my-4 sm:my-8 text-3xl sm:text-4xl lg:text-5xl text-center select-none  rounded-lg p-2 sm:p-4">
                 {mealName}
               </h1>
-              <div className="relative w-full h-44 sm:h-96 overflow-hidden rounded-lg border bg-gray-100">
-                <Image
-                  src={image}
-                  layout="fill"
-                  objectFit="contain"
-                  alt={mealName}
-                />
-              </div>
+              {!image && <Loading myMessage={'جاري تحميل الصورة'} />}
+              {image && (
+                <div className="relative w-full h-44 sm:h-96 overflow-hidden rounded-lg border bg-gray-100">
+                  <Image
+                    src={image}
+                    layout="fill"
+                    objectFit="cover"
+                    alt={mealName}
+                  />
+                </div>
+              )}
 
               <div className="bg-white rounded-lg mt-4 sm:mt-16">
                 <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">

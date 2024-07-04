@@ -325,18 +325,17 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
         </h1>
         <div
           className={`relative w-full h-52 sm:h-72 lg:h-96 overflow-hidden rounded-lg bg-gray-100`}
-          style={{
-            backgroundImage: `url(/${recipe?.image})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
         >
-          <Image
-            src={recipe?.image}
-            layout="fill"
-            objectFit="cover"
-            alt={recipe?.mealName}
-          />
+          {!recipe?.image && <Loading myMessage={'جاري تحميل الصورة'} />}
+
+          {recipe?.image && (
+            <Image
+              src={recipe?.image}
+              layout="fill"
+              objectFit="cover"
+              alt={recipe?.mealName}
+            />
+          )}
         </div>
         {show && (
           <>
