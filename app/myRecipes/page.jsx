@@ -17,6 +17,7 @@ import Button from '../../components/Button';
 import Loading from '../../components/Loading';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { MdEdit } from 'react-icons/md';
+import { Suspense } from 'react';
 
 export default function MyRecipes() {
   const [isOpen, setIsOpen] = useState(false);

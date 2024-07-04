@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // distDir: 'build',
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
   images: {
     remotePatterns: [
       {
