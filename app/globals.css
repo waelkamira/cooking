@@ -78,7 +78,7 @@ input[type='file'] {
   font-weight: bold;
   display: inline-block;
   /* background-color: aqua; */
-  padding: 100px;
+  /* padding: 100px; */
   cursor: pointer;
   color: white; /* White text */
   font-size: 14px;

@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function Button({ style, title, onClick, path = '' }) {
   return (
-    <Link href={path}>
+    <Link href={path} className="w-full">
       <button
         type="submit"
         onClick={onClick}

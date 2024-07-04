@@ -91,8 +91,9 @@ export default function Page() {
         />
       </div>
       <div className="flex justify-between items-center w-full gap-4 my-8">
-        <h1 className="grow text-lg lg:text-2xl w-full text-white ">
-          وصفاتي المفضلة:
+        <h1 className="text-right text-xl text-white font-bold my-2 ">
+          <span className="text-one font-bold text-2xl ml-2">#</span>
+          وصفاتي المفضلة
         </h1>
         <BackButton />
       </div>

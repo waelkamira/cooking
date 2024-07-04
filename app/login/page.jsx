@@ -58,6 +58,7 @@ export default function LogInPage() {
     });
 
     if (response.ok) {
+      router.push('/');
       toast.custom((t) => (
         <CustomToast
           t={t}
@@ -66,10 +67,16 @@ export default function LogInPage() {
           greenEmoji={'🧀'}
         />
       ));
-      router.push('/');
     } else {
       setError(response?.error);
-      toast.custom((t) => <CustomToast t={t} message={'حدث خطأ ما 😐'} />);
+      toast.custom((t) => (
+        <CustomToast
+          t={t}
+          message={
+            'عنوان البريد الالكتروني هذا غير موجود يجب عليك التسجيل أولا 😐'
+          }
+        />
+      ));
     }
   }
 

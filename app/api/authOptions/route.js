@@ -37,7 +37,7 @@ export const authOptions = {
         const email = credentials?.email;
         const password = credentials?.password;
         const user = await User.findOne({ email });
-
+        console.log('user', user);
         if (!user) {
           throw new Error('الايميل المدخل غير موجود');
         }
@@ -61,13 +61,44 @@ export const authOptions = {
 
   session: {
     strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60, // Set session expiration to 30 days
     // Update this with any relevant session options like refresh JWTs
   },
 
   // Callbacks to handle user authentication and session management
+  // callbacks: {
+  //   async signIn({ account, profile }) {
+  //     if (account.provider === 'google') {
+  //       // Check for existing user with Google email
+  //       const existingUser = await User.findOne({ email: profile.email });
+  //       if (!existingUser) {
+  //         // Create new user if doesn't exist
+  //         await User.create({
+  //           email: profile.email,
+  //           name: profile.name,
+  //           image: profile.picture,
+  //           googleId: profile.sub,
+  //         });
+  //       }
+  //       return true;
+  //     }
+  //     return true;
+  //   },
+
+  //   async session({ session, token }) {
+  //     session.user.id = token.id;
+  //     return session;
+  //   },
+
+  //   async jwt({ token, user }) {
+  //     if (user) {
+  //       token.id = user.id;
+  //     }
+  //     return token;
+  //   },
+  // },
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account, profile, email, credentials }) {
+      // Custom logic on sign-in
       if (account.provider === 'google') {
         // Check for existing user with Google email
         const existingUser = await User.findOne({ email: profile.email });
@@ -80,21 +111,28 @@ export const authOptions = {
             googleId: profile.sub,
           });
         }
+        return true;
       }
       return true;
     },
-
-    async session({ session, token }) {
-      session.user.id = token.id;
+    async redirect({ url, baseUrl }) {
+      return url.startsWith(baseUrl) ? url : baseUrl;
+    },
+    async session({ session, user, token }) {
+      // Attach additional properties to the session object
+      session.user.id = token.sub;
       return session;
     },
-
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
+    async jwt({ token, user, account, profile, isNewUser }) {
+      // Handle the JWT token
+      if (account) {
+        token.accessToken = account.access_token;
       }
       return token;
     },
+  },
+  pages: {
+    signIn: '/auth/signin', // Custom sign-in page
   },
   session: {
     strategy: 'jwt',
@@ -102,84 +140,3 @@ export const authOptions = {
   debug: process.env.NODE_ENV,
   pages: { signIn: '/login' },
 };
-
-// import mongoose from 'mongoose';
-// import { User } from '../models/UserModel';
-// import CredentialsProvider from 'next-auth/providers/credentials';
-// import GoogleProvider from 'next-auth/providers/google';
-// import bcrypt from 'bcrypt';
-// import { MongoDBAdapter } from '@auth/mongodb-adapter';
-// import clientPromise from '../../../lib/Mongodb';
-// import { redirect } from 'next/navigation';
-// import { signIn } from 'next-auth/react';
-
-// // Ensure database connection
-// mongoose.connect(process.env.NEXT_PUBLIC_MONGODB, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// });
-
-// export const authOptions = {
-//   providers: [
-//     GoogleProvider({
-//       clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-//       clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET,
-//     }),
-//     CredentialsProvider({
-//       name: 'Credentials',
-//       credentials: {
-//         email: { label: 'Email', type: 'text' },
-//         password: { label: 'Password', type: 'password' },
-//       },
-//       async authorize(credentials) {
-//         await mongoose.connect(process.env.NEXT_PUBLIC_MONGODB);
-//         const user = await User.findOne({ email: credentials.email });
-//         if (user && bcrypt.compareSync(credentials.password, user.password)) {
-//           return user;
-//         } else {
-//           throw new Error('Invalid email or password');
-//         }
-//       },
-//     }),
-//   ],
-//   adapter: MongoDBAdapter(clientPromise),
-//   secret: process.env.NEXT_PUBLIC_SECRET,
-//   session: {
-//     strategy: 'jwt',
-//     maxAge: 30 * 24 * 60 * 60, // Set session expiration to 30 days
-//   },
-//   callbacks: {
-//     async signIn({ user, account, profile }) {
-//       if (account.provider === 'google') {
-//         const existingUser = await User.findOne({ email: profile.email });
-//         if (!existingUser) {
-//           await User.create({
-//             email: profile.email,
-//             name: profile.name,
-//             image: profile.picture,
-//             googleId: profile.sub,
-//           });
-//         }
-//       }
-//       return true;
-//     },
-//     async session({ session, token }) {
-//       if (token) {
-//         session.user.id = token.id;
-//         session.user.email = token.email;
-//       }
-//       return session;
-//     },
-//     async jwt({ token, user }) {
-//       if (user) {
-//         token.id = user.id;
-//         token.email = user.email;
-//       }
-//       return token;
-//     },
-//   },
-//   pages: {
-//     signIn: '/login',
-//   },
-//   debug: process.env.NODE_ENV === 'development',
-// };

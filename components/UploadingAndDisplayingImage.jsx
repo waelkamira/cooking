@@ -34,9 +34,6 @@ export default function UploadingAndDisplayingImage({ img }) {
       if (data.success) {
         setUploadedImage(data?.data?.link);
         dispatch({ type: 'IMAGE', payload: data?.data?.link });
-        // if (typeof window !== 'undefined') {
-        //   localStorage.setItem('image', JSON.stringify(data?.data?.link));
-        // }
       } else {
         console.error('Error uploading image:', data.error);
       }

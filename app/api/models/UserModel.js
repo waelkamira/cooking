@@ -21,11 +21,12 @@ const UserSchema = new Schema(
     image: {
       type: String,
       default:
-        'https://res.cloudinary.com/dh2xlutfu/image/upload/v1716844354/cooking/userImage_qeyh2w.png',
+        'https://res.cloudinary.com/dh2xlutfu/image/upload/v1720033330/qvvkquzk4djn2bl9jcwb.jpg',
     },
     googleId: {
       type: String,
       unique: true,
+      default: () => (Math.random() * 1000000000).toString(), // Generates a random number as a string
     },
   },
   { timestamps: true }

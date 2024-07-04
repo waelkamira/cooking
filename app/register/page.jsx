@@ -63,10 +63,10 @@ export default function RegisterPage() {
     });
 
     if (response.ok) {
+      router.push('/login');
       toast.custom((t) => (
         <CustomToast t={t} message={'🌿 تم التسجيل بنجاح 🌿'} />
       ));
-      router.push('/login');
     } else {
       setError('email', {
         type: 'custom',
@@ -98,7 +98,9 @@ export default function RegisterPage() {
           />
         </div>
         {errors?.name && (
-          <h1 className="text-one text-md my-2">{errors?.name?.message}</h1>
+          <h1 className="text-one text-md my-2 text-start">
+            {errors?.name?.message}
+          </h1>
         )}
         <div className="relative flex flex-col items-start justify-center w-full">
           <h1 className="w-full my-4 select-none text-start text-sm sm:text-lg">
@@ -113,7 +115,9 @@ export default function RegisterPage() {
           />
         </div>
         {errors?.email && (
-          <h1 className="text-one text-md my-2">{errors?.email?.message}</h1>
+          <h1 className="text-one text-md my-2 text-start">
+            {errors?.email?.message}
+          </h1>
         )}
         <div className="relative flex flex-col items-start justify-center w-full">
           <h1 className="w-full my-4 select-none text-start text-sm sm:text-lg">
@@ -128,7 +132,9 @@ export default function RegisterPage() {
           />
         </div>
         {errors?.password && (
-          <h1 className="text-one text-md my-2">{errors?.password?.message}</h1>
+          <h1 className="text-one text-md my-2 text-start">
+            {errors?.password?.message}
+          </h1>
         )}
         <div
           className="flex justify-between w-full bg-white rounded-md px-4 py-2 items-center my-8 hover:shadow-md cursor-pointer"

@@ -4,7 +4,8 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
-import Loading from '@/components/Loading';
+import Loading from '../../components/Loading';
+import Button from '../../components/Button';
 
 export default function TheGarden() {
   const [isOpen, setIsOpen] = useState(false);
@@ -82,11 +83,14 @@ export default function TheGarden() {
           alt="photo"
         />
       </div>
-      <div className="flex justify-between items-center w-full gap-4 my-8">
+      <div className="flex flex-col justify-start items-center w-full gap-4 my-8">
         <h1 className="grow text-lg lg:text-2xl w-full text-white ">
           الجوائز التي ربحتها نتيجة نشر
           <span className="text-one"> {userRecipes?.length}</span> وصفات
         </h1>
+        <div className="w-full sm:w-1/3 gap-4 my-8">
+          <Button title={'إنشاء وصفة جديدة'} style={' '} path="/newRecipe" />
+        </div>
         <BackButton />
         <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
           <TfiMenuAlt
