@@ -19,7 +19,6 @@ import { getYoutubeVideoId } from '../../../components/youtubeUtils';
 export default function EditRecipe() {
   const [url, setUrl] = useState('');
   const [embedLink, setEmbedLink] = useState('');
-  const [error, setError] = useState('');
 
   const { data } = useContext(inputsContext);
   const [isOpen, setIsOpen] = useState(false);
@@ -108,10 +107,8 @@ export default function EditRecipe() {
 
       setEmbedLink(youtubeEmbedLink);
       setInputs({ ...inputs, link: youtubeEmbedLink });
-      setError('');
     } else {
       setEmbedLink('');
-      setError('Invalid YouTube URL');
     }
   };
   return (
@@ -201,7 +198,19 @@ export default function EditRecipe() {
                     })
                   }
                 >
-                  {editedRecipe?.mealName}
+                  {inputs?.mealName || editedRecipe?.mealName}
+                  {/* //? هذا السبان لابقاء الفوكس */}
+                  <span
+                    contentEditable="false"
+                    className={
+                      inputs?.mealName && editedRecipe?.mealName
+                        ? 'hidden'
+                        : 'text-white'
+                    }
+                  >
+                    &#13;&#10;
+                  </span>
+
                   <MdEdit className="absolute top-0 right-0 animate-pulse text-2xl text-green-400" />
                 </h1>
 
@@ -219,14 +228,6 @@ export default function EditRecipe() {
               >
                 حفظ التعديلات
               </button>
-              {/* <div className="relative w-full h-44 sm:h-96 overflow-hidden rounded-lg border bg-gray-100">
-                <Image
-                  src={editedRecipe?.image}
-                  layout="fill"
-                  objectFit="cover"
-                  alt={editedRecipe?.mealName}
-                />
-              </div> */}
 
               <div className="bg-white rounded-lg mt-4 sm:mt-16">
                 <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
@@ -258,6 +259,17 @@ export default function EditRecipe() {
                   }
                 >
                   {editedRecipe?.ingredients}
+                  {/* //? هذا السبان لابقاء الفوكس */}
+                  <span
+                    contentEditable="false"
+                    className={
+                      inputs?.mealName && editedRecipe?.mealName
+                        ? 'hidden'
+                        : 'text-white'
+                    }
+                  >
+                    &#13;&#10;
+                  </span>
                   <MdEdit className="absolute top-0 right-0 animate-pulse text-2xl text-green-400" />
                 </pre>
                 <button
@@ -295,6 +307,17 @@ export default function EditRecipe() {
                   }
                 >
                   {editedRecipe?.theWay}
+                  {/* //? هذا السبان لابقاء الفوكس */}
+                  <span
+                    contentEditable="false"
+                    className={
+                      inputs?.mealName && editedRecipe?.mealName
+                        ? 'hidden'
+                        : 'text-white'
+                    }
+                  >
+                    &#13;&#10;
+                  </span>
                   <MdEdit className="absolute top-0 right-0 animate-pulse text-2xl text-green-400" />
                 </pre>
                 <button
@@ -334,6 +357,17 @@ export default function EditRecipe() {
                       }
                     >
                       {editedRecipe?.advise}
+                      {/* //? هذا السبان لابقاء الفوكس */}
+                      <span
+                        contentEditable="false"
+                        className={
+                          inputs?.mealName && editedRecipe?.mealName
+                            ? 'hidden'
+                            : 'text-white'
+                        }
+                      >
+                        &#13;&#10;
+                      </span>
                       <MdEdit className="absolute top-0 right-0 animate-pulse text-2xl text-green-400" />
                     </pre>{' '}
                     <button
@@ -362,16 +396,7 @@ export default function EditRecipe() {
                     />
                   </div>
                 </div>
-                {/* <input
-                  onChange={(e) =>
-                    setInputs({ ...inputs, link: e.target.value })
-                  }
-                  type="text"
-                  name=""
-                  id=""
-                  className="w-full border h-16 p-2 rounded-lg"
-                  placeholder="الصق رابط الفيديو الجديد هنا ..."
-                /> */}
+
                 <input
                   type="text"
                   placeholder="الصق رابط الفيديو الجديد هنا ..."

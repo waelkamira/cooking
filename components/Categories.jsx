@@ -54,7 +54,7 @@ export default function CategoriesSlid() {
           key={index}
         >
           <div
-            className="relative border border-one w-full h-[144px] rounded-lg overflow-hidden hover:scale-[101%] transition-all duration-300 shadow-lg"
+            className="relative border border-one w-full h-[150px] rounded-lg overflow-hidden hover:scale-[101%] transition-all duration-300 shadow-lg"
             onClick={() => router.push(`?searchedCategory=${category?.name}`)}
           >
             <Image

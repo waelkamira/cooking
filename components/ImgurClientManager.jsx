@@ -34,6 +34,7 @@ const clientIds = [
   'aba6d61049df704',
   'afe7cd663114833',
   'c96595b05a8989e',
+  'dbed62f246420c6',
 ];
 
 const imgurClientManager = new ImgurClientManager(clientIds);
