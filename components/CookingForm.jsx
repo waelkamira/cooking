@@ -60,10 +60,7 @@ export default function CookingForm({
 
   async function handleSubmit(e) {
     e.preventDefault();
-    //  if (typeof window !== 'undefined') {
-    //    const img = JSON.parse(localStorage.getItem('image'));
-    //    setInputs({...inputs,image:img})
-    //  }
+
     if (
       inputs.mealName &&
       inputs.ingredients &&
@@ -217,12 +214,12 @@ export default function CookingForm({
           <div className="flex flex-col gap-8 md:flex-row w-full ">
             <div className="flex flex-col items-center justify-center w-full">
               {errors.selectedValue && (
-                <h1 className="text-one text-2xl text-end my-2 w-full animate-bounce font-bold opacity-0">
+                <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold opacity-0">
                   اختيار الصنف مطلوب
                 </h1>
               )}
               {errors.mealName && (
-                <h1 className="text-one text-2xl text-end my-2 w-full animate-bounce font-bold">
+                <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold">
                   اسم الطبخة مطلوب
                 </h1>
               )}
@@ -299,7 +296,7 @@ export default function CookingForm({
             />
           </div>
           {errors.ingredients && (
-            <h1 className="text-one text-2xl text-end my-2 w-full animate-bounce font-bold">
+            <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold">
               حقل المقادير مطلوب
             </h1>
           )}
@@ -341,7 +338,7 @@ export default function CookingForm({
             />
           </div>
           {errors.theWay && (
-            <h1 className="text-one text-2xl text-end my-2 w-full animate-bounce font-bold">
+            <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold">
               حقل الطريقة مطلوب
             </h1>
           )}
@@ -404,7 +401,7 @@ export default function CookingForm({
 
           <input
             type="text"
-            placeholder="Paste YouTube link here"
+            placeholder="... ضع رابط الفيديو هنا"
             value={url}
             onChange={handleInputChange}
             className="text-right mt-4 mb-8 w-full p-2 rounded-lg text-lg outline-2 focus:outline-one h-10"

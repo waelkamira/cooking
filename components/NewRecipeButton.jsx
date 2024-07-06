@@ -39,12 +39,12 @@ export default function NewRecipeButton() {
             className={
               (session?.status === 'unauthenticated'
                 ? 'h-[700px]'
-                : 'h-[2620px] sm:h-[2350px] lg:h-[2500px]') +
-              ' relative w-full 2xl:w-2/3 flex flex-col items-start justify-center sm:flex-row 2xl:my-8 top-0 z-40 overflow-hidden border border-one'
+                : 'h-[2520px] sm:h-[2350px] lg:h-[3000px]') +
+              ' relative w-full 2xl:w-2/3 flex flex-col items-start justify-center sm:flex-row 2xl:my-8 top-0 z-40 overflow-hidden border border-one '
             }
             onClick={(e) => e.stopPropagation()}
           >
-            <div
+            {/* <div
               className={
                 (session?.status === 'authenticated' ? 'h-full' : 'h-[700px]') +
                 ' relative border border-one w-full top-0 flex items-start justify-start rounded-lg overflow-hidden bg-one'
@@ -59,10 +59,10 @@ export default function NewRecipeButton() {
                 alt="photo"
                 priority
               />
-            </div>
+            </div> */}
 
             <div className="absolute w-full h-full flex flex-col items-center justify-start rounded-lg grow z-50 bg-four ">
-              <div className="relative h-44 sm:h-72 lg:h-[550px] w-full ">
+              <div className="relative h-44 sm:h-72 lg:h-[600px] w-full ">
                 <Image
                   src={
                     'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718994271/cooking/yrcziegsjcyzwszl4bjh.png'

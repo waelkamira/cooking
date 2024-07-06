@@ -44,16 +44,16 @@ export default function UploadingAndDisplayingImage({ img }) {
 
   return (
     <div className="relative flex justify-center items-center w-full h-72 sm:h-96 text-center ">
-      <div className="absolute top-0 left-0 flex flex-col justify-center items-center text-white z-50">
+      <div className="absolute top-0 left-0 flex flex-col justify-center items-center text-white z-50 w-full">
         <input type="file" id="file-upload" onChange={onFileChange} />
         <input
           type="file"
           id="file-upload"
           onChange={onFileChange}
-          className="flex justify-center items-center w-96 h-72 sm:h-96 border-2 border-one rounded-lg placeholder:text-white "
+          className="flex justify-center items-center w-96 h-72 sm:h-96 border-2 text-center border-one rounded-lg placeholder:text-white "
         />
         {imageError?.imageError && (
-          <h1 className="text-one text-2xl text-center my-2 w-full animate-bounce font-bold">
+          <h1 className=" text-one text-2xl text-center my-2 w-full animate-bounce font-bold mt-8">
             {imageError?.message}
           </h1>
         )}
