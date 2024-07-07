@@ -19,15 +19,17 @@ export default function HomePage() {
   const router = useRouter();
 
   //! التطبيق build حتى لاتسبب مشكلة عند  useEffect يجب وضع الجملة الشرطية هذه ضمن
-  useEffect(() => {
-    if (session?.data?.user?.email === undefined) {
-      router.push('/login');
-    }
-  }, [router, session?.data?.user?.email]);
+  // useEffect(() => {
+  //   if (session?.data?.user?.email === undefined) {
+  //     router.push('/login');
+  //   }
+  // }, [router, session?.data?.user?.email]);
 
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('image', JSON.stringify(session?.data?.user?.image));
-  }
+  useEffect(() => {
+    if (typeof window !== 'undefined' && session?.user?.image) {
+      localStorage.setItem('image', JSON.stringify(session.user.image));
+    }
+  }, [session?.user?.image]);
 
   return (
     <Suspense>
