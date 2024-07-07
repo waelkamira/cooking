@@ -20,6 +20,13 @@ export default function LogInPage() {
     email: z.string().email(),
     password: z.string().min(),
   });
+  // {
+  //   "version": 2,
+  //   "builds": [
+  //     { "src": "package.json", "use": "@vercel/node" },
+  //     { "src": "next.config.js", "use": "@vercel/next" }
+  //   ]
+  // }
 
   const {
     register,
