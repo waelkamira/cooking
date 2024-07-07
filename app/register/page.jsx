@@ -10,6 +10,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { signIn, useSession } from 'next-auth/react';
 import CustomToast from '../../components/CustomToast';
+import { useEffect } from 'react';
 
 export default function RegisterPage() {
   const session = useSession();
@@ -29,9 +30,13 @@ export default function RegisterPage() {
   } = useForm({ resolver: zodResolver(schema) });
 
   //! اذا تم التسجيل بنجاح عن طريق أحد البروفايدرز سوف يتم توجيه المستخدم الى صفحة تسجيل الدخول
-  if (session?.data?.user?.email) {
-    router.push('/login');
-  }
+  //! التطبيق build حتى لاتسبب مشكلة عند  useEffect يجب وضع الجملة الشرطية هذه ضمن
+
+  useEffect(() => {
+    if (session?.data?.user?.email) {
+      router.push('/login');
+    }
+  }, [router, session?.data?.user?.email]);
 
   async function onSubmit() {
     // console.log('getValues', getValues());

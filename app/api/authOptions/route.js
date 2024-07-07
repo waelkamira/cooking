@@ -8,10 +8,7 @@ import clientPromise from '../../../lib/Mongodb';
 
 const connectToDatabase = async () => {
   if (mongoose.connection.readyState !== 1) {
-    await mongoose.connect(process.env.NEXT_PUBLIC_MONGODB, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.NEXT_PUBLIC_MONGODB);
   }
 };
 

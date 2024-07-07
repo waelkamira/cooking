@@ -15,12 +15,13 @@ import { TfiMenuAlt } from 'react-icons/tfi';
 import SideBarMenu from '../../components/SideBarMenu';
 import Button from '../../components/Button';
 import Loading from '../../components/Loading';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { MdEdit } from 'react-icons/md';
 import { Suspense } from 'react';
-
+// import HandleDeletePost from '../../components/DeletePost';
 export default function MyRecipes() {
   const [isOpen, setIsOpen] = useState(false);
+  const [recipeId, setRecipeId] = useState('');
   const [isVisible, setIsVisible] = useState(false);
   const { dispatch } = useContext(inputsContext);
   const [pageNumber, setPageNumber] = useState(1);
@@ -28,9 +29,6 @@ export default function MyRecipes() {
   const session = useSession();
   const [myRecipes, setMyRecipes] = useState([]);
   const router = useRouter();
-  const params = useSearchParams();
-  const id = params.get('id');
-  console.log('id', id);
 
   useEffect(() => {
     fetchMyRecipes();
@@ -54,12 +52,13 @@ export default function MyRecipes() {
         }
       });
   };
+
   //? هذه الدالة لحذف المنشورات
-  async function handleDeletePost() {
+  async function handleDeletePost(recipeId) {
     const response = await fetch('/api/allCookingRecipes', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ _id: id }),
+      body: JSON.stringify({ _id: recipeId }),
     });
 
     if (response.ok) {
@@ -76,6 +75,15 @@ export default function MyRecipes() {
 
   return (
     <div className="relative w-full bg-four h-full p-4 lg:p-8 rounded-lg">
+      <div className="absolute flex flex-col items-start gap-2 z-40 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
+        <TfiMenuAlt
+          className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
+          onClick={() => {
+            setIsOpen(!isOpen);
+          }}
+        />
+        {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
+      </div>
       {isVisible && (
         <div className="absolute flex flex-col items-center my-4 bg-four/95 z-50 inset-0 text-white">
           <div className="sticky top-72 w-full ">
@@ -84,7 +92,7 @@ export default function MyRecipes() {
             </h1>
             <div className="flex justify-between items-center w-full h-24 sm:h-28 z-50 gap-8 p-8">
               <button
-                onClick={() => handleDeletePost()}
+                onClick={() => handleDeletePost(recipeId)}
                 className="btn rounded-full w-full h-full border border-white hover:border-0"
               >
                 حذف
@@ -99,15 +107,6 @@ export default function MyRecipes() {
           </div>
         </div>
       )}
-      <div className="absolute flex flex-col items-start gap-2 z-40 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
-        <TfiMenuAlt
-          className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
-          onClick={() => {
-            setIsOpen(!isOpen);
-          }}
-        />
-        {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
-      </div>
       <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
         <Image
           priority
@@ -167,8 +166,36 @@ export default function MyRecipes() {
                     <div
                       className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
                       onClick={() => {
-                        router.push(`?id=${recipe?._id}`);
+                        // router.push(`?id=${recipe?._id}`);
                         setIsVisible(true);
+                        setRecipeId(recipe?._id);
+                        // {
+                        //   isVisible && (
+                        //     <div className="absolute flex flex-col items-center my-4 bg-four/95 z-50 inset-0 text-white">
+                        //       <div className="sticky top-72 w-full ">
+                        //         <h1 className="text-center text-lg sm:text-3xl">
+                        //           هل تريد حذف هذه الوصفة نهائيا؟
+                        //         </h1>
+                        //         <div className="flex justify-between items-center w-full h-24 sm:h-28 z-50 gap-8 p-8">
+                        //           <button
+                        //             onClick={() => (
+                        //               <handleDeletePost id={recipe?._id} />
+                        //             )}
+                        //             className="btn rounded-full w-full h-full border border-white hover:border-0"
+                        //           >
+                        //             حذف
+                        //           </button>
+                        //           <button
+                        //             onClick={() => setIsVisible(false)}
+                        //             className="btn rounded-full w-full h-full border border-white hover:border-0"
+                        //           >
+                        //             تراجع
+                        //           </button>
+                        //         </div>
+                        //       </div>
+                        //     </div>
+                        //   );
+                        // }
                       }}
                     >
                       <IoMdClose className="" />

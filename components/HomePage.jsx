@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SearchBar from './SearchBar';
 import NewRecipeButton from './NewRecipeButton';
 import AllCookingRecipes from './AllCookingRecipes';
@@ -18,10 +18,12 @@ export default function HomePage() {
   const session = useSession();
   const router = useRouter();
 
-  console.log(session?.data?.user?.email);
-  if (session?.data?.user?.email === undefined) {
-    router.push('/login');
-  }
+  //! التطبيق build حتى لاتسبب مشكلة عند  useEffect يجب وضع الجملة الشرطية هذه ضمن
+  useEffect(() => {
+    if (session?.data?.user?.email === undefined) {
+      router.push('/login');
+    }
+  }, [router, session?.data?.user?.email]);
 
   if (typeof window !== 'undefined') {
     localStorage.setItem('image', JSON.stringify(session?.data?.user?.image));
