@@ -27,7 +27,7 @@ export default function SideBarMenu({ setIsOpen }) {
         </Link>
       )}
       {session?.status === 'unauthenticated' && (
-        <Button path={'/'} title={'تسجيل الدخول'} />
+        <Button title={'تسجيل الدخول'} path={'/login'} />
       )}
 
       {session?.status === 'authenticated' && user?.isAdmin && (
