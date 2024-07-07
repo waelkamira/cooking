@@ -78,7 +78,7 @@ export default function SearchBar() {
           (searchedWord || searchedCategory
             ? 'absolute z-50 top-4 left-0 '
             : '') +
-          ' flex flex-col items-start justify-center w-full lg:mt-8 bg-four rounded-lg '
+          ' flex flex-col items-start justify-center w-full lg:mt-8 bg-four rounded-lg my-2'
         }
       >
         <div className="flex flex-col justify-center items-center sm:flex-row gap-4 w-full">

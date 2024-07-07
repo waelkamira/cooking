@@ -23,8 +23,8 @@ export default function SideBar() {
   }, []);
 
   return (
-    <div className="hidden xl:block w-80 h-fit border-l-[16px] border-one">
-      <div className="w-full bg-four rounded-r-lg">
+    <div className="hidden xl:block w-80 h-full border-l-[16px] border-one">
+      <div className="w-full bg-four rounded-r-lg min-h-screen h-full ">
         {session?.status === 'authenticated' && (
           <div className="flex flex-col justify-between items-center p-4 rounded-r-lg w-full">
             <div
@@ -48,7 +48,7 @@ export default function SideBar() {
         )}
 
         {session?.status === 'unauthenticated' && (
-          <div className="px-4">
+          <div className="px-4 py-8">
             <Button title={'تسجيل دخول'} style={' '} path="/login" />
           </div>
         )}
