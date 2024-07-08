@@ -24,7 +24,12 @@ export default function SideBar() {
 
   return (
     <div className="hidden xl:block w-80 h-full border-l-[16px] border-one">
-      <div className="w-full bg-four rounded-r-lg min-h-screen h-full ">
+      <div
+        className={
+          (session?.status === 'unauthenticated' ? 'min-h-screen' : '') +
+          ` w-full bg-four rounded-r-lg  h-full `
+        }
+      >
         {session?.status === 'authenticated' && (
           <div className="flex flex-col justify-between items-center p-4 rounded-r-lg w-full">
             <div

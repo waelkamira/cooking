@@ -26,11 +26,19 @@ export default function HomePage() {
   //   }
   // }, [router, session?.data?.user?.email]);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined' && session?.user?.image) {
-      localStorage.setItem('image', JSON.stringify(session.user.image));
-    }
-  }, [session?.user?.image]);
+  // useEffect(() => {
+  //   if (typeof window !== 'undefined' && session?.user?.image) {
+  //     localStorage.setItem('image', JSON.stringify(session.user.image));
+  //   }
+  // }, [session?.user?.image]);
+
+  if (session?.data?.user?.email === undefined) {
+    router.push('/login');
+  }
+
+  if (typeof window !== 'undefined' && session?.user?.image) {
+    localStorage.setItem('image', JSON.stringify(session.user.image));
+  }
 
   return (
     <Suspense>
