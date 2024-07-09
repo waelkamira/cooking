@@ -118,7 +118,7 @@ export default function UploadingAndDisplayingImage({ img }) {
       const data = await response.json();
       if (data.success) {
         setUploadedImage(data?.data?.link);
-        dispatch({ type: 'IMAGE', payload: data?.data?.link });
+        // dispatch({ type: 'IMAGE', payload: data?.data?.link });
       } else {
         console.error('Error uploading image:', data.error);
       }
