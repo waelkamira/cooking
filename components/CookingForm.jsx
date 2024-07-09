@@ -54,10 +54,11 @@ export default function CookingForm({
     setInputs({
       ...inputs,
       selectedValue: data?.selectedValue?.label,
+      image: data?.image,
     });
-    handleUpload();
+    // handleUpload();
     handleGenerateEmbed();
-  }, [url, data?.selectedValue]);
+  }, [url, data?.selectedValue, data?.image]);
 
   if ((isVisible = false)) {
     setErrors({ mealName: false, ingredients: false, theWay: false });
@@ -157,44 +158,44 @@ export default function CookingForm({
     }
   }
 
-  //? هذه الدوال للتعامل مع الصورة المرفوعة
+  // //? هذه الدوال للتعامل مع الصورة المرفوعة
 
-  const handleUpload = async () => {
-    if (!selectedFile) return;
+  // const handleUpload = async () => {
+  //   if (!selectedFile) return;
 
-    const formData = new FormData();
-    formData.append('image', selectedFile);
+  //   const formData = new FormData();
+  //   formData.append('image', selectedFile);
 
-    try {
-      const response = await fetch('/api/uploadImageToImgur', {
-        method: 'POST',
-        body: formData,
-      });
+  //   try {
+  //     const response = await fetch('/api/uploadImageToImgur', {
+  //       method: 'POST',
+  //       body: formData,
+  //     });
 
-      const data = await response.json();
-      if (data.success) {
-        setUploadedImage(data?.data?.link);
-        setInputs({ ...inputs, image: data?.data?.link });
-      } else {
-        console.error('Error uploading image:', data.error);
-      }
-    } catch (error) {
-      console.error('Error uploading image:', error);
-    }
-  };
+  //     const data = await response.json();
+  //     if (data.success) {
+  //       setUploadedImage(data?.data?.link);
+  //       setInputs({ ...inputs, image: data?.data?.link });
+  //     } else {
+  //       console.error('Error uploading image:', data.error);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error uploading image:', error);
+  //   }
+  // };
 
-  const onFileChange = (event) => {
-    const file = event.target.files[0];
-    setSelectedFile(file);
+  // const onFileChange = (event) => {
+  //   const file = event.target.files[0];
+  //   setSelectedFile(file);
 
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setPreviewImage(reader.result);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
   //? هذه دالة يتم تفعيلها عند نجاح انشاء وصفة للاحتفال
   const handleClick = () => {
     const end = Date.now() + 4 * 1000; // 3 seconds
@@ -249,7 +250,7 @@ export default function CookingForm({
   };
   return (
     <>
-      <div className="relative flex flex-col p-4 justify-start items-center xl:items-end w-full h-72 sm:h-96 text-center">
+      {/* <div className="relative flex flex-col p-4 justify-start items-center xl:items-end w-full h-72 sm:h-96 text-center">
         <div className="absolute p-4 top-0 left-0 flex flex-col justify-center items-center text-white z-50 w-full">
           <input
             type="file"
@@ -302,13 +303,8 @@ export default function CookingForm({
             </div>
           )}
         </div>
-        {/* <button
-          onClick={handleUpload}
-          className="absolute -top-16 mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          Save
-        </button> */}
-      </div>
+      
+      </div> */}
       <div className="w-full p-2 sm:p-8 h-fit ">
         <form
           className="flex flex-col justify-center items-start h-fit w-full mt-4 "

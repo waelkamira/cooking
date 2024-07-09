@@ -84,7 +84,7 @@ export default function NewRecipeButton() {
                 <div className="w-full">
                   <div className="flex justify-center items-center w-full px-8 mt-8">
                     {/* <ImageUpload /> */}
-                    {/* <UploadingAndDisplayingImage /> */}
+                    <UploadingAndDisplayingImage />
                   </div>
                   <CookingForm
                     setIsVisible={setIsVisible}
