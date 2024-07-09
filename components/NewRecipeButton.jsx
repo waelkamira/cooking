@@ -9,7 +9,6 @@ import { signIn, useSession } from 'next-auth/react';
 import Button from './Button';
 import Link from 'next/link';
 import UploadingAndDisplayingImage from './UploadingAndDisplayingImage';
-import PostimageUploadingAndDisplayingImage from './PostimageUploadingAndDisplayingImage';
 
 export default function NewRecipeButton() {
   const [isVisible, setIsVisible] = useState(false);
@@ -84,9 +83,8 @@ export default function NewRecipeButton() {
               {session?.status === 'authenticated' && (
                 <div className="w-full">
                   <div className="flex justify-center items-center w-full px-8 mt-8">
-                    <TbArrowBigLeftLinesFilled className="hidden xl:block text-one text-5xl mx-32 animate-pulse transition-all duration-300" />
                     {/* <ImageUpload /> */}
-                    <UploadingAndDisplayingImage />
+                    {/* <UploadingAndDisplayingImage /> */}
                   </div>
                   <CookingForm
                     setIsVisible={setIsVisible}

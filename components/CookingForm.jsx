@@ -10,12 +10,17 @@ import CurrentUser from './CurrentUser';
 import CustomToast from './CustomToast';
 import { Confetti } from './SuccessComponent';
 import { getYoutubeVideoId } from './youtubeUtils';
+import { MdOutlineAddPhotoAlternate } from 'react-icons/md';
+import { TbArrowBigLeftLinesFilled } from 'react-icons/tb';
 
 export default function CookingForm({
   setIsVisible,
   isVisible,
   cancel = true,
 }) {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
+  const [uploadedImage, setUploadedImage] = useState(null);
   const [url, setUrl] = useState('');
   const [embedLink, setEmbedLink] = useState('');
   const [error, setError] = useState('');
@@ -43,16 +48,16 @@ export default function CookingForm({
     advise: '',
     link: '',
   });
-  const { data, dispatch } = useContext(inputsContext);
+  const { data, dispatch, imageError } = useContext(inputsContext);
 
   useEffect(() => {
     setInputs({
       ...inputs,
       selectedValue: data?.selectedValue?.label,
-      image: data?.image,
     });
+    handleUpload();
     handleGenerateEmbed();
-  }, [url, data?.selectedValue, data?.image]);
+  }, [url, data?.selectedValue]);
 
   if ((isVisible = false)) {
     setErrors({ mealName: false, ingredients: false, theWay: false });
@@ -152,6 +157,44 @@ export default function CookingForm({
     }
   }
 
+  //? هذه الدوال للتعامل مع الصورة المرفوعة
+
+  const handleUpload = async () => {
+    if (!selectedFile) return;
+
+    const formData = new FormData();
+    formData.append('image', selectedFile);
+
+    try {
+      const response = await fetch('/api/uploadImageToImgur', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setUploadedImage(data?.data?.link);
+        setInputs({ ...inputs, image: data?.data?.link });
+      } else {
+        console.error('Error uploading image:', data.error);
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
+  };
+
+  const onFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
   //? هذه دالة يتم تفعيلها عند نجاح انشاء وصفة للاحتفال
   const handleClick = () => {
     const end = Date.now() + 4 * 1000; // 3 seconds
@@ -205,44 +248,105 @@ export default function CookingForm({
     }
   };
   return (
-    <div className="w-full p-2 sm:p-8 h-fit ">
-      <form
-        className="flex flex-col justify-center items-start h-fit w-full mt-4 "
-        onSubmit={handleSubmit}
-      >
-        <div className="w-full">
-          <div className="flex flex-col gap-8 md:flex-row w-full ">
-            <div className="flex flex-col items-center justify-center w-full">
-              {errors.selectedValue && (
-                <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold opacity-0">
-                  اختيار الصنف مطلوب
-                </h1>
-              )}
-              {errors.mealName && (
-                <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold">
-                  اسم الطبخة مطلوب
-                </h1>
-              )}
-              <div className="flex items-center gap-2 w-full justify-start">
-                <h1 className="text-right text-xl text-white font-bold my-2 ">
-                  <span className="text-one font-bold text-2xl ml-2">#</span>
-                  اسم الطبخة:
-                </h1>
-              </div>
+    <>
+      <div className="relative flex flex-col p-4 justify-start items-center xl:items-end w-full h-72 sm:h-96 text-center">
+        <div className="absolute p-4 top-0 left-0 flex flex-col justify-center items-center text-white z-50 w-full">
+          <input
+            type="file"
+            id="file-upload"
+            onChange={onFileChange}
+            className="flex justify-center items-center w-96 h-72 sm:h-96 border-2 text-center border-one rounded-lg placeholder:text-white"
+          />
+          {imageError?.imageError && (
+            <h1 className="text-one text-2xl text-center my-2 w-full animate-bounce font-bold mt-8">
+              {imageError?.message}
+            </h1>
+          )}
+        </div>
+        <div className=" text-start flex justify-start items-center xl:items-start w-full h-full ">
+          <TbArrowBigLeftLinesFilled className="absolute top-0 bottom-0 m-auto w-1/2 hidden xl:block text-one text-7xl mx-32 animate-pulse transition-all duration-300" />
+        </div>
+        <div className="absolute top-0 mx-auto w-full xl:w-1/2 h-72 sm:h-96 z-20 rounded-lg overflow-hidden">
+          <div className="absolute top-0 left-0 custom-file-upload w-full h-full p-4">
+            <div className="flex flex-col justify-center items-center size-full border-2 border-one rounded-lg overflow-hidden">
+              <label
+                htmlFor="file-upload"
+                className="absolute top-0 size-full cursor-pointer overflow-hidden "
+              ></label>
+              <MdOutlineAddPhotoAlternate className="text-one text-3xl" />
+              {!previewImage && (
+                <h1 className="text-white text-xl">أضف صورة للطبخة</h1>
+              )}{' '}
+            </div>
+          </div>
 
-              <input
-                value={inputs.mealName}
-                onChange={(e) =>
-                  setInputs({ ...inputs, mealName: e.target.value })
-                }
-                type="text"
-                id="اسم الطبخة"
-                name="اسم الطبخة"
-                placeholder="... شاورما الدجاج"
-                autoFocus
-                className="text-right w-full p-2 rounded-lg text-lg outline-2 focus:outline-one h-10"
+          {previewImage && (
+            <div className="relative w-full h-72 sm:h-96">
+              <Image
+                src={previewImage}
+                alt="Selected"
+                layout="fill"
+                objectFit="cover"
               />
-              {/* <div className="flex items-center gap-2 w-full justify-start">
+            </div>
+          )}
+
+          {uploadedImage && (
+            <div className="relative w-full h-72 sm:h-96">
+              <Image
+                src={uploadedImage}
+                alt="Uploaded"
+                layout="fill"
+                objectFit="cover"
+              />
+            </div>
+          )}
+        </div>
+        {/* <button
+          onClick={handleUpload}
+          className="absolute -top-16 mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Save
+        </button> */}
+      </div>
+      <div className="w-full p-2 sm:p-8 h-fit ">
+        <form
+          className="flex flex-col justify-center items-start h-fit w-full mt-4 "
+          onSubmit={handleSubmit}
+        >
+          <div className="w-full">
+            <div className="flex flex-col gap-8 md:flex-row w-full ">
+              <div className="flex flex-col items-center justify-center w-full">
+                {errors.selectedValue && (
+                  <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold opacity-0">
+                    اختيار الصنف مطلوب
+                  </h1>
+                )}
+                {errors.mealName && (
+                  <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold">
+                    اسم الطبخة مطلوب
+                  </h1>
+                )}
+                <div className="flex items-center gap-2 w-full justify-start">
+                  <h1 className="text-right text-xl text-white font-bold my-2 ">
+                    <span className="text-one font-bold text-2xl ml-2">#</span>
+                    اسم الطبخة:
+                  </h1>
+                </div>
+
+                <input
+                  value={inputs.mealName}
+                  onChange={(e) =>
+                    setInputs({ ...inputs, mealName: e.target.value })
+                  }
+                  type="text"
+                  id="اسم الطبخة"
+                  name="اسم الطبخة"
+                  placeholder="... شاورما الدجاج"
+                  autoFocus
+                  className="text-right w-full p-2 rounded-lg text-lg outline-2 focus:outline-one h-10"
+                />
+                {/* <div className="flex items-center gap-2 w-full justify-start">
                 <h1 className="text-right text-xl text-white font-bold my-2 ">
                   <span className="text-one font-bold text-2xl ml-2">#</span>
                   رابط الصورة:{' '}
@@ -261,103 +365,103 @@ export default function CookingForm({
                 autoFocus
                 className="text-right w-full p-2 rounded-lg text-lg outline-2 focus:outline-one h-10"
               /> */}
-            </div>
-            <div className="flex flex-col items-center justify-center w-full my-2 ">
-              {errors.mealName && (
-                <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold opacity-0 ">
-                  اسم الطبخة مطلوب
-                </h1>
-              )}
-              {errors.selectedValue && (
-                <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold">
-                  اختيار الصنف مطلوب
-                </h1>
-              )}
-              <div className="flex items-center gap-2 w-full justify-start">
-                <h1 className="text-right text-xl text-white font-bold my-2">
-                  <span className="text-one font-bold text-2xl ml-2">#</span>
-                  اختر الصنف:
-                </h1>
               </div>
+              <div className="flex flex-col items-center justify-center w-full my-2 ">
+                {errors.mealName && (
+                  <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold opacity-0 ">
+                    اسم الطبخة مطلوب
+                  </h1>
+                )}
+                {errors.selectedValue && (
+                  <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold">
+                    اختيار الصنف مطلوب
+                  </h1>
+                )}
+                <div className="flex items-center gap-2 w-full justify-start">
+                  <h1 className="text-right text-xl text-white font-bold my-2">
+                    <span className="text-one font-bold text-2xl ml-2">#</span>
+                    اختر الصنف:
+                  </h1>
+                </div>
 
-              <SelectComponent />
+                <SelectComponent />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="w-full my-4">
-          <div className="relative w-full h-28">
-            <Image
-              src={
-                'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716954/cooking/vege1_jvpnhw.png'
-              }
-              layout="fill"
-              objectFit="contain"
-              alt="photo"
-            />
-          </div>
-          {errors.ingredients && (
-            <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold">
-              حقل المقادير مطلوب
-            </h1>
-          )}
-          <div className="flex items-center gap-2 w-full justify-start">
-            {' '}
-            <h1 className="text-right text-xl text-white font-bold my-2">
-              <span className="text-one font-bold text-2xl ml-2">#</span>
-              المقادير:
-            </h1>
-          </div>
+          <div className="w-full my-4">
+            <div className="relative w-full h-28">
+              <Image
+                src={
+                  'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716954/cooking/vege1_jvpnhw.png'
+                }
+                layout="fill"
+                objectFit="contain"
+                alt="photo"
+              />
+            </div>
+            {errors.ingredients && (
+              <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold">
+                حقل المقادير مطلوب
+              </h1>
+            )}
+            <div className="flex items-center gap-2 w-full justify-start">
+              {' '}
+              <h1 className="text-right text-xl text-white font-bold my-2">
+                <span className="text-one font-bold text-2xl ml-2">#</span>
+                المقادير:
+              </h1>
+            </div>
 
-          <textarea
-            value={inputs.ingredients}
-            onChange={(e) =>
-              setInputs({ ...inputs, ingredients: e.target.value })
-            }
-            dir="rtl"
-            rows={'6'}
-            name="المقادير"
-            id="المقادير"
-            className="scrollBar text-right w-full p-2 rounded-lg text-xl h-36 outline-2 focus:outline-one"
-            placeholder={`١- خبز توست حسب الرغبة
+            <textarea
+              value={inputs.ingredients}
+              onChange={(e) =>
+                setInputs({ ...inputs, ingredients: e.target.value })
+              }
+              dir="rtl"
+              rows={'6'}
+              name="المقادير"
+              id="المقادير"
+              className="scrollBar text-right w-full p-2 rounded-lg text-xl h-36 outline-2 focus:outline-one"
+              placeholder={`١- خبز توست حسب الرغبة
 ٢- جبن شرائح
 ٣- ٥ بيضات مخفوقة
 ٤- ملح وفلفل
 ٥- بقدونس مفروم ناعماً للتزيين
                 `}
-          ></textarea>
-        </div>
-        <div className="w-full my-4">
-          <div className="relative w-full h-28">
-            <Image
-              src={
-                'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716956/cooking/spices_v4n9lm.png'
-              }
-              layout="fill"
-              objectFit="contain"
-              alt="photo"
-            />
+            ></textarea>
           </div>
-          {errors.theWay && (
-            <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold">
-              حقل الطريقة مطلوب
-            </h1>
-          )}
-          <div className="flex items-center gap-2 w-full justify-start">
-            {' '}
-            <h1 className="text-right text-xl text-white font-bold my-2">
-              <span className="text-one font-bold text-2xl ml-2">#</span>
-              الطريقة:
-            </h1>
-          </div>
+          <div className="w-full my-4">
+            <div className="relative w-full h-28">
+              <Image
+                src={
+                  'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716956/cooking/spices_v4n9lm.png'
+                }
+                layout="fill"
+                objectFit="contain"
+                alt="photo"
+              />
+            </div>
+            {errors.theWay && (
+              <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold">
+                حقل الطريقة مطلوب
+              </h1>
+            )}
+            <div className="flex items-center gap-2 w-full justify-start">
+              {' '}
+              <h1 className="text-right text-xl text-white font-bold my-2">
+                <span className="text-one font-bold text-2xl ml-2">#</span>
+                الطريقة:
+              </h1>
+            </div>
 
-          <textarea
-            value={inputs.theWay}
-            onChange={(e) => setInputs({ ...inputs, theWay: e.target.value })}
-            dir="rtl"
-            rows={'6'}
-            name="المقادير"
-            id="المقادير"
-            placeholder={`١- يخفق البيض مع الملح والفلفل
+            <textarea
+              value={inputs.theWay}
+              onChange={(e) => setInputs({ ...inputs, theWay: e.target.value })}
+              dir="rtl"
+              rows={'6'}
+              name="المقادير"
+              id="المقادير"
+              placeholder={`١- يخفق البيض مع الملح والفلفل
 ٢- يوضع في آل خبزة شريحة من الجبن ثم تغطى بقطعة أخرى من الخبز على شكل
 سندويتشات ثم تقطع على شكل مثلثات
 ٣- تغمس السندويتشات في البيض المخفوق من الجهتين وتوضع في الزيت وتضاف
@@ -366,60 +470,60 @@ export default function CookingForm({
 ٥- توضع على شبك حتى تصفى من الزيت أو على ورق نشاف وتقدم مع الحليب أو
 العصير
                 `}
-            className="text-right w-full p-2 rounded-lg text-xl h-36 outline-2 focus:outline-one"
-          ></textarea>
-        </div>
-        <div className="w-full my-4">
-          <div className="flex items-center gap-2 w-full justify-start">
-            {' '}
-            <h1 className="text-right text-xl text-white font-bold my-2">
-              <span className="text-one font-bold text-2xl ml-2">#</span>
-              نصائح لتحضير :
-            </h1>
+              className="text-right w-full p-2 rounded-lg text-xl h-36 outline-2 focus:outline-one"
+            ></textarea>
           </div>
-          <textarea
-            value={inputs.advise}
-            onChange={(e) => setInputs({ ...inputs, advise: e.target.value })}
-            dir="rtl"
-            rows={'6'}
-            name="المقادير"
-            id="المقادير"
-            placeholder={`اكتب بعض النصائح عن تحضير هذه الطبخة
-                `}
-            className="text-right w-full p-2 rounded-lg text-xl h-24 outline-2 focus:outline-one"
-          ></textarea>
-        </div>
-        <div className="w-full">
-          <div className="flex items-center gap-2 w-full justify-start ">
-            {' '}
-            <h1 className="text-right text-xl text-white font-bold my-2">
-              <span className="text-one font-bold text-2xl ml-2">#</span>
-              أضف رابط الطبخة من يوتيوب:.
-            </h1>
-          </div>
-          {/* <YoutubeEmbedder /> */}
-
-          <input
-            type="text"
-            placeholder="... ضع رابط الفيديو هنا"
-            value={url}
-            onChange={handleInputChange}
-            className="text-right mt-4 mb-8 w-full p-2 rounded-lg text-lg outline-2 focus:outline-one h-10"
-          />
-          {inputs?.link && (
-            <div>
-              <iframe
-                width="560"
-                height="315"
-                src={inputs?.link}
-                frameBorder="0"
-                allowFullScreen
-                title="Embedded YouTube Video"
-                className="rounded-lg w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
-              />
+          <div className="w-full my-4">
+            <div className="flex items-center gap-2 w-full justify-start">
+              {' '}
+              <h1 className="text-right text-xl text-white font-bold my-2">
+                <span className="text-one font-bold text-2xl ml-2">#</span>
+                نصائح لتحضير :
+              </h1>
             </div>
-          )}
-          {/* <input
+            <textarea
+              value={inputs.advise}
+              onChange={(e) => setInputs({ ...inputs, advise: e.target.value })}
+              dir="rtl"
+              rows={'6'}
+              name="المقادير"
+              id="المقادير"
+              placeholder={`اكتب بعض النصائح عن تحضير هذه الطبخة
+                `}
+              className="text-right w-full p-2 rounded-lg text-xl h-24 outline-2 focus:outline-one"
+            ></textarea>
+          </div>
+          <div className="w-full">
+            <div className="flex items-center gap-2 w-full justify-start ">
+              {' '}
+              <h1 className="text-right text-xl text-white font-bold my-2">
+                <span className="text-one font-bold text-2xl ml-2">#</span>
+                أضف رابط الطبخة من يوتيوب:.
+              </h1>
+            </div>
+            {/* <YoutubeEmbedder /> */}
+
+            <input
+              type="text"
+              placeholder="... ضع رابط الفيديو هنا"
+              value={url}
+              onChange={handleInputChange}
+              className="text-right mt-4 mb-8 w-full p-2 rounded-lg text-lg outline-2 focus:outline-one h-10"
+            />
+            {inputs?.link && (
+              <div>
+                <iframe
+                  width="560"
+                  height="315"
+                  src={inputs?.link}
+                  frameBorder="0"
+                  allowFullScreen
+                  title="Embedded YouTube Video"
+                  className="rounded-lg w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
+                />
+              </div>
+            )}
+            {/* <input
             value={inputs.link}
             onChange={(e) => setInputs({ ...inputs, link: e.target.value })}
             type="text"
@@ -428,8 +532,8 @@ export default function CookingForm({
             placeholder="... رابط الفيديو"
             className="text-right w-full p-2 rounded-lg text-xl outline-2 focus:outline-one"
           /> */}
-        </div>
-        {/* <div className="w-full flex flex-col items-start justify-center lg:flex-row gap-4 my-10 rounded-lg">
+          </div>
+          {/* <div className="w-full flex flex-col items-start justify-center lg:flex-row gap-4 my-10 rounded-lg">
           <div className="w-full bg-four p-4 rounded-lg mb-4 border border-one">
             <h1 className="text-one md:text-xl font-bold w-full">
               {' '}
@@ -461,35 +565,36 @@ export default function CookingForm({
             />
           </div>
         </div> */}
-        <div className="flex flex-col sm:flex-row justify-around items-center gap-8 w-full my-12">
-          <button
-            type="submit"
-            className="btn bg-five rounded-lg text-white shadow-lg hover:outline outline-one text-xl hover:font-bold py-2 px-16 w-full"
-          >
-            حفظ
-          </button>
-          {cancel && (
+          <div className="flex flex-col sm:flex-row justify-around items-center gap-8 w-full my-12">
             <button
-              type="text"
-              className="btn bg-five rounded-lg text-white shadow-lg hover:outline  outline-one text-xl hover:font-bold py-2 px-16 w-full"
-              onClick={() => {
-                setIsVisible(false);
-                setInputs({
-                  mealName: '',
-                  selectedValue: '',
-                  image: '',
-                  ingredients: '',
-                  theWay: '',
-                  advise: '',
-                  link: '',
-                });
-              }}
+              type="submit"
+              className="btn bg-five rounded-lg text-white shadow-lg hover:outline outline-one text-xl hover:font-bold py-2 px-16 w-full"
             >
-              إلغاء
+              حفظ
             </button>
-          )}
-        </div>
-      </form>
-    </div>
+            {cancel && (
+              <button
+                type="text"
+                className="btn bg-five rounded-lg text-white shadow-lg hover:outline  outline-one text-xl hover:font-bold py-2 px-16 w-full"
+                onClick={() => {
+                  setIsVisible(false);
+                  setInputs({
+                    mealName: '',
+                    selectedValue: '',
+                    image: '',
+                    ingredients: '',
+                    theWay: '',
+                    advise: '',
+                    link: '',
+                  });
+                }}
+              >
+                إلغاء
+              </button>
+            )}
+          </div>
+        </form>
+      </div>
+    </>
   );
 }
