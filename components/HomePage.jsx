@@ -36,7 +36,7 @@ export default function HomePage() {
     if (session?.data?.user?.email === undefined) {
       router.push('/login');
     }
-  }, 2000);
+  }, 5000);
 
   if (typeof window !== 'undefined' && session?.user?.image) {
     localStorage.setItem('image', JSON.stringify(session.user.image));
