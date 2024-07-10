@@ -32,9 +32,11 @@ export default function HomePage() {
   //   }
   // }, [session?.user?.image]);
 
-  if (session?.data?.user?.email === undefined) {
-    router.push('/login');
-  }
+  setTimeout(() => {
+    if (session?.data?.user?.email === undefined) {
+      router.push('/login');
+    }
+  }, 2000);
 
   if (typeof window !== 'undefined' && session?.user?.image) {
     localStorage.setItem('image', JSON.stringify(session.user.image));
