@@ -22,9 +22,6 @@ export default function AllCookingRecipes() {
     fetchAllCookingRecipes();
   }, [newRecipe, deletedRecipe, pageNumber]);
 
-  if (session?.data?.user?.email === undefined) {
-    router.push('/login');
-  }
   async function fetchAllCookingRecipes() {
     const response = await fetch('/api/allCookingRecipes');
     const json = await response?.json();
