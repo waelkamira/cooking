@@ -292,12 +292,15 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
           >
             <div className="overflow-hidden rounded-full">
               <div className="relative size-12 rounded-full overflow-hidden">
-                <Image
-                  src={recipe?.userImage}
-                  layout="fill"
-                  objectFit="cover"
-                  alt={recipe?.mealName}
-                />
+                {!recipe?.userImage && <Loading />}
+                {recipe?.userImage && (
+                  <Image
+                    src={recipe?.userImage}
+                    layout="fill"
+                    objectFit="cover"
+                    alt={recipe?.mealName}
+                  />
+                )}
               </div>
             </div>
             <div className="flex flex-col justify-center items-start">

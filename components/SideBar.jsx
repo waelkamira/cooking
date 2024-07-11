@@ -8,6 +8,7 @@ import CurrentUser from '../components/CurrentUser';
 import TheGarden from './Garden';
 import Categories from './Categories';
 import NewRecipeButton from './NewRecipeButton';
+import Loading from './Loading';
 
 export default function SideBar() {
   const router = useRouter();
@@ -37,7 +38,11 @@ export default function SideBar() {
               onClick={() => router.push('/profile?username')}
             >
               <div className="relative size-14 overflow-hidden rounded-full">
-                <Image src={user?.image} fill alt={user?.name} />
+                {!user?.image && <Loading />}
+
+                {user?.image && (
+                  <Image src={user?.image} fill alt={user?.name} />
+                )}
               </div>
               <h1 className=" text-white text-nowrap">{user?.name} </h1>
             </div>
