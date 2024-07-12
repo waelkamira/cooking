@@ -18,7 +18,7 @@ import Loading from '../../components/Loading';
 import { useRouter } from 'next/navigation';
 import { MdEdit } from 'react-icons/md';
 import { Suspense } from 'react';
-// import HandleDeletePost from '../../components/DeletePost';
+
 export default function MyRecipes() {
   const [isOpen, setIsOpen] = useState(false);
   const [recipeId, setRecipeId] = useState('');
@@ -63,7 +63,11 @@ export default function MyRecipes() {
 
     if (response.ok) {
       toast.custom((t) => (
-        <CustomToast t={t} message={'👍 تم حذف هذا البوست من قائمة وصفاتك'} />
+        <CustomToast
+          t={t}
+          message={'تم حذف هذا البوست من قائمة وصفاتك'}
+          redEmoji={'✖'}
+        />
       ));
       setIsVisible(false);
       fetchMyRecipes();
@@ -74,7 +78,7 @@ export default function MyRecipes() {
   }
 
   return (
-    <div className="relative w-full bg-four h-full p-4 lg:p-8 rounded-lg">
+    <div className="relative w-full bg-four h-full sm:p-4 lg:p-8 rounded-lg">
       <div className="absolute flex flex-col items-start gap-2 z-40 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
         <TfiMenuAlt
           className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
@@ -150,11 +154,11 @@ export default function MyRecipes() {
           {myRecipes?.length > 0 &&
             myRecipes.map((recipe, index) => (
               <div
-                className="relative flex flex-col items-start justify-start gap-0 bg-white rounded-lg overflow-hidden"
+                className="relative flex flex-col items-start justify-start gap-0 bg-green-500 rounded-lg overflow-hidden"
                 key={index}
               >
                 {session?.status === 'authenticated' && (
-                  <div className="flex justify-between items-center bg-green-500 w-full p-4">
+                  <div className="flex justify-between items-center bg-green-500 w-full pt-4 px-4">
                     <div
                       className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
                       onClick={() => router.push(`/editRecipe/${recipe?._id}`)}
@@ -166,36 +170,8 @@ export default function MyRecipes() {
                     <div
                       className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
                       onClick={() => {
-                        // router.push(`?id=${recipe?._id}`);
                         setIsVisible(true);
                         setRecipeId(recipe?._id);
-                        // {
-                        //   isVisible && (
-                        //     <div className="absolute flex flex-col items-center my-4 bg-four/95 z-50 inset-0 text-white">
-                        //       <div className="sticky top-72 w-full ">
-                        //         <h1 className="text-center text-lg sm:text-3xl">
-                        //           هل تريد حذف هذه الوصفة نهائيا؟
-                        //         </h1>
-                        //         <div className="flex justify-between items-center w-full h-24 sm:h-28 z-50 gap-8 p-8">
-                        //           <button
-                        //             onClick={() => (
-                        //               <handleDeletePost id={recipe?._id} />
-                        //             )}
-                        //             className="btn rounded-full w-full h-full border border-white hover:border-0"
-                        //           >
-                        //             حذف
-                        //           </button>
-                        //           <button
-                        //             onClick={() => setIsVisible(false)}
-                        //             className="btn rounded-full w-full h-full border border-white hover:border-0"
-                        //           >
-                        //             تراجع
-                        //           </button>
-                        //         </div>
-                        //       </div>
-                        //     </div>
-                        //   );
-                        // }
                       }}
                     >
                       <IoMdClose className="" />
@@ -207,7 +183,7 @@ export default function MyRecipes() {
               </div>
             ))}
         </div>
-        <div className="flex items-center justify-around my-4 mt-8 text-white">
+        <div className="flex items-center justify-around text-white">
           {myRecipes?.length >= 10 && (
             <Link href={'#post1'}>
               <div

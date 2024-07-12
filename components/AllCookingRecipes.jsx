@@ -35,7 +35,7 @@ export default function AllCookingRecipes() {
   }
 
   return (
-    <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-[1800px] px-2 sm:px-16 sm:py-8 rounded-lg bg-seven overflow-y-auto z-10">
+    <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-[1800px] sm:px-16 pt-4 sm:py-8 rounded-lg bg-seven overflow-y-auto z-10">
       {allCookingRecipes?.length === 0 && <Loading />}
       {allCookingRecipes?.length > 0 &&
         allCookingRecipes.map((recipe, index) => (
@@ -43,7 +43,7 @@ export default function AllCookingRecipes() {
             <SmallItem recipe={recipe} index={index} />
           </div>
         ))}
-      <div className="flex items-center justify-around my-4 mt-8">
+      <div className="flex items-center justify-around sm:my-4 sm:mt-8">
         {allCookingRecipes?.length >= 10 && (
           <Link href={'#post1'}>
             <div

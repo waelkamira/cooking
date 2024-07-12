@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import SearchBar from './SearchBar';
 import NewRecipeButton from './NewRecipeButton';
 import AllCookingRecipes from './AllCookingRecipes';
@@ -44,9 +44,9 @@ export default function HomePage() {
     <Suspense>
       <div className="relative flex flex-col justify-center items-center xl:w-4/5 z-40 sm:my-0 w-full bg-four">
         <div className="w-full p-2 sm:p-4 lg:p-8">
-          <div className="xl:hidden absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 lg:top-12 lg:right-12 w-full">
+          <div className="xl:hidden absolute flex flex-col items-start gap-2 z-50 top-2 right-0 sm:top-4 sm:right-4 lg:top-12 lg:right-12 w-full">
             <TfiMenuAlt
-              className=" p-2 rounded-lg text-4xl sm:text-5xl text-one animate-pulse"
+              className=" p-2 rounded-lg text-5xl text-one animate-pulse"
               onClick={() => setIsOpen(!isOpen)}
             />
             {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}

@@ -15,6 +15,7 @@ import { MdEdit } from 'react-icons/md';
 import UploadingAndDisplayingImage from '../../../components/UploadingAndDisplayingImage';
 import { inputsContext } from '../../../components/Context';
 import { getYoutubeVideoId } from '../../../components/youtubeUtils';
+import LoadingPhoto from '../../../components/LoadingPhoto';
 
 export default function EditRecipe() {
   const [url, setUrl] = useState('');
@@ -166,13 +167,19 @@ export default function EditRecipe() {
           <div className="flex justify-center w-full">
             <div className="flex flex-col w-full 2xl:w-2/3 border  rounded-lg p-2 sm:p-8 mt-8 bg-white">
               <div className="flex justify-start items-center gap-2 w-full mb-4">
+                {/* <LoadingPhoto /> */}
+
                 <div className="relative size-14 overflow-hidden rounded-full">
-                  <Image
-                    src={editedRecipe?.userImage}
-                    fill
-                    alt={editedRecipe?.mealName}
-                  />
+                  {!editedRecipe?.userImage && <LoadingPhoto />}
+                  {editedRecipe?.userImage && (
+                    <Image
+                      src={editedRecipe?.userImage}
+                      fill
+                      alt={editedRecipe?.mealName}
+                    />
+                  )}
                 </div>
+
                 <div className="flex flex-col justify-center">
                   <h6 className="text-[13px] sm:text-[18px] text-eight select-none">
                     {editedRecipe?.userName}

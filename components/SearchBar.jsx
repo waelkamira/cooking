@@ -74,11 +74,12 @@ export default function SearchBar() {
   return (
     <Suspense>
       <div
+        //! ERROR
         className={
           (searchedWord || searchedCategory
-            ? 'absolute z-50 top-4 left-0 '
+            ? 'absolute z-50 top-4 left-0 h-screen overflow-scroll'
             : '') +
-          ' flex flex-col items-start justify-center w-full lg:mt-8 bg-four rounded-lg my-2'
+          ' flex flex-col items-start justify-center w-full lg:mt-8 bg-four rounded-lg'
         }
       >
         <div className="flex flex-col justify-center items-center sm:flex-row gap-4 w-full">

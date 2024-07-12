@@ -6,15 +6,20 @@ import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import Loading from '../../components/Loading';
 import Button from '../../components/Button';
+import LoadingPhoto from '../../components/LoadingPhoto';
+import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
+import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
+import Link from 'next/link';
 
 export default function TheGarden() {
+  const [pageNumber, setPageNumber] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
   const [icons, setIcons] = useState([]);
   const [userRecipes, setUserRecipes] = useState([]);
 
   useEffect(() => {
     fetchUserRecipes();
-  }, []);
+  }, [pageNumber]);
 
   //? هذه الدالة لجلب كل وصفات المستخدم لحساب عددها و عرضع الجوائز بناء على العدد
   const fetchUserRecipes = async () => {
@@ -37,7 +42,9 @@ export default function TheGarden() {
         const res = await fetch('/api/getIcons');
         const data = await res.json();
         if (res.ok) {
-          setIcons(data);
+          const startPage = (pageNumber - 1) * 12;
+          const endPage = startPage + 12;
+          setIcons(data?.slice(startPage, endPage));
         }
       }
     }
@@ -119,20 +126,47 @@ export default function TheGarden() {
                   key={index}
                 >
                   <div
-                    className="relative w-[50px] h-[50px] sm:w-[70px] sm:h-[70px] transition-all duration-300 hover:scale-110 cursor-pointer"
+                    className="relative w-[50px] h-[50px] sm:w-[70px] sm:h-[70px] transition-all duration-300 hover:scale-112 cursor-pointer"
                     key={index}
                   >
-                    <Image
-                      src={icon}
-                      layout="fill"
-                      objectFit="contain"
-                      alt="icon"
-                    />
+                    {!icon && <LoadingPhoto />}
+                    {icon && (
+                      <Image
+                        src={icon}
+                        layout="fill"
+                        objectFit="contain"
+                        alt="icon"
+                      />
+                    )}
                   </div>
                 </div>
               ))}
             {result()}
           </div>
+        )}
+      </div>
+      <div className="flex items-center justify-around text-white">
+        {icons?.length >= 12 && (
+          <Link href={'#post1'}>
+            <div
+              className="flex items-center justify-around cursor-pointer"
+              onClick={() => setPageNumber(pageNumber + 1)}
+            >
+              <h1 className="text-white font-bold">الصفحة التالية</h1>
+              <MdKeyboardDoubleArrowRight className="text-2xl animate-pulse" />
+            </div>
+          </Link>
+        )}
+        {pageNumber > 1 && (
+          <Link href={'#post1'}>
+            <div
+              className="flex items-center justify-around cursor-pointer"
+              onClick={() => setPageNumber(pageNumber - 1)}
+            >
+              <MdKeyboardDoubleArrowLeft className="text-2xl animate-pulse" />
+              <h1 className="text-white font-bold">الصفحة السابقة</h1>
+            </div>
+          </Link>
         )}
       </div>
     </div>

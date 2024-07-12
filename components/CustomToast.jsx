@@ -1,8 +1,6 @@
 'use client';
 import Image from 'next/image';
-import Link from 'next/link';
 import React from 'react';
-import CurrentUser from './CurrentUser';
 export default function CustomToast({
   t,
   message,
@@ -10,14 +8,13 @@ export default function CustomToast({
   greenEmoji,
   redEmoji,
 }) {
-  // console.log(CurrentUser());
   return (
     <div
       className={`${
         t.visible ? 'animate-enter' : 'animate-leave'
-      } max-w-md w-full bg-four border-[3px] border-one text-white shadow-lg rounded-lg pointer-events-auto flex-2 items-center justify-center p-4`}
+      } max-w-md w-full bg-white text-four shadow-lg rounded-lg pointer-events-auto flex-2 items-center justify-center p-4`}
     >
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center my-1">
         <div className="flex-1 w-full">
           <div className="flex justify-center items-center gap-2">
             <div className="relative w-14 h-14 flex-shrink-0 pt-0.5 rounded-full ">
@@ -29,25 +26,16 @@ export default function CustomToast({
               />
             </div>
             <div className="ml-3 flex-1">
-              <h1 className="text-sm text-white font-bold">بهيجة اشرق لبن</h1>
+              <h1 className="text-sm">بهيجة اشرق لبن</h1>
             </div>
           </div>
         </div>
-
-        {/* {!CurrentUser()?.email && (
-          <Link href={'/login'}>
-            {' '}
-            <div className="">
-              <h1 className="flex justify-center items-center cursor-pointer text-white h-10 font-bold text-sm hover:scale-[101%] bg-five hover:bg-one text-center p-1 rounded-lg ">
-                تسجيل الدخول
-              </h1>
-            </div>
-          </Link>
-        )} */}
       </div>
+      {/* <hr className="w-full h-[1px] bg-four rounded-full border-hidden select-none my-1" /> */}
+
       <div>
         <div>
-          <h1 className="mt-4 text-sm text-white s:text-nowrap text-center">
+          <h1 className="sm:mt-4 text-[12px] sm:text-sm s:text-nowrap text-center">
             <span className="text-green-400 text-xl font-bold">
               {greenEmoji}
             </span>

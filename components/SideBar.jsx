@@ -9,6 +9,7 @@ import TheGarden from './Garden';
 import Categories from './Categories';
 import NewRecipeButton from './NewRecipeButton';
 import Loading from './Loading';
+import LoadingPhoto from './LoadingPhoto';
 
 export default function SideBar() {
   const router = useRouter();
@@ -38,7 +39,7 @@ export default function SideBar() {
               onClick={() => router.push('/profile?username')}
             >
               <div className="relative size-14 overflow-hidden rounded-full">
-                {!user?.image && <Loading />}
+                {!user?.image && <LoadingPhoto />}
 
                 {user?.image && (
                   <Image src={user?.image} fill alt={user?.name} />

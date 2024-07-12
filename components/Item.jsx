@@ -9,6 +9,7 @@ import SideBarMenu from './SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 import Loading from './Loading';
+import LoadingPhoto from './LoadingPhoto';
 
 export default function Item({
   image,
@@ -95,10 +96,11 @@ export default function Item({
             </h1>
           </div>
           <div className="flex justify-center w-full">
-            <div className="flex flex-col w-full 2xl:w-2/3 border  rounded-lg p-2 sm:p-8 mt-8 bg-white">
+            <div className="flex flex-col w-full 2xl:w-2/3 rounded-lg p-2 sm:p-8 mt-8 bg-white border-t-[20px] border-green-500">
               <div className="flex justify-start items-center gap-2 w-full mb-4">
                 <div className="relative size-14 overflow-hidden rounded-full">
-                  <Image src={userImage} fill alt={mealName} />
+                  {!userImage && <LoadingPhoto />}
+                  {userImage && <Image src={userImage} fill alt={mealName} />}
                 </div>
                 <div className="flex flex-col justify-center">
                   <h6 className="text-[13px] sm:text-[18px] text-eight select-none">

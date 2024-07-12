@@ -5,6 +5,7 @@ import CurrentUser from '../components/CurrentUser';
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from './Button';
+import LoadingPhoto from './LoadingPhoto';
 
 export default function SideBarMenu({ setIsOpen }) {
   const session = useSession();
@@ -17,7 +18,14 @@ export default function SideBarMenu({ setIsOpen }) {
           <div className="flex flex-col justify-between items-center rounded-lg w-full">
             <div className="flex justify-start items-center w-full cursor-pointer line-clamp-1 mb-2">
               <div className="relative size-10 overflow-hidden rounded-full">
-                <Image src={user?.image} fill alt={session?.data?.user?.name} />
+                {!user?.image && <LoadingPhoto />}
+                {user?.image && (
+                  <Image
+                    src={user?.image}
+                    fill
+                    alt={session?.data?.user?.name}
+                  />
+                )}
               </div>
               <h1 className=" text-white text-nowrap text-start mx-3 text-sm line-clamp-1 select-none">
                 {session?.data?.user?.name}
