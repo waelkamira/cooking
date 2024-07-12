@@ -118,11 +118,11 @@ export default function TheGarden() {
           />
         )}
         {icons?.length > 0 && (
-          <div className=" flex flex-wrap items-center justify-center w-full xl:w-2/3  h-full bg-one rounded-lg p-4">
+          <div className=" flex flex-wrap items-center justify-center sm:grid sm:grid-cols-3 w-full sm:w-2/3 xl:w-1/3 h-full bg-one rounded-lg p-4">
             {icons?.length > 0 &&
               icons?.slice(0, userRecipes?.length)?.map((icon, index) => (
                 <div
-                  className="p-2 rounded-lg bg-four overflow-hidden m-1"
+                  className="flex justify-center p-2 rounded-lg bg-four overflow-hidden m-1"
                   key={index}
                 >
                   <div
@@ -152,7 +152,9 @@ export default function TheGarden() {
               className="flex items-center justify-around cursor-pointer"
               onClick={() => setPageNumber(pageNumber + 1)}
             >
-              <h1 className="text-white font-bold">الصفحة التالية</h1>
+              <h1 className="text-white text-sm sm:text-lg mt-2 sm:font-bold">
+                الصفحة التالية
+              </h1>
               <MdKeyboardDoubleArrowRight className="text-2xl animate-pulse" />
             </div>
           </Link>
@@ -164,7 +166,9 @@ export default function TheGarden() {
               onClick={() => setPageNumber(pageNumber - 1)}
             >
               <MdKeyboardDoubleArrowLeft className="text-2xl animate-pulse" />
-              <h1 className="text-white font-bold">الصفحة السابقة</h1>
+              <h1 className="text-white text-sm sm:text-lg mt-2 sm:font-bold">
+                الصفحة السابقة
+              </h1>
             </div>
           </Link>
         )}

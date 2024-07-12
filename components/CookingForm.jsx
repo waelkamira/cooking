@@ -250,61 +250,6 @@ export default function CookingForm({
   };
   return (
     <>
-      {/* <div className="relative flex flex-col p-4 justify-start items-center xl:items-end w-full h-72 sm:h-96 text-center">
-        <div className="absolute p-4 top-0 left-0 flex flex-col justify-center items-center text-white z-50 w-full">
-          <input
-            type="file"
-            id="file-upload"
-            onChange={onFileChange}
-            className="flex justify-center items-center w-96 h-72 sm:h-96 border-2 text-center border-one rounded-lg placeholder:text-white"
-          />
-          {imageError?.imageError && (
-            <h1 className="text-one text-2xl text-center my-2 w-full animate-bounce font-bold mt-8">
-              {imageError?.message}
-            </h1>
-          )}
-        </div>
-        <div className=" text-start flex justify-start items-center xl:items-start w-full h-full ">
-          <TbArrowBigLeftLinesFilled className="absolute top-0 bottom-0 m-auto w-1/2 hidden xl:block text-one text-7xl mx-32 animate-pulse transition-all duration-300" />
-        </div>
-        <div className="absolute top-0 mx-auto w-full xl:w-1/2 h-72 sm:h-96 z-20 rounded-lg overflow-hidden">
-          <div className="absolute top-0 left-0 custom-file-upload w-full h-full p-4">
-            <div className="flex flex-col justify-center items-center size-full border-2 border-one rounded-lg overflow-hidden">
-              <label
-                htmlFor="file-upload"
-                className="absolute top-0 size-full cursor-pointer overflow-hidden "
-              ></label>
-              <MdOutlineAddPhotoAlternate className="text-one text-3xl" />
-              {!previewImage && (
-                <h1 className="text-white text-xl">أضف صورة للطبخة</h1>
-              )}{' '}
-            </div>
-          </div>
-
-          {previewImage && (
-            <div className="relative w-full h-72 sm:h-96">
-              <Image
-                src={previewImage}
-                alt="Selected"
-                layout="fill"
-                objectFit="cover"
-              />
-            </div>
-          )}
-
-          {uploadedImage && (
-            <div className="relative w-full h-72 sm:h-96">
-              <Image
-                src={uploadedImage}
-                alt="Uploaded"
-                layout="fill"
-                objectFit="cover"
-              />
-            </div>
-          )}
-        </div>
-      
-      </div> */}
       <div className="w-full p-2 sm:p-8 h-fit ">
         <form
           className="flex flex-col justify-center items-start h-fit w-full mt-4 "
@@ -314,18 +259,20 @@ export default function CookingForm({
             <div className="flex flex-col gap-8 md:flex-row w-full ">
               <div className="flex flex-col items-center justify-center w-full">
                 {errors.selectedValue && (
-                  <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold opacity-0">
+                  <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce sm:font-bold opacity-0">
                     اختيار الصنف مطلوب
                   </h1>
                 )}
                 {errors.mealName && (
-                  <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold">
+                  <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce sm:font-bold">
                     اسم الطبخة مطلوب
                   </h1>
                 )}
                 <div className="flex items-center gap-2 w-full justify-start">
-                  <h1 className="text-right text-xl text-white font-bold my-2 ">
-                    <span className="text-one font-bold text-2xl ml-2">#</span>
+                  <h1 className="text-right text-md sm:text-xl text-white sm:font-bold my-2 ">
+                    <span className="text-one sm:font-bold text-2xl ml-2">
+                      #
+                    </span>
                     اسم الطبخة:
                   </h1>
                 </div>
@@ -340,42 +287,25 @@ export default function CookingForm({
                   name="اسم الطبخة"
                   placeholder="... شاورما الدجاج"
                   autoFocus
-                  className="text-right w-full p-2 rounded-lg text-lg outline-2 focus:outline-one h-10"
+                  className="text-right w-full p-2 rounded-lg text-lg outline-2 focus:outline-one h-10 placeholder:text-sm placeholder:sm:text-lg"
                 />
-                {/* <div className="flex items-center gap-2 w-full justify-start">
-                <h1 className="text-right text-xl text-white font-bold my-2 ">
-                  <span className="text-one font-bold text-2xl ml-2">#</span>
-                  رابط الصورة:{' '}
-                </h1>
-              </div>
-
-              <input
-                value={inputs.image}
-                onChange={(e) =>
-                  setInputs({ ...inputs, image: e.target.value })
-                }
-                type="text"
-                id="رابط الصورة"
-                name="رابط الصورة"
-                placeholder="...رابط الصورة"
-                autoFocus
-                className="text-right w-full p-2 rounded-lg text-lg outline-2 focus:outline-one h-10"
-              /> */}
               </div>
               <div className="flex flex-col items-center justify-center w-full my-2 ">
                 {errors.mealName && (
-                  <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold opacity-0 ">
+                  <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce sm:font-bold opacity-0 ">
                     اسم الطبخة مطلوب
                   </h1>
                 )}
                 {errors.selectedValue && (
-                  <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold">
+                  <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce sm:font-bold">
                     اختيار الصنف مطلوب
                   </h1>
                 )}
                 <div className="flex items-center gap-2 w-full justify-start">
-                  <h1 className="text-right text-xl text-white font-bold my-2">
-                    <span className="text-one font-bold text-2xl ml-2">#</span>
+                  <h1 className="text-right text-md sm:text-xl text-white sm:font-bold my-2">
+                    <span className="text-one sm:font-bold text-2xl ml-2">
+                      #
+                    </span>
                     اختر الصنف:
                   </h1>
                 </div>
@@ -396,14 +326,14 @@ export default function CookingForm({
               />
             </div>
             {errors.ingredients && (
-              <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold">
+              <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce sm:font-bold">
                 حقل المقادير مطلوب
               </h1>
             )}
             <div className="flex items-center gap-2 w-full justify-start">
               {' '}
-              <h1 className="text-right text-xl text-white font-bold my-2">
-                <span className="text-one font-bold text-2xl ml-2">#</span>
+              <h1 className="text-right text-md sm:text-xl text-white sm:font-bold my-2">
+                <span className="text-one sm:font-bold text-2xl ml-2">#</span>
                 المقادير:
               </h1>
             </div>
@@ -417,7 +347,7 @@ export default function CookingForm({
               rows={'6'}
               name="المقادير"
               id="المقادير"
-              className="scrollBar text-right w-full p-2 rounded-lg text-xl h-36 outline-2 focus:outline-one"
+              className="scrollBar text-right w-full p-2 rounded-lg text-xl placeholder:text-sm placeholder:sm:text-lg h-36 outline-2 focus:outline-one"
               placeholder={`١- خبز توست حسب الرغبة
 ٢- جبن شرائح
 ٣- ٥ بيضات مخفوقة
@@ -438,14 +368,14 @@ export default function CookingForm({
               />
             </div>
             {errors.theWay && (
-              <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce font-bold">
+              <h1 className="text-one text-2xl text-start my-2 w-full animate-bounce sm:font-bold">
                 حقل الطريقة مطلوب
               </h1>
             )}
             <div className="flex items-center gap-2 w-full justify-start">
               {' '}
-              <h1 className="text-right text-xl text-white font-bold my-2">
-                <span className="text-one font-bold text-2xl ml-2">#</span>
+              <h1 className="text-right text-md sm:text-xl text-white sm:font-bold my-2">
+                <span className="text-one sm:font-bold text-2xl ml-2">#</span>
                 الطريقة:
               </h1>
             </div>
@@ -466,14 +396,14 @@ export default function CookingForm({
 ٥- توضع على شبك حتى تصفى من الزيت أو على ورق نشاف وتقدم مع الحليب أو
 العصير
                 `}
-              className="text-right w-full p-2 rounded-lg text-xl h-36 outline-2 focus:outline-one"
+              className="text-right w-full p-2 rounded-lg text-xl placeholder:text-sm placeholder:sm:text-lg h-36 outline-2 focus:outline-one"
             ></textarea>
           </div>
           <div className="w-full my-4">
             <div className="flex items-center gap-2 w-full justify-start">
               {' '}
-              <h1 className="text-right text-xl text-white font-bold my-2">
-                <span className="text-one font-bold text-2xl ml-2">#</span>
+              <h1 className="text-right text-md sm:text-xl text-white sm:font-bold my-2">
+                <span className="text-one sm:font-bold text-2xl ml-2">#</span>
                 نصائح لتحضير :
               </h1>
             </div>
@@ -486,14 +416,14 @@ export default function CookingForm({
               id="المقادير"
               placeholder={`اكتب بعض النصائح عن تحضير هذه الطبخة
                 `}
-              className="text-right w-full p-2 rounded-lg text-xl h-24 outline-2 focus:outline-one"
+              className="text-right w-full p-2 rounded-lg text-xl placeholder:text-sm placeholder:sm:text-lg h-24 outline-2 focus:outline-one"
             ></textarea>
           </div>
           <div className="w-full">
             <div className="flex items-center gap-2 w-full justify-start ">
               {' '}
-              <h1 className="text-right text-xl text-white font-bold my-2">
-                <span className="text-one font-bold text-2xl ml-2">#</span>
+              <h1 className="text-right text-md sm:text-xl text-white sm:font-bold my-2">
+                <span className="text-one sm:font-bold text-2xl ml-2">#</span>
                 أضف رابط الطبخة من يوتيوب:.
               </h1>
             </div>
@@ -504,7 +434,7 @@ export default function CookingForm({
               placeholder="... ضع رابط الفيديو هنا"
               value={url}
               onChange={handleInputChange}
-              className="text-right mt-4 mb-8 w-full p-2 rounded-lg text-lg outline-2 focus:outline-one h-10"
+              className="text-right mt-4 mb-8 w-full p-2 rounded-lg text-lg outline-2 focus:outline-one h-10 placeholder:text-sm placeholder:sm:text-lg"
             />
             {inputs?.link && (
               <div>
@@ -519,59 +449,19 @@ export default function CookingForm({
                 />
               </div>
             )}
-            {/* <input
-            value={inputs.link}
-            onChange={(e) => setInputs({ ...inputs, link: e.target.value })}
-            type="text"
-            id="رابط الفيديو"
-            name="رابط الفيديو"
-            placeholder="... رابط الفيديو"
-            className="text-right w-full p-2 rounded-lg text-xl outline-2 focus:outline-one"
-          /> */}
           </div>
-          {/* <div className="w-full flex flex-col items-start justify-center lg:flex-row gap-4 my-10 rounded-lg">
-          <div className="w-full bg-four p-4 rounded-lg mb-4 border border-one">
-            <h1 className="text-one md:text-xl font-bold w-full">
-              {' '}
-              لا تقم بنسخ رابط الفيديو من يوتيوب مباشرة لأنه لن يعمل
-            </h1>
-            <pre className="text-white font-sans w-full text-start md:text-xl select-none">
-              لوضع الرابط من يوتيوب بشكل صحيح اتبع الخطوات التالية:
-            </pre>
-            <pre className="text-white font-sans w-full text-start md:text-xl select-none">
-              1- قم بالضغط على زر مشاركة أسفل الفيديو
-            </pre>{' '}
-            <pre className="text-white font-sans w-full text-start md:text-xl select-none">
-              2- اضغط على كلمة embed
-            </pre>
-            <pre className="text-white font-sans w-full text-start md:text-xl select-none">
-              3- اضغط على كلمة نسخ copy
-            </pre>
-            <pre className="text-white font-sans w-full text-start md:text-xl select-none">
-              ثم الصق الرابط في حقل رابط الفيديو هنا
-            </pre>
-          </div>
-          <div className="relative w-full h-96 rounded-lg overflow-hidden">
-            <Image
-              src={
-                'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716953/cooking/info_ci1rzp.png'
-              }
-              fill
-              alt="photo"
-            />
-          </div>
-        </div> */}
+
           <div className="flex flex-col sm:flex-row justify-around items-center gap-8 w-full my-12">
             <button
               type="submit"
-              className="btn bg-five rounded-lg text-white shadow-lg hover:outline outline-one text-xl hover:font-bold py-2 px-16 w-full"
+              className="btn bg-five rounded-lg text-white shadow-lg hover:outline outline-one text-xl hover:sm:font-bold py-2 px-16 w-full"
             >
               حفظ
             </button>
             {cancel && (
               <button
                 type="text"
-                className="btn bg-five rounded-lg text-white shadow-lg hover:outline  outline-one text-xl hover:font-bold py-2 px-16 w-full"
+                className="btn bg-five rounded-lg text-white shadow-lg hover:outline  outline-one text-xl hover:sm:font-bold py-2 px-16 w-full"
                 onClick={() => {
                   setIsVisible(false);
                   setInputs({

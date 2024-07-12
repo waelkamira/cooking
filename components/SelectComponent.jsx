@@ -22,12 +22,6 @@ export default function SelectComponent() {
         type: 'SELECTED_VALUE',
         payload: { selectedValue: selectedValue, modelName: 'createSoup' },
       });
-      //  if (typeof window !== 'undefined') {
-      //    localStorage.setItem(
-      //      'selectedValue',
-      //      JSON.stringify(data?.data?.link)
-      //    );
-      //  }
     } else if (selectedValue?.value === 'معجنات') {
       dispatch({
         type: 'SELECTED_VALUE',
@@ -90,7 +84,7 @@ export default function SelectComponent() {
       isSearchable
       options={options}
       theme={customTheme}
-      className="w-full text-xl text-start"
+      className="w-full text-xl text-start placeholder:text-sm placeholder:sm:text-lg"
     >
       Select
     </Select>

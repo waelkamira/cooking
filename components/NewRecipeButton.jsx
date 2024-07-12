@@ -31,14 +31,14 @@ export default function NewRecipeButton() {
             className="absolute top-2 right-2 sm:top-16 sm:right-16 flex justify-center items-center z-50 bg-five hover:bg-one cursor-pointer h-fit px-4 py-1 text-white font-semibold rounded-lg hover:scale-105 shadow-lg "
             onClick={() => setIsVisible(false)}
           >
-            <h1>إغلاق</h1>
+            <h1 className="tex-sm">إغلاق</h1>
             <RxCross2 className="text-xl" />
           </div>
           <div
             className={
               (session?.status === 'unauthenticated'
                 ? 'h-[700px]'
-                : 'h-[2520px] sm:h-[2350px] lg:h-[3000px]') +
+                : 'h-[2400px] sm:h-[2350px] lg:h-[3000px]') +
               ' relative w-full 2xl:w-2/3 flex flex-col items-start justify-center sm:flex-row 2xl:my-8 top-0 z-40 overflow-hidden border border-one '
             }
             onClick={(e) => e.stopPropagation()}
