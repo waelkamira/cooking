@@ -5,8 +5,11 @@ import { authOptions } from '../authOptions/route';
 
 export async function PUT(req) {
   await mongoose.connect(process.env.NEXT_PUBLIC_MONGODB);
-  const { email, image } = await req.json();
-  const user = await User.findOneAndUpdate({ email }, { image: image });
+  const { email, image, name } = await req.json();
+  const user = await User.findOneAndUpdate(
+    { email },
+    { image: image, name: name }
+  );
 
   return Response.json(user);
 }
