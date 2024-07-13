@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/react';
 import CurrentUser from './CurrentUser';
 import CustomToast from './CustomToast';
 import { Confetti } from './SuccessComponent';
-import { getYoutubeVideoId } from './youtubeUtils';
+import { getVideoIdAndPlatform } from './youtubeUtils';
 import { MdOutlineAddPhotoAlternate } from 'react-icons/md';
 import { TbArrowBigLeftLinesFilled } from 'react-icons/tb';
 
@@ -235,19 +235,27 @@ export default function CookingForm({
   };
 
   const handleGenerateEmbed = (inputValue) => {
-    const videoId = getYoutubeVideoId(inputValue);
+    const { videoId, platform } = getVideoIdAndPlatform(inputValue);
 
     if (videoId) {
-      const youtubeEmbedLink = `https://www.youtube.com/embed/${videoId}`;
+      let embedLink = '';
+      if (platform === 'youtube') {
+        embedLink = `https://www.youtube.com/embed/${videoId}`;
+      } else if (platform === 'tiktok') {
+        embedLink = `https://www.tiktok.com/embed/${videoId}`;
+      } else if (platform === 'facebook') {
+        embedLink = `https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/watch/?v=${videoId}&show_text=0&width=560`;
+      }
 
-      setEmbedLink(youtubeEmbedLink);
-      setInputs({ ...inputs, link: youtubeEmbedLink });
+      setEmbedLink(embedLink);
+      setInputs({ ...inputs, link: embedLink });
       setError('');
     } else {
       setEmbedLink('');
-      setError('Invalid YouTube URL');
+      setError('Invalid video URL');
     }
   };
+
   return (
     <>
       <div className="w-full p-2 sm:p-8 h-fit ">
@@ -273,7 +281,7 @@ export default function CookingForm({
                     <span className="text-one sm:font-bold text-2xl ml-2">
                       #
                     </span>
-                    اسم الطبخة:
+                    اسم الطبخة: (إجباري)
                   </h1>
                 </div>
 
@@ -306,7 +314,7 @@ export default function CookingForm({
                     <span className="text-one sm:font-bold text-2xl ml-2">
                       #
                     </span>
-                    اختر الصنف:
+                    اختر الصنف: (إجباري)
                   </h1>
                 </div>
 
@@ -334,7 +342,7 @@ export default function CookingForm({
               {' '}
               <h1 className="text-right text-md sm:text-xl text-white sm:font-bold my-2">
                 <span className="text-one sm:font-bold text-2xl ml-2">#</span>
-                المقادير:
+                المقادير: (إجباري)
               </h1>
             </div>
 
@@ -376,7 +384,7 @@ export default function CookingForm({
               {' '}
               <h1 className="text-right text-md sm:text-xl text-white sm:font-bold my-2">
                 <span className="text-one sm:font-bold text-2xl ml-2">#</span>
-                الطريقة:
+                الطريقة: (إجباري)
               </h1>
             </div>
 
@@ -424,10 +432,9 @@ export default function CookingForm({
               {' '}
               <h1 className="text-right text-md sm:text-xl text-white sm:font-bold my-2">
                 <span className="text-one sm:font-bold text-2xl ml-2">#</span>
-                أضف رابط الطبخة من يوتيوب:.
+                أضف رابط الطبخة من يوتيوب أو تيك توك (إجباري)
               </h1>
             </div>
-            {/* <YoutubeEmbedder /> */}
 
             <input
               type="text"
