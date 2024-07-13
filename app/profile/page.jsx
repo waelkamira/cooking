@@ -20,12 +20,16 @@ export default function Profile() {
   const [isOpen, setIsOpen] = useState(false);
   const user = CurrentUser();
   const { profile_image, dispatch } = useContext(inputsContext);
-  const [newUserName, setNewUserName] = useState(session?.data?.user?.name);
+  const [newUserName, setNewUserName] = useState('');
   const [newImage, setNewImage] = useState('');
 
   useEffect(() => {
-    editProfileImageAndUserName();
+    if (typeof window !== 'undefined') {
+      const newName = JSON.parse(localStorage.getItem('CurrentUser'));
+      setNewUserName(newName?.name);
+    }
     setNewImage(profile_image?.image);
+    editProfileImageAndUserName();
   }, [profile_image?.image]);
 
   async function editProfileImageAndUserName() {

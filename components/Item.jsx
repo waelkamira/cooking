@@ -24,6 +24,8 @@ export default function Item({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
+  const videoRef = useRef(null); // Add a ref to the iframe element
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
   //? src نريد ان نستخرج منه قيمة ال string لكنه نص  ifram html الذي هو عبارة عن عنصر  link انشأنا ديف مؤقت لوضع ال
   let tempDiv = document.createElement('div');
@@ -218,30 +220,34 @@ export default function Item({
 
                 <div className="flex justify-center items-center w-full mt-16">
                   {iframeSrc && (
-                    <iframe
-                      src={iframeSrc}
-                      title="YouTube video player"
-                      frameborder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                      allowfullscreen
-                      referrerpolicy="strict-origin-when-cross-origin"
-                      className={
-                        ' rounded-lg w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]'
-                      }
-                    />
+                    <div className>
+                      <iframe
+                        src={iframeSrc}
+                        title="YouTube video player"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                        allowfullscreen
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        className={
+                          ' rounded-lg w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]'
+                        }
+                      />
+                    </div>
                   )}
                   {!iframeSrc && (
-                    <iframe
-                      src={link}
-                      title="YouTube video player"
-                      frameborder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                      allowfullscreen
-                      referrerpolicy="strict-origin-when-cross-origin"
-                      className={
-                        ' rounded-lg w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]'
-                      }
-                    />
+                    <div className=" flex flex-col items-center justify-center w-full">
+                      <iframe
+                        src={link}
+                        title="YouTube video player"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                        allowfullscreen
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        className={
+                          ' rounded-lg w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]'
+                        }
+                      />
+                    </div>
                   )}
                 </div>
               </div>
