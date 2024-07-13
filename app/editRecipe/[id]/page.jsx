@@ -14,7 +14,7 @@ import toast from 'react-hot-toast';
 import { MdEdit } from 'react-icons/md';
 import UploadingAndDisplayingImage from '../../../components/UploadingAndDisplayingImage';
 import { inputsContext } from '../../../components/Context';
-import { getYoutubeVideoId } from '../../../components/youtubeUtils';
+import { getVideoIdAndPlatform } from '../../../components/youtubeUtils';
 import LoadingPhoto from '../../../components/LoadingPhoto';
 
 export default function EditRecipe() {
@@ -101,15 +101,24 @@ export default function EditRecipe() {
   };
 
   const handleGenerateEmbed = (inputValue) => {
-    const videoId = getYoutubeVideoId(inputValue);
+    const { videoId, platform } = getVideoIdAndPlatform(inputValue);
 
     if (videoId) {
-      const youtubeEmbedLink = `https://www.youtube.com/embed/${videoId}`;
+      let embedLink = '';
+      if (platform === 'youtube') {
+        embedLink = `https://www.youtube.com/embed/${videoId}`;
+      } else if (platform === 'tiktok') {
+        embedLink = `https://www.tiktok.com/embed/${videoId}`;
+      } else if (platform === 'facebook') {
+        embedLink = `https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/watch/?v=${videoId}&show_text=0&width=560`;
+      }
 
-      setEmbedLink(youtubeEmbedLink);
-      setInputs({ ...inputs, link: youtubeEmbedLink });
+      setEmbedLink(embedLink);
+      setInputs({ ...inputs, link: embedLink });
+      setError('');
     } else {
       setEmbedLink('');
+      setError('Invalid video URL');
     }
   };
   return (
