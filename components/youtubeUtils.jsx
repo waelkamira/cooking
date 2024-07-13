@@ -1,5 +1,6 @@
 // utils/youtubeUtils.js
 'use client';
+
 export const getYoutubeVideoId = (url) => {
   let videoId = null;
 
@@ -16,6 +17,14 @@ export const getYoutubeVideoId = (url) => {
   const youtubeMatch = url?.match(youtubeRegex);
   if (youtubeMatch && youtubeMatch[1]) {
     videoId = youtubeMatch[1];
+  }
+
+  // Match YouTube Shorts URLs
+  const shortsRegex =
+    /(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([^& \n<]+)/;
+  const shortsMatch = url?.match(shortsRegex);
+  if (shortsMatch && shortsMatch[1]) {
+    videoId = shortsMatch[1];
   }
 
   return videoId;
