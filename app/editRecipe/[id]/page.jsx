@@ -115,10 +115,8 @@ export default function EditRecipe() {
 
       setEmbedLink(embedLink);
       setInputs({ ...inputs, link: embedLink });
-      setError('');
     } else {
       setEmbedLink('');
-      setError('Invalid video URL');
     }
   };
   return (
@@ -176,8 +174,6 @@ export default function EditRecipe() {
           <div className="flex justify-center w-full">
             <div className="flex flex-col w-full 2xl:w-2/3 border  rounded-lg p-2 sm:p-8 mt-8 bg-white">
               <div className="flex justify-start items-center gap-2 w-full mb-4">
-                {/* <LoadingPhoto /> */}
-
                 <div className="relative size-14 overflow-hidden rounded-full">
                   {!editedRecipe?.userImage && <LoadingPhoto />}
                   {editedRecipe?.userImage && (
@@ -227,7 +223,7 @@ export default function EditRecipe() {
                     &#13;&#10;
                   </span>
 
-                  <MdEdit className="absolute top-0 right-0 animate-pulse text-2xl text-green-400" />
+                  <MdEdit className="absolute top-0 -right-6 animate-pulse text-2xl text-one" />
                 </h1>
 
                 <button
@@ -253,7 +249,7 @@ export default function EditRecipe() {
                     </span>
                     المقادير
                   </h1>
-                  <div className="relative size-40 md:size-44 xl:size-48 overflow-hidden rounded-lg grow">
+                  <div className="relative size-28 md:size-44 xl:size-48 overflow-hidden rounded-lg grow">
                     <Image
                       src={
                         'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716954/cooking/item7_eg8p34.png'
@@ -286,7 +282,7 @@ export default function EditRecipe() {
                   >
                     &#13;&#10;
                   </span>
-                  <MdEdit className="absolute top-0 right-0 animate-pulse text-2xl text-green-400" />
+                  <MdEdit className="absolute top-0 -right-6 animate-pulse text-2xl text-one" />
                 </pre>
                 <button
                   onClick={() => handleEditRecipe()}
@@ -301,7 +297,7 @@ export default function EditRecipe() {
                     </span>
                     الطريقة
                   </h1>
-                  <div className="relative size-28 md:size-40 xl:size-48  overflow-hidden rounded-lg rotate-45">
+                  <div className="relative size-20 md:size-32 xl:size-48  overflow-hidden rounded-lg rotate-45">
                     <Image
                       src={
                         'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716954/cooking/item9_fl6au4.png'
@@ -334,7 +330,7 @@ export default function EditRecipe() {
                   >
                     &#13;&#10;
                   </span>
-                  <MdEdit className="absolute top-0 right-0 animate-pulse text-2xl text-green-400" />
+                  <MdEdit className="absolute top-0 -right-6 animate-pulse text-2xl text-one" />
                 </pre>
                 <button
                   onClick={() => handleEditRecipe()}
@@ -351,7 +347,7 @@ export default function EditRecipe() {
                         </span>
                         نصائح
                       </h1>
-                      <div className="relative size-28 md:size-32 xl:size-44 overflow-hidden rounded-lg">
+                      <div className="relative size-20 md:size-32 xl:size-44 overflow-hidden rounded-lg">
                         <Image
                           src={
                             'https://res.cloudinary.com/dh2xlutfu/image/upload/v1719047940/cooking/qtkwhiyf7hywaeh3yvd0.png'
@@ -384,7 +380,7 @@ export default function EditRecipe() {
                       >
                         &#13;&#10;
                       </span>
-                      <MdEdit className="absolute top-0 right-0 animate-pulse text-2xl text-green-400" />
+                      <MdEdit className="absolute top-0 -right-6 animate-pulse text-2xl text-one" />
                     </pre>{' '}
                     <button
                       onClick={() => handleEditRecipe()}
@@ -401,7 +397,7 @@ export default function EditRecipe() {
                     </span>
                     فيديو
                   </h1>
-                  <div className="relative size-28 md:size-32 xl:size-44 overflow-hidden rounded-lg rotate-20">
+                  <div className="relative size-20 md:size-32 xl:size-44 overflow-hidden rounded-lg rotate-20">
                     <Image
                       src={
                         'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716954/cooking/item10_zjts4w.png'

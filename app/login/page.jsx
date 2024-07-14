@@ -70,6 +70,10 @@ export default function LogInPage() {
     });
 
     if (response.ok) {
+      const values = getValues();
+
+      localStorage.setItem('email', values?.email);
+      localStorage.setItem('password', values?.password);
       router.push('/');
       toast.custom((t) => (
         <CustomToast
