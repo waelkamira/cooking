@@ -1,89 +1,42 @@
-// pages/api/users.js
-
-import { usersConnection } from '../../../lib/MongoDBConnections';
+import { usersConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
 import { User } from '../models/UserModel';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../authOptions/route';
 
+// Ensure the connection is ready before using it
 async function ensureConnection() {
-  if (usersConnection.readyState !== 1) {
-    // Check if connection is open
+  if (!usersConnection.readyState) {
     await usersConnection.openUri(process.env.NEXT_PUBLIC_MONGODB);
   }
 }
 
-export async function PUT(req, res) {
-  try {
-    await ensureConnection();
-    const { email, image, name } = await req.body;
-    const UserModel = usersConnection.model('User', User.schema);
-    const user = await UserModel.findOneAndUpdate(
-      { email },
-      { image, name },
-      { new: true } // Return the updated document
-    );
+export async function PUT(req) {
+  await ensureConnection();
 
-    return res.status(200).json(user);
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
+  const { email, image, name } = await req.json();
+  const UserModel = usersConnection.model('User', User.schema);
+  const user = await UserModel.findOneAndUpdate(
+    { email },
+    { image, name },
+    { new: true } // Return the updated document
+  );
+
+  return new Response(JSON.stringify(user), { status: 200 });
 }
 
-export async function GET(req, res) {
-  try {
-    await ensureConnection();
-    const session = await getServerSession(authOptions, req);
-    const email = session?.user?.email;
+export async function GET() {
+  await ensureConnection();
 
-    const UserModel = usersConnection.model('User', User.schema);
-    const users = await UserModel.find();
-    const findUser = users.find((user) => user.email === email);
+  const session = await getServerSession(authOptions);
+  const email = session?.user?.email;
 
-    return res.status(200).json(findUser);
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
+  const UserModel = usersConnection.model('User', User.schema);
+  const user = await UserModel.find();
+  const allUsers = [, ...user];
+  const findUser = allUsers?.filter((item) => item?.email === email);
+
+  return new Response(JSON.stringify(findUser), { status: 200 });
 }
-
-// import { usersConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
-// import { User } from '../models/UserModel';
-// import { getServerSession } from 'next-auth';
-// import { authOptions } from '../authOptions/route';
-
-// // Ensure the connection is ready before using it
-// async function ensureConnection() {
-//   if (!usersConnection.readyState) {
-//     await usersConnection.openUri(process.env.NEXT_PUBLIC_MONGODB);
-//   }
-// }
-
-// export async function PUT(req) {
-//   await ensureConnection();
-
-//   const { email, image, name } = await req.json();
-//   const UserModel = usersConnection.model('User', User.schema);
-//   const user = await UserModel.findOneAndUpdate(
-//     { email },
-//     { image, name },
-//     { new: true } // Return the updated document
-//   );
-
-//   return new Response(JSON.stringify(user), { status: 200 });
-// }
-
-// export async function GET() {
-//   await ensureConnection();
-
-//   const session = await getServerSession(authOptions);
-//   const email = session?.user?.email;
-
-//   const UserModel = usersConnection.model('User', User.schema);
-//   const user = await UserModel.find();
-//   const allUsers = [, ...user];
-//   const findUser = allUsers?.filter((item) => item?.email === email);
-
-//   return new Response(JSON.stringify(findUser), { status: 200 });
-// }
 
 // import mongoose from 'mongoose';
 // import { User } from '../models/UserModel';
