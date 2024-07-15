@@ -1,56 +1,45 @@
 const mongoose = require('mongoose');
 
-const connections = {};
+const connections = {}; // Cache connections
 
-async function makeNewConnection(uri, dbName) {
-  if (connections[dbName]) {
-    if (connections[dbName].readyState === 1) {
-      return connections[dbName];
-    } else {
-      await connections[dbName].asPromise();
-      return connections[dbName];
-    }
+async function connectToDatabase(uri) {
+  if (connections[uri]) {
+    // If connection already exists, return it
+    return connections[uri];
   }
 
-  const db = mongoose.createConnection(uri, {
+  // Create a new connection
+  const db = await mongoose.createConnection(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
 
-  connections[dbName] = db;
-
   db.on('error', (error) => {
-    console.log(`MongoDB :: connection ${dbName} ${JSON.stringify(error)}`);
-    db.close().catch(() =>
-      console.log(`MongoDB :: failed to close connection ${dbName}`)
-    );
+    console.log(`MongoDB :: connection error ${uri} ${JSON.stringify(error)}`);
   });
 
   db.on('connected', () => {
-    console.log(`MongoDB :: connected ${dbName}`);
+    console.log(`MongoDB :: connected ${uri}`);
   });
 
   db.on('disconnected', () => {
-    console.log(`MongoDB :: disconnected ${dbName}`);
+    console.log(`MongoDB :: disconnected ${uri}`);
   });
 
-  await db.asPromise();
+  connections[uri] = db; // Cache the connection
   return db;
 }
 
 async function connectToUsersDB() {
-  return makeNewConnection(process.env.NEXT_PUBLIC_MONGODB, 'users');
+  return connectToDatabase(process.env.NEXT_PUBLIC_MONGODB);
 }
 
 async function connectToFavoritesDB() {
-  return makeNewConnection(
-    process.env.NEXT_PUBLIC_MONGODB_FAVORITES,
-    'favorites'
-  );
+  return connectToDatabase(process.env.NEXT_PUBLIC_MONGODB_FAVORITES);
 }
 
 async function connectToMealsDB() {
-  return makeNewConnection(process.env.NEXT_PUBLIC_MONGODB_MEALS, 'meals');
+  return connectToDatabase(process.env.NEXT_PUBLIC_MONGODB_MEALS);
 }
 
 module.exports = {
