@@ -1,32 +1,48 @@
-import { connectToUsersDB } from '../../../lib/MongoDBConnections';
+// pages/api/users.js
+
+import { usersConnection } from '../../../lib/MongoDBConnections';
 import { User } from '../models/UserModel';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../authOptions/route';
 
-export async function PUT(req) {
-  const usersConnection = await connectToUsersDB();
-  const { email, image, name } = await req.json();
-  const UserModel = usersConnection.model('User', User.schema);
-  const user = await UserModel.findOneAndUpdate(
-    { email },
-    { image, name },
-    { new: true } // Return the updated document
-  );
-
-  return new Response(JSON.stringify(user), { status: 200 });
+async function ensureConnection() {
+  if (usersConnection.readyState !== 1) {
+    // Check if connection is open
+    await usersConnection.openUri(process.env.NEXT_PUBLIC_MONGODB);
+  }
 }
 
-export async function GET() {
-  const usersConnection = await connectToUsersDB();
-  const session = await getServerSession(authOptions);
-  const email = session?.user?.email;
+export async function PUT(req, res) {
+  try {
+    await ensureConnection();
+    const { email, image, name } = await req.body;
+    const UserModel = usersConnection.model('User', User.schema);
+    const user = await UserModel.findOneAndUpdate(
+      { email },
+      { image, name },
+      { new: true } // Return the updated document
+    );
 
-  const UserModel = usersConnection.model('User', User.schema);
-  const user = await UserModel.find();
-  const allUsers = [, ...user];
-  const findUser = allUsers?.filter((item) => item?.email === email);
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
 
-  return new Response(JSON.stringify(findUser), { status: 200 });
+export async function GET(req, res) {
+  try {
+    await ensureConnection();
+    const session = await getServerSession(authOptions, req);
+    const email = session?.user?.email;
+
+    const UserModel = usersConnection.model('User', User.schema);
+    const users = await UserModel.find();
+    const findUser = users.find((user) => user.email === email);
+
+    return res.status(200).json(findUser);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
 }
 
 // import { usersConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly

@@ -1,48 +1,48 @@
+// pages/api/meals.js
+
 import { connectToMealsDB } from '../../../lib/MongoDBConnections';
 import { Meal } from '../models/CreateMealModel';
 
-export async function GET() {
-  const mealsConnection = await connectToMealsDB();
-  const MealModel = mealsConnection.model('Meal', Meal.schema);
-  const allCookingRecipes = await MealModel.find();
+export default async function handler(req, res) {
+  try {
+    const mealsConnection = await connectToMealsDB();
+    const MealModel = mealsConnection.model('Meal', Meal.schema);
 
-  return new Response(JSON.stringify(allCookingRecipes.reverse()), {
-    status: 200,
-  });
-}
+    if (req.method === 'GET') {
+      const allCookingRecipes = await MealModel.find();
+      return res.status(200).json(allCookingRecipes.reverse());
+    } else if (req.method === 'DELETE') {
+      const { _id } = req.body;
+      const deleteRecipe = await MealModel.findByIdAndDelete(_id);
+      return res.status(200).json(deleteRecipe);
+    } else if (req.method === 'PUT') {
+      const {
+        _id,
+        usersWhoLikesThisRecipe,
+        usersWhoPutEmojiOnThisRecipe,
+        usersWhoPutHeartOnThisRecipe,
+        ...rest
+      } = req.body;
 
-export async function DELETE(req) {
-  const mealsConnection = await connectToMealsDB();
-  const { _id } = await req.json();
-  const MealModel = mealsConnection.model('Meal', Meal.schema);
-  const deleteRecipe = await MealModel.findByIdAndDelete({ _id });
+      const updateLikes = await MealModel.findByIdAndUpdate(
+        _id,
+        {
+          usersWhoLikesThisRecipe,
+          usersWhoPutEmojiOnThisRecipe,
+          usersWhoPutHeartOnThisRecipe,
+          ...rest,
+        },
+        { new: true } // Return the updated document
+      );
 
-  return new Response(JSON.stringify(deleteRecipe), { status: 200 });
-}
-
-export async function PUT(req) {
-  const mealsConnection = await connectToMealsDB();
-  const {
-    _id,
-    usersWhoLikesThisRecipe,
-    usersWhoPutEmojiOnThisRecipe,
-    usersWhoPutHeartOnThisRecipe,
-    ...rest
-  } = await req.json();
-
-  const MealModel = mealsConnection.model('Meal', Meal.schema);
-  const updateLikes = await MealModel.findByIdAndUpdate(
-    { _id },
-    {
-      usersWhoLikesThisRecipe,
-      usersWhoPutEmojiOnThisRecipe,
-      usersWhoPutHeartOnThisRecipe,
-      ...rest,
-    },
-    { new: true } // Return the updated document
-  );
-
-  return new Response(JSON.stringify(updateLikes), { status: 200 });
+      return res.status(200).json(updateLikes);
+    } else {
+      return res.status(405).json({ error: 'Method Not Allowed' });
+    }
+  } catch (error) {
+    console.error('API Error:', error);
+    return res.status(500).json({ error: error.message });
+  }
 }
 
 // import { mealsConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly

@@ -1,21 +1,23 @@
-const mongoose = require('mongoose');
+// lib/MongoDBConnections.js
 
-const connections = {}; // Cache connections
+import mongoose from 'mongoose';
 
-async function connectToDatabase(uri) {
+let connections = {};
+
+export async function connectToDatabase(uri) {
   if (connections[uri]) {
-    // If connection already exists, return it
     return connections[uri];
   }
 
-  // Create a new connection
   const db = await mongoose.createConnection(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
 
   db.on('error', (error) => {
-    console.log(`MongoDB :: connection error ${uri} ${JSON.stringify(error)}`);
+    console.error(
+      `MongoDB :: connection error ${uri} ${JSON.stringify(error)}`
+    );
   });
 
   db.on('connected', () => {
@@ -26,27 +28,13 @@ async function connectToDatabase(uri) {
     console.log(`MongoDB :: disconnected ${uri}`);
   });
 
-  connections[uri] = db; // Cache the connection
+  connections[uri] = db;
   return db;
 }
 
-async function connectToUsersDB() {
-  return connectToDatabase(process.env.NEXT_PUBLIC_MONGODB);
-}
-
-async function connectToFavoritesDB() {
-  return connectToDatabase(process.env.NEXT_PUBLIC_MONGODB_FAVORITES);
-}
-
-async function connectToMealsDB() {
-  return connectToDatabase(process.env.NEXT_PUBLIC_MONGODB_MEALS);
-}
-
-module.exports = {
-  connectToUsersDB,
-  connectToFavoritesDB,
-  connectToMealsDB,
-};
+export const usersConnection = connectToDatabase(
+  process.env.NEXT_PUBLIC_MONGODB
+);
 
 // //! في حال الحاجة لقواعد بيانات أكثر يوجد كود في الاسفل
 

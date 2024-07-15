@@ -1,16 +1,15 @@
-// pages/api/auth/[...nextauth].js
-import { connectToUsersDB } from '../../../lib/MongoDBConnections';
+import { usersConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
 import { User } from '../models/UserModel';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import bcrypt from 'bcrypt';
 import { MongoDBAdapter } from '@auth/mongodb-adapter';
 import clientPromise from '../../../lib/Mongodb';
-
-// Ensure the connection is ready before using it
 async function connectToDatabase() {
-  const usersConnection = await connectToUsersDB();
-  return usersConnection;
+  if (usersConnection.readyState !== 1) {
+    // Check if connection is open
+    await usersConnection.openUri(process.env.NEXT_PUBLIC_MONGODB);
+  }
 }
 
 export const authOptions = {
@@ -38,7 +37,7 @@ export const authOptions = {
         },
       },
       async authorize(credentials) {
-        const usersConnection = await connectToDatabase();
+        await connectToDatabase();
         const email = credentials?.email;
         const password = credentials?.password;
         const UserModel = usersConnection.model('User', User.schema);
@@ -64,7 +63,7 @@ export const authOptions = {
     },
     async signIn({ account, profile }) {
       if (account.provider === 'google') {
-        const usersConnection = await connectToDatabase();
+        await connectToDatabase();
         const UserModel = usersConnection.model('User', User.schema);
         const existingUser = await UserModel.findOne({ email: profile.email });
 
