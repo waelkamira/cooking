@@ -1,15 +1,8 @@
-import { mealsConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
+import { getMealsConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
 import { Meal } from '../models/CreateMealModel';
 
-// Ensure the connection is ready before using it
-async function ensureConnection() {
-  if (!mealsConnection.readyState) {
-    await mealsConnection.openUri(process.env.NEXT_PUBLIC_MONGODB_MEALS);
-  }
-}
-
 export async function GET() {
-  await ensureConnection();
+  const mealsConnection = await getMealsConnection();
 
   // Using the existing connection to perform the operation
   const MealModel = mealsConnection.model('Meal', Meal.schema);
@@ -21,19 +14,19 @@ export async function GET() {
 }
 
 export async function DELETE(req) {
-  await ensureConnection();
+  const mealsConnection = await getMealsConnection();
 
   const { _id } = await req.json();
 
   // Using the existing connection to perform the operation
   const MealModel = mealsConnection.model('Meal', Meal.schema);
-  const deleteRecipe = await MealModel.findByIdAndDelete({ _id });
+  const deleteRecipe = await MealModel.findByIdAndDelete(_id);
 
   return new Response(JSON.stringify(deleteRecipe), { status: 200 });
 }
 
 export async function PUT(req) {
-  await ensureConnection();
+  const mealsConnection = await getMealsConnection();
 
   const {
     _id,
@@ -46,7 +39,7 @@ export async function PUT(req) {
   // Using the existing connection to perform the operation
   const MealModel = mealsConnection.model('Meal', Meal.schema);
   const updateLikes = await MealModel.findByIdAndUpdate(
-    { _id },
+    _id,
     {
       usersWhoLikesThisRecipe,
       usersWhoPutEmojiOnThisRecipe,
@@ -58,6 +51,67 @@ export async function PUT(req) {
 
   return new Response(JSON.stringify(updateLikes), { status: 200 });
 }
+
+// import { mealsConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
+// import { Meal } from '../models/CreateMealModel';
+
+// // Ensure the connection is ready before using it
+// async function ensureConnection() {
+//   if (!mealsConnection.readyState) {
+//     await mealsConnection.openUri(process.env.NEXT_PUBLIC_MONGODB_MEALS);
+//   }
+// }
+
+// export async function GET() {
+//   await ensureConnection();
+
+//   // Using the existing connection to perform the operation
+//   const MealModel = mealsConnection.model('Meal', Meal.schema);
+//   const allCookingRecipes = await MealModel.find();
+
+//   return new Response(JSON.stringify(allCookingRecipes.reverse()), {
+//     status: 200,
+//   });
+// }
+
+// export async function DELETE(req) {
+//   await ensureConnection();
+
+//   const { _id } = await req.json();
+
+//   // Using the existing connection to perform the operation
+//   const MealModel = mealsConnection.model('Meal', Meal.schema);
+//   const deleteRecipe = await MealModel.findByIdAndDelete({ _id });
+
+//   return new Response(JSON.stringify(deleteRecipe), { status: 200 });
+// }
+
+// export async function PUT(req) {
+//   await ensureConnection();
+
+//   const {
+//     _id,
+//     usersWhoLikesThisRecipe,
+//     usersWhoPutEmojiOnThisRecipe,
+//     usersWhoPutHeartOnThisRecipe,
+//     ...rest
+//   } = await req.json();
+
+//   // Using the existing connection to perform the operation
+//   const MealModel = mealsConnection.model('Meal', Meal.schema);
+//   const updateLikes = await MealModel.findByIdAndUpdate(
+//     { _id },
+//     {
+//       usersWhoLikesThisRecipe,
+//       usersWhoPutEmojiOnThisRecipe,
+//       usersWhoPutHeartOnThisRecipe,
+//       ...rest,
+//     },
+//     { new: true } // Return the updated document
+//   );
+
+//   return new Response(JSON.stringify(updateLikes), { status: 200 });
+// }
 
 // import mongoose from 'mongoose';
 // import { Meal } from '../models/CreateMealModel';
