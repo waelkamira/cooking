@@ -1,10 +1,9 @@
-import { getMealsConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
+// pages/api/meals.js
+import { connectToMealsDB } from '../../../lib/MongoDBConnections';
 import { Meal } from '../models/CreateMealModel';
 
 export async function GET() {
-  const mealsConnection = await getMealsConnection();
-
-  // Using the existing connection to perform the operation
+  const mealsConnection = await connectToMealsDB();
   const MealModel = mealsConnection.model('Meal', Meal.schema);
   const allCookingRecipes = await MealModel.find();
 
@@ -14,20 +13,16 @@ export async function GET() {
 }
 
 export async function DELETE(req) {
-  const mealsConnection = await getMealsConnection();
-
+  const mealsConnection = await connectToMealsDB();
   const { _id } = await req.json();
-
-  // Using the existing connection to perform the operation
   const MealModel = mealsConnection.model('Meal', Meal.schema);
-  const deleteRecipe = await MealModel.findByIdAndDelete(_id);
+  const deleteRecipe = await MealModel.findByIdAndDelete({ _id });
 
   return new Response(JSON.stringify(deleteRecipe), { status: 200 });
 }
 
 export async function PUT(req) {
-  const mealsConnection = await getMealsConnection();
-
+  const mealsConnection = await connectToMealsDB();
   const {
     _id,
     usersWhoLikesThisRecipe,
@@ -36,10 +31,9 @@ export async function PUT(req) {
     ...rest
   } = await req.json();
 
-  // Using the existing connection to perform the operation
   const MealModel = mealsConnection.model('Meal', Meal.schema);
   const updateLikes = await MealModel.findByIdAndUpdate(
-    _id,
+    { _id },
     {
       usersWhoLikesThisRecipe,
       usersWhoPutEmojiOnThisRecipe,

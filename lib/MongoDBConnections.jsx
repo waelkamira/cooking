@@ -1,77 +1,62 @@
 const mongoose = require('mongoose');
 
-let usersConnection;
-let favoritesConnection;
-let mealsConnection;
+const connections = {};
 
-const createConnection = async (uri, connectionName) => {
-  const db = mongoose.createConnection(uri);
+async function makeNewConnection(uri, dbName) {
+  if (connections[dbName]) {
+    if (connections[dbName].readyState === 1) {
+      return connections[dbName];
+    } else {
+      await connections[dbName].asPromise();
+      return connections[dbName];
+    }
+  }
+
+  const db = mongoose.createConnection(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+
+  connections[dbName] = db;
 
   db.on('error', (error) => {
-    console.error(
-      `MongoDB :: connection ${connectionName} ${JSON.stringify(error)}`
-    );
+    console.log(`MongoDB :: connection ${dbName} ${JSON.stringify(error)}`);
     db.close().catch(() =>
-      console.error(`MongoDB :: failed to close connection ${connectionName}`)
+      console.log(`MongoDB :: failed to close connection ${dbName}`)
     );
   });
 
   db.on('connected', () => {
-    mongoose.set('debug', (col, method, query, doc) => {
-      console.log(
-        `MongoDB :: ${connectionName} ${col}.${method}(${JSON.stringify(
-          query
-        )},${JSON.stringify(doc)})`
-      );
-    });
-    console.log(`MongoDB :: connected ${connectionName}`);
+    console.log(`MongoDB :: connected ${dbName}`);
   });
 
   db.on('disconnected', () => {
-    console.log(`MongoDB :: disconnected ${connectionName}`);
+    console.log(`MongoDB :: disconnected ${dbName}`);
   });
 
+  await db.asPromise();
   return db;
-};
+}
 
-const getConnection = async (uri, connection, connectionName) => {
-  if (!connection) {
-    connection = await createConnection(uri, connectionName);
-  }
-  return connection;
-};
+async function connectToUsersDB() {
+  return makeNewConnection(process.env.NEXT_PUBLIC_MONGODB, 'users');
+}
 
-const getUsersConnection = async () => {
-  usersConnection = await getConnection(
-    process.env.NEXT_PUBLIC_MONGODB,
-    usersConnection,
-    'usersConnection'
-  );
-  return usersConnection;
-};
-
-const getFavoritesConnection = async () => {
-  favoritesConnection = await getConnection(
+async function connectToFavoritesDB() {
+  return makeNewConnection(
     process.env.NEXT_PUBLIC_MONGODB_FAVORITES,
-    favoritesConnection,
-    'favoritesConnection'
+    'favorites'
   );
-  return favoritesConnection;
-};
+}
 
-const getMealsConnection = async () => {
-  mealsConnection = await getConnection(
-    process.env.NEXT_PUBLIC_MONGODB_MEALS,
-    mealsConnection,
-    'mealsConnection'
-  );
-  return mealsConnection;
-};
+async function connectToMealsDB() {
+  return makeNewConnection(process.env.NEXT_PUBLIC_MONGODB_MEALS, 'meals');
+}
 
 module.exports = {
-  getUsersConnection,
-  getFavoritesConnection,
-  getMealsConnection,
+  connectToUsersDB,
+  connectToFavoritesDB,
+  connectToMealsDB,
 };
 
 // //! في حال الحاجة لقواعد بيانات أكثر يوجد كود في الاسفل
