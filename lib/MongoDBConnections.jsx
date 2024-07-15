@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 //! في حال الحاجة لقواعد بيانات أكثر يوجد كود في الاسفل
 
 const mongoose = require('mongoose');
@@ -5,6 +6,14 @@ const mongoose = require('mongoose');
 function makeNewConnection(uri) {
   const db = mongoose.createConnection(uri);
 
+=======
+const mongoose = require('mongoose');
+
+function makeNewConnection(uriName) {
+  const uri = process.env[`NEXT_PUBLIC_MONGODB_${uriName}`];
+  const db = mongoose.createConnection(uri);
+
+>>>>>>> 452540e6f5c7d4d1f1d9dbf2d365e824f206700b
   db.on('error', function (error) {
     console.log(`MongoDB :: connection ${this.name} ${JSON.stringify(error)}`);
     db.close().catch(() =>
@@ -17,7 +26,11 @@ function makeNewConnection(uri) {
       console.log(
         `MongoDB :: ${this.conn.name} ${col}.${method}(${JSON.stringify(
           query
+<<<<<<< HEAD
         )},${JSON.stringify(doc)})`
+=======
+        )}, ${JSON.stringify(doc)})`
+>>>>>>> 452540e6f5c7d4d1f1d9dbf2d365e824f206700b
       );
     });
     console.log(`MongoDB :: connected ${this.name}`);
@@ -30,6 +43,7 @@ function makeNewConnection(uri) {
   return db;
 }
 
+<<<<<<< HEAD
 // Create connections using environment variables
 const usersConnection = makeNewConnection(process.env.NEXT_PUBLIC_MONGODB);
 const favoritesConnection = makeNewConnection(
@@ -38,6 +52,25 @@ const favoritesConnection = makeNewConnection(
 const mealsConnection = makeNewConnection(
   process.env.NEXT_PUBLIC_MONGODB_MEALS
 );
+=======
+const usersConnection = makeNewConnection('USERS');
+const favoritesConnection = makeNewConnection('FAVORITES');
+const mealsConnection = makeNewConnection('MEALS');
+
+process.on('SIGINT', async () => {
+  await usersConnection.close();
+  await favoritesConnection.close();
+  await mealsConnection.close();
+  console.log('MongoDB :: connections closed due to application termination');
+  process.exit(0);
+});
+
+module.exports = {
+  usersConnection,
+  favoritesConnection,
+  mealsConnection,
+};
+>>>>>>> 452540e6f5c7d4d1f1d9dbf2d365e824f206700b
 
 // Handle application termination to gracefully close connections
 process.on('SIGINT', async () => {
