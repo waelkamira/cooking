@@ -1,4 +1,3 @@
-// pages/api/meals.js
 import { connectToMealsDB } from '../../../lib/MongoDBConnections';
 import { Meal } from '../models/CreateMealModel';
 
