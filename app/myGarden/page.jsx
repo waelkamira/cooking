@@ -50,14 +50,14 @@ export default function TheGarden() {
     }
   };
 
-  const numberOfSquares = 31 - userRecipes?.length;
+  const numberOfSquares = 12 - userRecipes?.length;
   // const numberOfCubs = 0;
   const arr = [];
   const result = () => {
     for (let i = 0; i < numberOfSquares; i++) {
       arr.push(
-        <div className="flex justify-center items-center size-[66px] sm:size-[86px] bg-four m-1 rounded-lg text-center">
-          <h1 className="text-5xl">🥝</h1>
+        <div className="flex justify-center items-center bg-four m-1 rounded-lg">
+          <h1 className="text-5xl h-full w-full text-center p-2 sm:p-4">🥝</h1>
         </div>
       );
     }
@@ -118,7 +118,7 @@ export default function TheGarden() {
           />
         )}
         {icons?.length > 0 && (
-          <div className=" flex flex-wrap items-center justify-center sm:grid sm:grid-cols-3 w-full sm:w-2/3 xl:w-1/3 h-full bg-one rounded-lg p-4">
+          <div className="grid grid-cols-3 w-full sm:w-2/3 xl:w-1/3 h-full bg-one rounded-lg p-4">
             {icons?.length > 0 &&
               icons?.slice(0, userRecipes?.length)?.map((icon, index) => (
                 <div
@@ -126,7 +126,7 @@ export default function TheGarden() {
                   key={index}
                 >
                   <div
-                    className="relative w-[50px] h-[50px] sm:w-[70px] sm:h-[70px] transition-all duration-300 hover:scale-112 cursor-pointer"
+                    className="relative size-[50px] sm:size-[70px] transition-all duration-300 hover:scale-112 cursor-pointer"
                     key={index}
                   >
                     {!icon && <LoadingPhoto />}

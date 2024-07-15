@@ -33,7 +33,9 @@ export default function SearchBar() {
   }, [searchedWord, searchedCategory, pageNumber]);
 
   const response = async () => {
-    const res = await fetch('/api/allCookingRecipes').then((res) => res.json());
+    const res = await fetch('/api/allCookingRecipes').then((res) =>
+      res?.json()
+    );
     const startPage = (pageNumber - 1) * 10;
     const endPage = startPage + 10;
 
@@ -55,7 +57,7 @@ export default function SearchBar() {
 
     if (searchedCategory) {
       setIsVisible(true);
-      const categoryResults = res.filter(
+      const categoryResults = res?.filter(
         (item) => normalizeArabic(item.selectedValue) === normalizedCategory
       );
       setSearchByCategory(categoryResults.slice(startPage, endPage));
@@ -74,7 +76,6 @@ export default function SearchBar() {
   return (
     <Suspense>
       <div
-        //! ERROR
         className={
           (searchedWord || searchedCategory
             ? 'absolute z-50 top-4 left-0 h-screen overflow-scroll'
