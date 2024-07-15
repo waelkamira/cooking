@@ -1,17 +1,14 @@
-import { usersConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
+import { getUsersConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
 import { User } from '../models/UserModel';
 
-// Ensure the connection is ready before using it
 async function ensureConnection() {
-  if (!usersConnection.readyState) {
-    await usersConnection.openUri(process.env.NEXT_PUBLIC_MONGODB);
-  }
+  const usersConnection = await getUsersConnection();
+  return usersConnection;
 }
 
 export async function GET() {
-  await ensureConnection();
+  const usersConnection = await ensureConnection();
 
-  // Using the existing connection to perform the operation
   const UserModel = usersConnection.model('User', User.schema);
   const users = await UserModel.find();
 
@@ -19,11 +16,10 @@ export async function GET() {
 }
 
 export async function DELETE(req) {
-  await ensureConnection();
+  const usersConnection = await ensureConnection();
 
   const { email } = await req.json();
 
-  // Using the existing connection to perform the operation
   const UserModel = usersConnection.model('User', User.schema);
   const deleteUser = await UserModel.findOneAndDelete({ email });
 

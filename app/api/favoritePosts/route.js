@@ -1,21 +1,18 @@
-import { favoritesConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
+import { getFavoritesConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
 import { Favorite } from '../models/FavoritePosts';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../authOptions/route';
 
 // Ensure the connection is ready before using it
 async function ensureConnection() {
-  if (!favoritesConnection.readyState) {
-    await favoritesConnection.openUri(
-      process.env.NEXT_PUBLIC_MONGODB_FAVORITES
-    );
-  }
+  await getFavoritesConnection();
 }
 
 export async function POST(req) {
   await ensureConnection();
 
   const data = await req.json();
+  const favoritesConnection = await getFavoritesConnection();
   const FavoriteModel = favoritesConnection.model('Favorite', Favorite.schema);
   const FavoritePost = await FavoriteModel.create({ ...data });
 
@@ -26,6 +23,7 @@ export async function DELETE(req) {
   await ensureConnection();
 
   const data = await req.json();
+  const favoritesConnection = await getFavoritesConnection();
   const FavoriteModel = favoritesConnection.model('Favorite', Favorite.schema);
   const deleteFavoritePost = await FavoriteModel.findByIdAndDelete(data?._id);
 
@@ -38,6 +36,7 @@ export async function GET() {
   const session = await getServerSession(authOptions);
   const favoritedByUser = session?.user?.email;
 
+  const favoritesConnection = await getFavoritesConnection();
   const FavoriteModel = favoritesConnection.model('Favorite', Favorite.schema);
   const favoritePosts = await FavoriteModel.find({ favoritedByUser });
 

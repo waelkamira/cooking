@@ -1,4 +1,4 @@
-import { usersConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
+import { getUsersConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
 import { User } from '../models/UserModel';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
@@ -8,11 +8,9 @@ import clientPromise from '../../../lib/Mongodb';
 
 // Ensure the connection is ready before using it
 async function connectToDatabase() {
-  if (!usersConnection.readyState) {
-    await usersConnection.openUri(process.env.NEXT_PUBLIC_MONGODB);
-  }
+  await getUsersConnection();
 }
-// comment
+
 export const authOptions = {
   secret: process.env.NEXT_PUBLIC_SECRET,
   adapter: MongoDBAdapter(clientPromise),
@@ -41,6 +39,7 @@ export const authOptions = {
         await connectToDatabase();
         const email = credentials?.email;
         const password = credentials?.password;
+        const usersConnection = await getUsersConnection();
         const UserModel = usersConnection.model('User', User.schema);
         const user = await UserModel.findOne({ email });
 
@@ -65,6 +64,7 @@ export const authOptions = {
     async signIn({ account, profile }) {
       if (account.provider === 'google') {
         await connectToDatabase();
+        const usersConnection = await getUsersConnection();
         const UserModel = usersConnection.model('User', User.schema);
         const existingUser = await UserModel.findOne({ email: profile.email });
 

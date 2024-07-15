@@ -1,18 +1,17 @@
-import { usersConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
+import { getUsersConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
 import { User } from '../models/UserModel';
 import bcrypt from 'bcrypt';
 
 // Ensure the connection is ready before using it
 async function ensureConnection() {
-  if (!usersConnection.readyState) {
-    await usersConnection.openUri(process.env.NEXT_PUBLIC_MONGODB);
-  }
+  await getUsersConnection();
 }
 
 export async function POST(req) {
   await ensureConnection();
 
   const { name, email, password } = await req.json();
+  const usersConnection = await getUsersConnection();
   const UserModel = usersConnection.model('User', User.schema);
 
   const isExist = await UserModel.findOne({ email });
