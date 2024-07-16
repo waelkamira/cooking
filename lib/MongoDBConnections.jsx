@@ -120,7 +120,7 @@ module.exports = {
 //   mealsConnections,
 // };
 
-//! meals ال  connections في حال التعامل مع مجموعة كبيرة من createMeal.js هذا الكود تعديل لكود
+//! meals ال connections في حال التعامل مع مجموعة كبيرة من createMeal.js هذا الكود تعديل لكود
 
 // import { mealsConnections } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
 // import { Meal } from '../models/CreateMealModel';
