@@ -5,7 +5,7 @@ import { signOut, useSession } from 'next-auth/react';
 import Button from './Button';
 import Image from 'next/image';
 import CurrentUser from '../components/CurrentUser';
-// import TheGarden from './Garden';
+import TheGarden from './Garden';
 import Categories from './Categories';
 import NewRecipeButton from './NewRecipeButton';
 import Loading from './Loading';
@@ -98,7 +98,7 @@ export default function SideBar() {
           </div>
 
           <div className="p-4 rounded-r-lg bg-four overflow-hidden my-4">
-            {/* <TheGarden /> */}
+            <TheGarden />
           </div>
           <div className="px-2 rounded-r-lg bg-four overflow-hidden my-4">
             <Categories />
