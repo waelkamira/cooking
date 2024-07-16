@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { Meal } from '../models/CreateMealModel';
 
-const uri = process.env.NEXT_PUBLIC_MONGODB_MEALS; // Environment variable for meals DB
+const uri = process.env.NEXT_PUBLIC_MONGODB_MEALS;
 
 async function connectToDatabase() {
   if (mongoose.connection.readyState === 0) {
@@ -12,73 +12,97 @@ async function connectToDatabase() {
   }
 }
 
-export default async function handler(req, res) {
-  const { method } = req;
-
+export async function GET(req) {
   try {
     await connectToDatabase();
-
-    switch (method) {
-      case 'GET':
-        await handleGet(req, res);
-        break;
-      case 'DELETE':
-        await handleDelete(req, res);
-        break;
-      case 'PUT':
-        await handlePut(req, res);
-        break;
-      default:
-        res.setHeader('Allow', ['GET', 'DELETE', 'PUT']);
-        res.status(405).end(`Method ${method} Not Allowed`);
-    }
+    const allCookingRecipes = await Meal.find();
+    return new Response(JSON.stringify(allCookingRecipes.reverse()), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   } catch (error) {
-    console.error('Error connecting to meals database:', error);
-    res.status(500).json({ error: 'Error connecting to meals database' });
+    console.error(error);
+    return new Response(JSON.stringify({ error: 'Database error' }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   } finally {
-    // Close connection after use (important)
-    await mongoose.connection.close();
+    if (mongoose.connection.readyState !== 0) {
+      await mongoose.connection.close();
+    }
   }
 }
 
-async function handleGet(req, res) {
-  const MealModel = mongoose.model('Meal', Meal.schema);
-  const allCookingRecipes = await MealModel.find();
-
-  res.status(200).json(allCookingRecipes.reverse());
+export async function DELETE(req) {
+  try {
+    await connectToDatabase();
+    const { _id } = await req.json();
+    const deleteRecipe = await Meal.findByIdAndDelete({ _id });
+    return new Response(JSON.stringify(deleteRecipe), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return new Response(JSON.stringify({ error: 'Database error' }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  } finally {
+    if (mongoose.connection.readyState !== 0) {
+      await mongoose.connection.close();
+    }
+  }
 }
 
-async function handleDelete(req, res) {
-  const { _id } = await req.body;
-
-  const MealModel = mongoose.model('Meal', Meal.schema);
-  const deleteRecipe = await MealModel.findByIdAndDelete(_id);
-
-  res.status(200).json(deleteRecipe);
-}
-
-async function handlePut(req, res) {
-  const {
-    _id,
-    usersWhoLikesThisRecipe,
-    usersWhoPutEmojiOnThisRecipe,
-    usersWhoPutHeartOnThisRecipe,
-    ...rest
-  } = await req.body;
-
-  const MealModel = mongoose.model('Meal', Meal.schema);
-  const updateLikes = await MealModel.findByIdAndUpdate(
-    _id,
-    {
+export async function PUT(req) {
+  try {
+    await connectToDatabase();
+    const {
+      _id,
       usersWhoLikesThisRecipe,
       usersWhoPutEmojiOnThisRecipe,
       usersWhoPutHeartOnThisRecipe,
-      ...rest,
-    },
-    { new: true } // Return the updated document
-  );
+      ...rest
+    } = await req.json();
 
-  res.status(200).json(updateLikes);
+    const updateLikes = await Meal.findByIdAndUpdate(
+      _id,
+      {
+        usersWhoLikesThisRecipe,
+        usersWhoPutEmojiOnThisRecipe,
+        usersWhoPutHeartOnThisRecipe,
+        ...rest,
+      },
+      { new: true }
+    );
+    return new Response(JSON.stringify(updateLikes), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return new Response(JSON.stringify({ error: 'Database error' }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  } finally {
+    if (mongoose.connection.readyState !== 0) {
+      await mongoose.connection.close();
+    }
+  }
 }
 
 // import { mealsConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
