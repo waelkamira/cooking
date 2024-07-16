@@ -1,5 +1,4 @@
-//! في حال الحاجة لقواعد بيانات أكثر يوجد كود في الاسفل
-
+// lib/MongoDBConnections.js
 const mongoose = require('mongoose');
 
 function makeNewConnection(uri) {
@@ -30,29 +29,106 @@ function makeNewConnection(uri) {
   return db;
 }
 
-// Create connections using environment variables
-const usersConnection = makeNewConnection(process.env.NEXT_PUBLIC_MONGODB);
-const favoritesConnection = makeNewConnection(
-  process.env.NEXT_PUBLIC_MONGODB_FAVORITES
-);
-const mealsConnection = makeNewConnection(
-  process.env.NEXT_PUBLIC_MONGODB_MEALS
-);
+async function connectWithRetries(uri, retries = 5, delay = 2000) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      return makeNewConnection(uri);
+    } catch (err) {
+      console.log(`MongoDB :: connection attempt ${i + 1} failed for ${uri}`);
+      if (i < retries - 1) {
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      } else {
+        console.log(`MongoDB :: all retries failed for ${uri}`);
+        throw err;
+      }
+    }
+  }
+}
 
-// Handle application termination to gracefully close connections
-process.on('SIGINT', async () => {
-  await usersConnection.close();
-  await favoritesConnection.close();
-  await mealsConnection.close();
-  console.log('MongoDB :: connections closed due to application termination');
-  process.exit(0);
-});
+async function initConnections() {
+  const usersConnection = await connectWithRetries(
+    process.env.NEXT_PUBLIC_MONGODB
+  );
+  const favoritesConnection = await connectWithRetries(
+    process.env.NEXT_PUBLIC_MONGODB_FAVORITES
+  );
+  const mealsConnection = await connectWithRetries(
+    process.env.NEXT_PUBLIC_MONGODB_MEALS
+  );
 
-module.exports = {
-  usersConnection,
-  favoritesConnection,
-  mealsConnection,
-};
+  // Handle application termination to gracefully close connections
+  process.on('SIGINT', async () => {
+    await usersConnection.close();
+    await favoritesConnection.close();
+    await mealsConnection.close();
+    console.log('MongoDB :: connections closed due to application termination');
+    process.exit(0);
+  });
+
+  return {
+    usersConnection,
+    favoritesConnection,
+    mealsConnection,
+  };
+}
+
+module.exports = initConnections;
+
+// //! في حال الحاجة لقواعد بيانات أكثر يوجد كود في الاسفل
+
+// const mongoose = require('mongoose');
+
+// function makeNewConnection(uri) {
+//   const db = mongoose.createConnection(uri);
+
+//   db.on('error', function (error) {
+//     console.log(`MongoDB :: connection ${this.name} ${JSON.stringify(error)}`);
+//     db.close().catch(() =>
+//       console.log(`MongoDB :: failed to close connection ${this.name}`)
+//     );
+//   });
+
+//   db.on('connected', function () {
+//     mongoose.set('debug', function (col, method, query, doc) {
+//       console.log(
+//         `MongoDB :: ${this.conn.name} ${col}.${method}(${JSON.stringify(
+//           query
+//         )},${JSON.stringify(doc)})`
+//       );
+//     });
+//     console.log(`MongoDB :: connected ${this.name}`);
+//   });
+
+//   db.on('disconnected', function () {
+//     console.log(`MongoDB :: disconnected ${this.name}`);
+//   });
+
+//   return db;
+// }
+
+// // Create connections using environment variables
+// const usersConnection = makeNewConnection(process.env.NEXT_PUBLIC_MONGODB);
+// const favoritesConnection = makeNewConnection(
+//   process.env.NEXT_PUBLIC_MONGODB_FAVORITES
+// );
+// const mealsConnection = makeNewConnection(
+//   process.env.NEXT_PUBLIC_MONGODB_MEALS
+// );
+
+// // Handle application termination to gracefully close connections
+// process.on('SIGINT', async () => {
+//   await usersConnection.close();
+//   await favoritesConnection.close();
+//   await mealsConnection.close();
+//   console.log('MongoDB :: connections closed due to application termination');
+//   process.exit(0);
+// });
+
+// module.exports = {
+//   usersConnection,
+//   favoritesConnection,
+//   mealsConnection,
+// };
 
 //!  meals ل  connections  تم تعديله فقط للتعامل مع ستة  connections هذا الكود للتعامل مع مجموعة كبيرة من ال
 //! أيضا favorites  و users يجب تعديله ليشمل ال
