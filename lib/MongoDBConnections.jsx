@@ -1,9 +1,10 @@
-//! في حال الحاجة لقواعد بيانات أكثر يوجد كود في الاسفل
-
 const mongoose = require('mongoose');
 
 function makeNewConnection(uri) {
-  const db = mongoose.createConnection(uri);
+  const db = mongoose.createConnection(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 
   db.on('error', function (error) {
     console.log(`MongoDB :: connection ${this.name} ${JSON.stringify(error)}`);
@@ -53,6 +54,62 @@ module.exports = {
   favoritesConnection,
   mealsConnection,
 };
+
+// //! في حال الحاجة لقواعد بيانات أكثر يوجد كود في الاسفل
+
+// const mongoose = require('mongoose');
+
+// function makeNewConnection(uri) {
+//   const db = mongoose.createConnection(uri);
+
+//   db.on('error', function (error) {
+//     console.log(`MongoDB :: connection ${this.name} ${JSON.stringify(error)}`);
+//     db.close().catch(() =>
+//       console.log(`MongoDB :: failed to close connection ${this.name}`)
+//     );
+//   });
+
+//   db.on('connected', function () {
+//     mongoose.set('debug', function (col, method, query, doc) {
+//       console.log(
+//         `MongoDB :: ${this.conn.name} ${col}.${method}(${JSON.stringify(
+//           query
+//         )},${JSON.stringify(doc)})`
+//       );
+//     });
+//     console.log(`MongoDB :: connected ${this.name}`);
+//   });
+
+//   db.on('disconnected', function () {
+//     console.log(`MongoDB :: disconnected ${this.name}`);
+//   });
+
+//   return db;
+// }
+
+// // Create connections using environment variables
+// const usersConnection = makeNewConnection(process.env.NEXT_PUBLIC_MONGODB);
+// const favoritesConnection = makeNewConnection(
+//   process.env.NEXT_PUBLIC_MONGODB_FAVORITES
+// );
+// const mealsConnection = makeNewConnection(
+//   process.env.NEXT_PUBLIC_MONGODB_MEALS
+// );
+
+// // Handle application termination to gracefully close connections
+// process.on('SIGINT', async () => {
+//   await usersConnection.close();
+//   await favoritesConnection.close();
+//   await mealsConnection.close();
+//   console.log('MongoDB :: connections closed due to application termination');
+//   process.exit(0);
+// });
+
+// module.exports = {
+//   usersConnection,
+//   favoritesConnection,
+//   mealsConnection,
+// };
 
 //!  meals ل  connections  تم تعديله فقط للتعامل مع ستة  connections هذا الكود للتعامل مع مجموعة كبيرة من ال
 //! أيضا favorites  و users يجب تعديله ليشمل ال
