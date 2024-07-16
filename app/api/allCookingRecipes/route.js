@@ -3,19 +3,27 @@ import { Meal } from '../models/CreateMealModel';
 
 const uri = process.env.NEXT_PUBLIC_MONGODB_MEALS;
 
-let cachedConnection = null;
+if (!global.mongoose) {
+  global.mongoose = { conn: null, promise: null };
+}
 
 async function connectToDatabase() {
-  if (!cachedConnection) {
-    const options = {
+  if (global.mongoose.conn) {
+    return global.mongoose.conn;
+  }
+
+  if (!global.mongoose.promise) {
+    const opts = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     };
-    cachedConnection = mongoose.connect(uri, options).then((mongoose) => {
+
+    global.mongoose.promise = mongoose.connect(uri, opts).then((mongoose) => {
       return mongoose;
     });
   }
-  await cachedConnection;
+  global.mongoose.conn = await global.mongoose.promise;
+  return global.mongoose.conn;
 }
 
 export async function GET(req) {
