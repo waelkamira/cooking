@@ -3,13 +3,19 @@ import { Meal } from '../models/CreateMealModel';
 
 const uri = process.env.NEXT_PUBLIC_MONGODB_MEALS;
 
+let cachedConnection = null;
+
 async function connectToDatabase() {
-  if (mongoose.connection.readyState === 0) {
-    await mongoose.connect(uri, {
+  if (!cachedConnection) {
+    const options = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+    };
+    cachedConnection = mongoose.connect(uri, options).then((mongoose) => {
+      return mongoose;
     });
   }
+  await cachedConnection;
 }
 
 export async function GET(req) {
@@ -30,10 +36,6 @@ export async function GET(req) {
         'Content-Type': 'application/json',
       },
     });
-  } finally {
-    if (mongoose.connection.readyState !== 0) {
-      await mongoose.connection.close();
-    }
   }
 }
 
@@ -56,10 +58,6 @@ export async function DELETE(req) {
         'Content-Type': 'application/json',
       },
     });
-  } finally {
-    if (mongoose.connection.readyState !== 0) {
-      await mongoose.connection.close();
-    }
   }
 }
 
@@ -98,10 +96,6 @@ export async function PUT(req) {
         'Content-Type': 'application/json',
       },
     });
-  } finally {
-    if (mongoose.connection.readyState !== 0) {
-      await mongoose.connection.close();
-    }
   }
 }
 
