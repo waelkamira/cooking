@@ -1,80 +1,84 @@
-import { mealsConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
+import mongoose from 'mongoose';
 import { Meal } from '../models/CreateMealModel';
 
-// Ensure the connection is ready before using it
-async function ensureConnection() {
-  if (mealsConnection.readyState !== 1) {
-    await mealsConnection.openUri(process.env.NEXT_PUBLIC_MONGODB_MEALS);
+const uri = process.env.NEXT_PUBLIC_MONGODB_MEALS; // Environment variable for meals DB
+
+async function connectToDatabase() {
+  if (mongoose.connection.readyState === 0) {
+    await mongoose.connect(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
   }
 }
 
-export async function GET() {
+export default async function handler(req, res) {
+  const { method } = req;
+
   try {
-    await ensureConnection();
+    await connectToDatabase();
 
-    // Using the existing connection to perform the operation
-    const MealModel = mealsConnection.model('Meal', Meal.schema);
-    const allCookingRecipes = await MealModel.find();
-
-    return new Response(JSON.stringify(allCookingRecipes.reverse()), {
-      status: 200,
-    });
+    switch (method) {
+      case 'GET':
+        await handleGet(req, res);
+        break;
+      case 'DELETE':
+        await handleDelete(req, res);
+        break;
+      case 'PUT':
+        await handlePut(req, res);
+        break;
+      default:
+        res.setHeader('Allow', ['GET', 'DELETE', 'PUT']);
+        res.status(405).end(`Method ${method} Not Allowed`);
+    }
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-    });
+    console.error('Error connecting to meals database:', error);
+    res.status(500).json({ error: 'Error connecting to meals database' });
+  } finally {
+    // Close connection after use (important)
+    await mongoose.connection.close();
   }
 }
 
-export async function DELETE(req) {
-  try {
-    await ensureConnection();
+async function handleGet(req, res) {
+  const MealModel = mongoose.model('Meal', Meal.schema);
+  const allCookingRecipes = await MealModel.find();
 
-    const { _id } = await req.json();
-
-    // Using the existing connection to perform the operation
-    const MealModel = mealsConnection.model('Meal', Meal.schema);
-    const deleteRecipe = await MealModel.findByIdAndDelete({ _id });
-
-    return new Response(JSON.stringify(deleteRecipe), { status: 200 });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-    });
-  }
+  res.status(200).json(allCookingRecipes.reverse());
 }
 
-export async function PUT(req) {
-  try {
-    await ensureConnection();
+async function handleDelete(req, res) {
+  const { _id } = await req.body;
 
-    const {
-      _id,
+  const MealModel = mongoose.model('Meal', Meal.schema);
+  const deleteRecipe = await MealModel.findByIdAndDelete(_id);
+
+  res.status(200).json(deleteRecipe);
+}
+
+async function handlePut(req, res) {
+  const {
+    _id,
+    usersWhoLikesThisRecipe,
+    usersWhoPutEmojiOnThisRecipe,
+    usersWhoPutHeartOnThisRecipe,
+    ...rest
+  } = await req.body;
+
+  const MealModel = mongoose.model('Meal', Meal.schema);
+  const updateLikes = await MealModel.findByIdAndUpdate(
+    _id,
+    {
       usersWhoLikesThisRecipe,
       usersWhoPutEmojiOnThisRecipe,
       usersWhoPutHeartOnThisRecipe,
-      ...rest
-    } = await req.json();
+      ...rest,
+    },
+    { new: true } // Return the updated document
+  );
 
-    // Using the existing connection to perform the operation
-    const MealModel = mealsConnection.model('Meal', Meal.schema);
-    const updateLikes = await MealModel.findByIdAndUpdate(
-      { _id },
-      {
-        usersWhoLikesThisRecipe,
-        usersWhoPutEmojiOnThisRecipe,
-        usersWhoPutHeartOnThisRecipe,
-        ...rest,
-      },
-      { new: true } // Return the updated document
-    );
-
-    return new Response(JSON.stringify(updateLikes), { status: 200 });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-    });
-  }
+  res.status(200).json(updateLikes);
 }
 
 // import { mealsConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
