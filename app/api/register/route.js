@@ -1,9 +1,20 @@
-import { usersConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
-import { User } from '../models/UserModel';
+// pages/api/users.js
+import initConnections from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
+import { User } from '../models/UserModel'; // Adjust the import path accordingly
 import bcrypt from 'bcrypt';
+
+let connections;
+
+async function getUsersConnection() {
+  if (!connections) {
+    connections = await initConnections();
+  }
+  return connections.usersConnection;
+}
 
 // Ensure the connection is ready before using it
 async function ensureConnection() {
+  const usersConnection = await getUsersConnection();
   if (!usersConnection.readyState) {
     await usersConnection.openUri(process.env.NEXT_PUBLIC_MONGODB);
   }
@@ -13,6 +24,7 @@ export async function POST(req) {
   await ensureConnection();
 
   const { name, email, password } = await req.json();
+  const usersConnection = await getUsersConnection();
   const UserModel = usersConnection.model('User', User.schema);
 
   const isExist = await UserModel.findOne({ email });
@@ -31,6 +43,40 @@ export async function POST(req) {
 
   return new Response(JSON.stringify(user), { status: 201 });
 }
+
+// import { usersConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
+// import { User } from '../models/UserModel';
+// import bcrypt from 'bcrypt';
+
+// // Ensure the connection is ready before using it
+// async function ensureConnection() {
+//   if (!usersConnection.readyState) {
+//     await usersConnection.openUri(process.env.NEXT_PUBLIC_MONGODB);
+//   }
+// }
+
+// export async function POST(req) {
+//   await ensureConnection();
+
+//   const { name, email, password } = await req.json();
+//   const UserModel = usersConnection.model('User', User.schema);
+
+//   const isExist = await UserModel.findOne({ email });
+//   if (isExist) {
+//     throw new Error(
+//       'هذا الايميل موجود بالفعل قم بتسجيل الدخول او استخدم بريد الكتروني أخر'
+//     );
+//   }
+
+//   const hashedPassword = await bcrypt.hash(password, 10);
+//   const user = await UserModel.create({
+//     name,
+//     email,
+//     password: hashedPassword,
+//   });
+
+//   return new Response(JSON.stringify(user), { status: 201 });
+// }
 
 // import mongoose from 'mongoose';
 // import { User } from '../models/UserModel';
