@@ -36,7 +36,7 @@ const favoritesConnection = makeNewConnection(
   process.env.NEXT_PUBLIC_MONGODB_FAVORITES
 );
 const mealsConnection = makeNewConnection(
-  process.env.NEXT_PUBLIC_MONGODB_MEALS
+  process.env.NEXT_PUBLIC_MONGODB_MEALS_1
 );
 
 // Handle application termination to gracefully close connections
@@ -132,7 +132,7 @@ module.exports = {
 //   // Ensure the mealsConnection is ready to be used
 //   if (!mealsConnections[mealIndex].readyState) {
 //     await mealsConnections[mealIndex].openUri(
-//       process.env[`NEXT_PUBLIC_MONGODB_MEALS${mealIndex + 1}`]
+//       process.env[`NEXT_PUBLIC_MONGODB_MEALS_1${mealIndex + 1}`]
 //     );
 //   }
 

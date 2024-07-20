@@ -1,21 +1,55 @@
+import { getServerSession } from 'next-auth';
 import { mealsConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
 import { Meal } from '../models/CreateMealModel';
+import { authOptions } from '../authOptions/route';
 
 // Ensure the connection is ready before using it
 async function ensureConnection() {
   if (!mealsConnection.readyState) {
-    await mealsConnection.openUri(process.env.NEXT_PUBLIC_MONGODB_MEALS);
+    await mealsConnection.openUri(process.env.NEXT_PUBLIC_MONGODB_MEALS_1);
   }
 }
 
-export async function GET() {
+export async function GET(req) {
   await ensureConnection();
+
+  // Parse query parameters for pagination and email filtering and selectedValue filtering
+  const { searchParams } = new URL(req.url);
+  const page = parseInt(searchParams.get('page')) || 1;
+  const limit = parseInt(searchParams.get('limit')) || 10;
+  const session = await getServerSession(authOptions);
+  const email = session?.user?.email || '';
+  const selectedValue = searchParams.get('selectedValue');
+
+  // Log the parsed parameters
+  // console.log('Parsed parameters:', { page, limit, email, selectedValue });
+
+  // Calculate the number of documents to skip
+  const skip = (page - 1) * limit;
+
+  // Build the query object
+  const query = {};
+  if (email) {
+    query.createdBy = email;
+  }
+  if (selectedValue) {
+    query.selectedValue = selectedValue;
+  }
+
+  // Log the constructed query
+  // console.log('Constructed query:', query);
 
   // Using the existing connection to perform the operation
   const MealModel = mealsConnection.model('Meal', Meal.schema);
-  const allCookingRecipes = await MealModel.find();
+  const allCookingRecipes = await MealModel.find(query)
+    .sort({ createdAt: -1 }) // Sort by newest first
+    .skip(skip)
+    .limit(limit);
 
-  return new Response(JSON.stringify(allCookingRecipes.reverse()), {
+  // Log the retrieved documents
+  // console.log('Retrieved documents:', allCookingRecipes);
+
+  return new Response(JSON.stringify(allCookingRecipes), {
     status: 200,
   });
 }
@@ -134,19 +168,19 @@ export async function PUT(req) {
 // import { Meal } from '../models/CreateMealModel';
 
 // export async function GET() {
-//   await mongoose.createConnection(process.env.NEXT_PUBLIC_MONGODB_MEALS);
+//   await mongoose.createConnection(process.env.NEXT_PUBLIC_MONGODB_MEALS_1);
 //   const allCookingRecipes = await Meal?.find();
 //   return Response.json(allCookingRecipes.reverse());
 // }
 
 // export async function DELETE(req) {
-//   await mongoose.createConnection(process.env.NEXT_PUBLIC_MONGODB_MEALS);
+//   await mongoose.createConnection(process.env.NEXT_PUBLIC_MONGODB_MEALS_1);
 //   const { _id } = await req.json();
 //   const deleteRecipe = await Meal?.findByIdAndDelete({ _id });
 //   return Response.json(deleteRecipe);
 // }
 // export async function PUT(req) {
-//   await mongoose.createConnection(process.env.NEXT_PUBLIC_MONGODB_MEALS);
+//   await mongoose.createConnection(process.env.NEXT_PUBLIC_MONGODB_MEALS_1);
 //   const {
 //     _id,
 //     usersWhoLikesThisRecipe,

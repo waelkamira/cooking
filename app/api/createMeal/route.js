@@ -6,7 +6,7 @@ export async function POST(req) {
 
   // Ensure the mealsConnection is ready to be used
   if (!mealsConnection.readyState) {
-    await mealsConnection.openUri(process.env.NEXT_PUBLIC_MONGODB_MEALS);
+    await mealsConnection.openUri(process.env.NEXT_PUBLIC_MONGODB_MEALS_1);
   }
 
   // Using the existing connection to perform the operation
@@ -19,7 +19,7 @@ export async function POST(req) {
 // import mongoose from 'mongoose';
 // import { Meal } from '../models/CreateMealModel';
 // export async function POST(req) {
-//   await mongoose.createConnection(process.env.NEXT_PUBLIC_MONGODB_MEALS);
+//   await mongoose.createConnection(process.env.NEXT_PUBLIC_MONGODB_MEALS_1);
 //   const data = await req.json();
 //   // console.log('data', data);
 //   const meal = await Meal.create({ ...data });

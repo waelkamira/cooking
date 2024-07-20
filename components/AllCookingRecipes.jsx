@@ -4,8 +4,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import { inputsContext } from '../components/Context';
 import SmallItem from './SmallItem';
 import Loading from './Loading';
-import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
-import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
+import {
+  MdKeyboardDoubleArrowRight,
+  MdKeyboardDoubleArrowLeft,
+} from 'react-icons/md';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 
@@ -16,23 +18,19 @@ export default function AllCookingRecipes() {
   const session = useSession();
   const router = useRouter();
 
-  // console.log('pageNumber', pageNumber);
-
   useEffect(() => {
     fetchAllCookingRecipes();
-    // console.log('reload');
   }, [newRecipe, deletedRecipe, pageNumber]);
 
   async function fetchAllCookingRecipes() {
-    const response = await fetch('/api/allCookingRecipes');
+    const response = await fetch(
+      `/api/allCookingRecipes?page=${pageNumber}&limit=10`
+    );
     const json = await response?.json();
 
     if (response.ok) {
-      // console.log(json);
       dispatch({ type: 'SET_RECIPES', payload: json });
-      const startPage = (pageNumber - 1) * 10;
-      const endPage = startPage + 10;
-      setAllCookingRecipes(json.slice(startPage, endPage));
+      setAllCookingRecipes(json);
     }
   }
 

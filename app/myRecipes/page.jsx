@@ -17,7 +17,6 @@ import Button from '../../components/Button';
 import Loading from '../../components/Loading';
 import { useRouter } from 'next/navigation';
 import { MdEdit } from 'react-icons/md';
-import { Suspense } from 'react';
 
 export default function MyRecipes() {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,7 +24,7 @@ export default function MyRecipes() {
   const [isVisible, setIsVisible] = useState(false);
   const { dispatch } = useContext(inputsContext);
   const [pageNumber, setPageNumber] = useState(1);
-  const [CurrentUser, setCurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = useState('');
   const session = useSession();
   const [myRecipes, setMyRecipes] = useState([]);
   const router = useRouter();
@@ -35,21 +34,11 @@ export default function MyRecipes() {
   }, [pageNumber]);
 
   const fetchMyRecipes = async () => {
-    await fetch('/api/allCookingRecipes')
-      .then((res) => res.json())
+    await fetch(`/api/allCookingRecipes?page=${pageNumber}&limit=10`)
+      .then((res) => res?.json())
       .then((res) => {
-        if (typeof window !== 'undefined') {
-          const userData = JSON.parse(localStorage.getItem('CurrentUser'));
-          setCurrentUser(userData);
-          const email = userData?.email;
-          const findUserRecipes = res?.filter(
-            (item) => item?.createdBy === email
-          );
-          const startPage = (pageNumber - 1) * 10;
-          const endPage = startPage + 10;
-          setMyRecipes(findUserRecipes?.slice(startPage, endPage));
-          dispatch({ type: 'MY_RECIPES', payload: findUserRecipes });
-        }
+        setMyRecipes(res);
+        dispatch({ type: 'MY_RECIPES', payload: res });
       });
   };
 
