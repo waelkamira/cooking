@@ -1,7 +1,9 @@
-import { favoritesConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
+// import { favoritesConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
 import { Favorite } from '../models/FavoritePosts';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../authOptions/route';
+const initializeConnections = require('../../../lib/MongoDBConnections');
+const { favoritesConnection } = await initializeConnections();
 
 // Ensure the connection is ready before using it
 async function ensureConnection() {

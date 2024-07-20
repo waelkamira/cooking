@@ -1,8 +1,11 @@
+const initializeConnections = require('../../../lib/MongoDBConnections');
+
 import { getServerSession } from 'next-auth';
-import { mealsConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
+// import { mealsConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
 import { Meal } from '../models/CreateMealModel';
 import { authOptions } from '../authOptions/route';
 import NodeCache from 'node-cache';
+const { mealsConnection } = await initializeConnections();
 
 // إنشاء كاش بوقت انتهاء محدد
 const cache = new NodeCache({ stdTTL: 600 }); // التخزين المؤقت لمدة 10 دقائق

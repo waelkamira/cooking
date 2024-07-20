@@ -1,5 +1,8 @@
-import { usersConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
+const initializeConnections = require('../../../lib/MongoDBConnections');
+
+// import { usersConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
 import { User } from '../models/UserModel';
+const { usersConnection } = await initializeConnections();
 
 // Ensure the connection is ready before using it
 async function ensureConnection() {
