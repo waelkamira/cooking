@@ -1,14 +1,13 @@
 const initializeConnections = require('../../../lib/MongoDBConnections');
-
 import { getServerSession } from 'next-auth';
-// import { mealsConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
 import { Meal } from '../models/CreateMealModel';
 import { authOptions } from '../authOptions/route';
 import NodeCache from 'node-cache';
+
 const { mealsConnection } = await initializeConnections();
 
-// إنشاء كاش بوقت انتهاء محدد
-const cache = new NodeCache({ stdTTL: 600 }); // التخزين المؤقت لمدة 10 دقائق
+// Create a cache with a specific TTL (Time To Live)
+const cache = new NodeCache({ stdTTL: 600 }); // Cache for 10 minutes
 
 // Ensure the connection is ready before using it
 async function ensureConnection() {
@@ -20,12 +19,11 @@ async function ensureConnection() {
 export async function GET(req) {
   await ensureConnection();
 
-  // Parse query parameters for pagination and email filtering and selectedValue filtering
+  // Parse query parameters for pagination and filtering
   const { searchParams } = new URL(req.url);
   const page = parseInt(searchParams.get('page')) || 1;
   const limit = parseInt(searchParams.get('limit')) || 10;
   const session = await getServerSession(authOptions);
-  const email = session?.user?.email || '';
   const selectedValue = searchParams.get('selectedValue');
 
   // Calculate the number of documents to skip
@@ -33,19 +31,23 @@ export async function GET(req) {
 
   // Build the query object
   const query = {};
-  if (email && !selectedValue) {
-    query.createdBy = email;
-  }
   if (selectedValue) {
     query.selectedValue = selectedValue;
   }
 
+  // Log the query for debugging
+  console.log('Query:', query);
+
   // Create a cache key based on the query parameters
   const cacheKey = `${JSON.stringify(query)}_${page}_${limit}`;
+  console.log('Cache Key:', cacheKey);
 
   // Check if the data is already in the cache
   let allCookingRecipes = cache.get(cacheKey);
-  if (!allCookingRecipes) {
+  if (allCookingRecipes) {
+    console.log('Cache hit');
+  } else {
+    console.log('Cache miss');
     // Using the existing connection to perform the operation
     const MealModel = mealsConnection.model('Meal', Meal.schema);
     allCookingRecipes = await MealModel.find(query)
@@ -57,54 +59,21 @@ export async function GET(req) {
     cache.set(cacheKey, allCookingRecipes);
   }
 
+  // Log the number of recipes found
+  console.log('Number of recipes found:', allCookingRecipes.length);
+
+  // If no recipes found, return a message indicating this
+  if (!allCookingRecipes.length) {
+    console.log('No recipes found for the given query');
+    return new Response(JSON.stringify({ message: 'No recipes found' }), {
+      status: 200,
+    });
+  }
+
+  console.log('All cooking recipes:', allCookingRecipes);
   return new Response(JSON.stringify(allCookingRecipes), {
     status: 200,
   });
-}
-
-export async function DELETE(req) {
-  await ensureConnection();
-
-  const { _id } = await req.json();
-
-  // Using the existing connection to perform the operation
-  const MealModel = mealsConnection.model('Meal', Meal.schema);
-  const deleteRecipe = await MealModel.findByIdAndDelete({ _id });
-
-  // Clear the cache since the data has changed
-  cache.flushAll();
-
-  return new Response(JSON.stringify(deleteRecipe), { status: 200 });
-}
-
-export async function PUT(req) {
-  await ensureConnection();
-
-  const {
-    _id,
-    usersWhoLikesThisRecipe,
-    usersWhoPutEmojiOnThisRecipe,
-    usersWhoPutHeartOnThisRecipe,
-    ...rest
-  } = await req.json();
-
-  // Using the existing connection to perform the operation
-  const MealModel = mealsConnection.model('Meal', Meal.schema);
-  const updateLikes = await MealModel.findByIdAndUpdate(
-    { _id },
-    {
-      usersWhoLikesThisRecipe,
-      usersWhoPutEmojiOnThisRecipe,
-      usersWhoPutHeartOnThisRecipe,
-      ...rest,
-    },
-    { new: true } // Return the updated document
-  );
-
-  // Clear the cache since the data has changed
-  cache.flushAll();
-
-  return new Response(JSON.stringify(updateLikes), { status: 200 });
 }
 
 // //! شغال لكن لا يحدث في البرودكشن

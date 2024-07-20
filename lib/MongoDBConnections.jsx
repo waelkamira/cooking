@@ -3,8 +3,8 @@ const { MongoClient } = require('mongodb');
 
 // Connection options
 const connectionOptions = {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
+  // useUnifiedTopology: true,
+  // useNewUrlParser: true,
   maxPoolSize: 100, // Set pool size to ensure you do not exceed 500 connections in total
 };
 

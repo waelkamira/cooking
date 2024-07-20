@@ -1,4 +1,6 @@
-import { usersConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
+// import { usersConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
+const initializeConnections = require('../../../lib/MongoDBConnections');
+const { usersConnection } = await initializeConnections();
 import { User } from '../models/UserModel';
 import bcrypt from 'bcrypt';
 
