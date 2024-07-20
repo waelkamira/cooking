@@ -32,15 +32,27 @@ export async function DELETE(req) {
   return new Response(JSON.stringify(deleteFavoritePost), { status: 200 });
 }
 
-export async function GET() {
+export async function GET(req) {
   await ensureConnection();
-
+  const { searchParams } = new URL(req.url);
+  const page = parseInt(searchParams.get('page') || 1);
+  const limit = parseInt(searchParams.get('limit') || 10);
   const session = await getServerSession(authOptions);
-  const favoritedByUser = session?.user?.email;
+  const email = session?.user?.email;
 
+  const skip = (page - 1) * limit;
+  // build query
+
+  const query = {};
+  if (email) {
+    query.favoritedByUser = email;
+  }
   const FavoriteModel = favoritesConnection.model('Favorite', Favorite.schema);
-  const favoritePosts = await FavoriteModel.find({ favoritedByUser });
-
+  const favoritePosts = await FavoriteModel.find(query)
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+  // console.log('favoritePosts', favoritePosts.length);
   return new Response(JSON.stringify(favoritePosts), { status: 200 });
 }
 
