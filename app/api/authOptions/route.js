@@ -12,7 +12,7 @@ async function connectToDatabase() {
     await usersConnection.openUri(process.env.NEXT_PUBLIC_MONGODB);
   }
 }
-// comment
+
 export const authOptions = {
   secret: process.env.NEXT_PUBLIC_SECRET,
   adapter: MongoDBAdapter(clientPromise),

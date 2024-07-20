@@ -57,7 +57,6 @@ export default function CookingForm({
       selectedValue: data?.selectedValue?.label,
       image: data?.image,
     });
-    // handleUpload();
     handleGenerateEmbed();
   }, [url, data?.selectedValue, data?.image]);
 
@@ -159,44 +158,6 @@ export default function CookingForm({
     }
   }
 
-  // //? هذه الدوال للتعامل مع الصورة المرفوعة
-
-  // const handleUpload = async () => {
-  //   if (!selectedFile) return;
-
-  //   const formData = new FormData();
-  //   formData.append('image', selectedFile);
-
-  //   try {
-  //     const response = await fetch('/api/uploadImageToImgur', {
-  //       method: 'POST',
-  //       body: formData,
-  //     });
-
-  //     const data = await response.json();
-  //     if (data.success) {
-  //       setUploadedImage(data?.data?.link);
-  //       setInputs({ ...inputs, image: data?.data?.link });
-  //     } else {
-  //       console.error('Error uploading image:', data.error);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error uploading image:', error);
-  //   }
-  // };
-
-  // const onFileChange = (event) => {
-  //   const file = event.target.files[0];
-  //   setSelectedFile(file);
-
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => {
-  //       setPreviewImage(reader.result);
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
   //? هذه دالة يتم تفعيلها عند نجاح انشاء وصفة للاحتفال
   const handleClick = () => {
     const end = Date.now() + 4 * 1000; // 3 seconds

@@ -1,0 +1,30 @@
+// schema.prisma
+
+datasource db {
+  provider = "mongodb" // Or your database provider
+  url      = env("NEXT_PUBLIC_MONGODB_MEALS")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Meal {
+  id                           String   @id @default(cuid())
+  userName                     String
+  createdBy                    String
+  userImage                    String
+  mealName                     String
+  selectedValue                String
+  image                        String
+  ingredients                  String
+  theWay                       String
+  advise                       String?
+  link                         String?
+  favorite                     Boolean  @default(false)
+  usersWhoLikesThisRecipe      String[]
+  usersWhoPutEmojiOnThisRecipe String[]
+  usersWhoPutHeartOnThisRecipe String[]
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt
+}

@@ -20,11 +20,13 @@ export default function AllCookingRecipes() {
 
   useEffect(() => {
     fetchAllCookingRecipes();
+    // console.log('reload');
   }, [newRecipe, deletedRecipe, pageNumber]);
 
   async function fetchAllCookingRecipes() {
     const response = await fetch('/api/allCookingRecipes');
     const json = await response?.json();
+
     if (response.ok) {
       // console.log(json);
       dispatch({ type: 'SET_RECIPES', payload: json });

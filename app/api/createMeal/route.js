@@ -1,11 +1,13 @@
-import { getMealsConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
+import { mealsConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
 import { Meal } from '../models/CreateMealModel';
 
 export async function POST(req) {
   const data = await req.json();
 
   // Ensure the mealsConnection is ready to be used
-  const mealsConnection = await getMealsConnection();
+  if (!mealsConnection.readyState) {
+    await mealsConnection.openUri(process.env.NEXT_PUBLIC_MONGODB_MEALS);
+  }
 
   // Using the existing connection to perform the operation
   const MealModel = mealsConnection.model('Meal', Meal.schema);
@@ -13,24 +15,6 @@ export async function POST(req) {
 
   return new Response(JSON.stringify(meal), { status: 201 });
 }
-
-// import { mealsConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
-// import { Meal } from '../models/CreateMealModel';
-
-// export async function POST(req) {
-//   const data = await req.json();
-
-//   // Ensure the mealsConnection is ready to be used
-//   if (!mealsConnection.readyState) {
-//     await mealsConnection.openUri(process.env.NEXT_PUBLIC_MONGODB_MEALS);
-//   }
-
-//   // Using the existing connection to perform the operation
-//   const MealModel = mealsConnection.model('Meal', Meal.schema);
-//   const meal = await MealModel.create({ ...data });
-
-//   return new Response(JSON.stringify(meal), { status: 201 });
-// }
 
 // import mongoose from 'mongoose';
 // import { Meal } from '../models/CreateMealModel';

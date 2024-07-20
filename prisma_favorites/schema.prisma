@@ -1,0 +1,37 @@
+// schema.prisma
+
+datasource db {
+  provider = "mongodb" // Or your database provider
+  url      = env("NEXT_PUBLIC_MONGODB_FAVORITES")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+
+model FavoritePost {
+  id             String   @id @default(cuid())
+  favoritedByUser String?
+  userName       String?
+  userImage      String?
+  mealName       String?
+  selectedValue  String?
+  image          String?
+  ingredients    String?
+  theWay         String?
+  advise         String?
+  link           String?
+  numberOfLikes  Int?
+  numberOfHearts Int?
+  numberOfEmojis Int?
+  heart          Boolean  @default(false)
+  like           Boolean  @default(false)
+  emoji          Boolean  @default(false)
+  postId         String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+
