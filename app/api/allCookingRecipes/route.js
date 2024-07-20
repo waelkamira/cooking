@@ -168,19 +168,19 @@ export async function PUT(req) {
 // import { Meal } from '../models/CreateMealModel';
 
 // export async function GET() {
-//   await mongoose.createConnection(process.env.NEXT_PUBLIC_MONGODB_MEALS_1);
+//   await mongoose.createConnection(process.env.NEXT_PUBLIC_MONGODB_MEALS);
 //   const allCookingRecipes = await Meal?.find();
 //   return Response.json(allCookingRecipes.reverse());
 // }
 
 // export async function DELETE(req) {
-//   await mongoose.createConnection(process.env.NEXT_PUBLIC_MONGODB_MEALS_1);
+//   await mongoose.createConnection(process.env.NEXT_PUBLIC_MONGODB_MEALS);
 //   const { _id } = await req.json();
 //   const deleteRecipe = await Meal?.findByIdAndDelete({ _id });
 //   return Response.json(deleteRecipe);
 // }
 // export async function PUT(req) {
-//   await mongoose.createConnection(process.env.NEXT_PUBLIC_MONGODB_MEALS_1);
+//   await mongoose.createConnection(process.env.NEXT_PUBLIC_MONGODB_MEALS);
 //   const {
 //     _id,
 //     usersWhoLikesThisRecipe,

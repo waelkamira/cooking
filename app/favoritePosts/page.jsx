@@ -26,11 +26,13 @@ export default function Page() {
   }, [pageNumber]);
 
   const fetchUserFavorites = async () => {
-    await fetch(`/api/favoritePosts?page=${pageNumber}&limit=10`)
+    await fetch('/api/favoritePosts')
       .then((res) => res.json())
       .then((res) => {
+        const startPage = (pageNumber - 1) * 10;
+        const endPage = startPage + 10;
         // console.log('these are user favorites', res);
-        setUserFavorites(res);
+        setUserFavorites(res?.reverse()?.slice(startPage, endPage));
       });
   };
 

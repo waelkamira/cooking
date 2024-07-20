@@ -9,36 +9,32 @@ import Button from '../../components/Button';
 import Loading from '../../components/Loading';
 
 export default function WhatToCookToday() {
-  const [isOpen, setIsOpen] = useState(false); // State to control sidebar menu visibility
-  const [randomCookingRecipes, setRandomCookingRecipes] = useState([]); // State to store the fetched recipes
+  const [isOpen, setIsOpen] = useState(false);
+  const [randomCookingRecipes, setRandomCookingRecipes] = useState([]);
 
   useEffect(() => {
-    fetchAllMainCookingRecipes(); // Fetch recipes when the component mounts
+    fetchAllMainCookingRecipes();
+    shuffleArray(randomCookingRecipes);
   }, []);
 
-  // Fetch recipes from the API with a limit of 3 and filter by 'selectedValue'
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+      setRandomCookingRecipes(array.slice(0, 3));
+    }
+  }
+
   const fetchAllMainCookingRecipes = async () => {
-    const response = await fetch(
-      '/api/allCookingRecipes?limit=3&selectedValue=وجبة رئيسية'
-    );
+    const response = await fetch('/api/allCookingRecipes');
     const json = await response?.json();
     if (response.ok) {
-      setRandomCookingRecipes(json); // Update state with fetched recipes
+      const data = json?.filter(
+        (item) => item?.selectedValue === 'وجبة رئيسية'
+      );
+      setRandomCookingRecipes(data.slice(0, 3));
     }
   };
-
-  // Shuffle the array of recipes and set the state with the first 3 recipes
-  function shuffleArray(array) {
-    const shuffledArray = [...array]; // Make a copy of the array to avoid mutating the original state
-    for (let i = shuffledArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledArray[i], shuffledArray[j]] = [
-        shuffledArray[j],
-        shuffledArray[i],
-      ]; // Swap elements
-    }
-    setRandomCookingRecipes(shuffledArray.slice(0, 3)); // Update state with the first 3 shuffled recipes
-  }
 
   return (
     <div className="relative w-full bg-four h-full p-4 lg:p-8 rounded-lg">
@@ -69,7 +65,7 @@ export default function WhatToCookToday() {
           اضغط هنا للحصول على ثلاث أفكار جديدة لطبخة اليوم
         </h1>
         <Button
-          onClick={() => shuffleArray(randomCookingRecipes)} // Shuffle recipes on button click
+          onClick={() => shuffleArray(randomCookingRecipes)}
           title={'اقتراح أفكار جديدة'}
           style={'text-white bg-one rounded-full p-2 text-lg w-full lg:w-1/3'}
         />
@@ -79,7 +75,7 @@ export default function WhatToCookToday() {
           <TfiMenuAlt
             className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
             onClick={() => {
-              setIsOpen(!isOpen); // Toggle sidebar menu visibility
+              setIsOpen(!isOpen);
             }}
           />
           {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}

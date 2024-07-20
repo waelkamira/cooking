@@ -132,7 +132,7 @@ module.exports = {
 //   // Ensure the mealsConnection is ready to be used
 //   if (!mealsConnections[mealIndex].readyState) {
 //     await mealsConnections[mealIndex].openUri(
-//       process.env[`NEXT_PUBLIC_MONGODB_MEALS_1${mealIndex + 1}`]
+//       process.env[`NEXT_PUBLIC_MONGODB_MEALS${mealIndex + 1}`]
 //     );
 //   }
 
