@@ -8,12 +8,22 @@ async function ensureConnection() {
   }
 }
 
-export async function GET() {
+export async function GET(req) {
   await ensureConnection();
 
-  // Using the existing connection to perform the operation
+  const { searchParams } = new URL(req.url);
+  const pageNumber = parseInt(searchParams.get('pageNumber') || '1', 10);
+  const limit = parseInt(searchParams.get('limit') || '10', 10);
+  const searchQuery = searchParams.get('searchQuery') || '';
+
   const UserModel = usersConnection.model('User', User.schema);
-  const users = await UserModel.find();
+  const query = searchQuery
+    ? { email: { $regex: searchQuery, $options: 'i' } }
+    : {};
+
+  const users = await UserModel.find(query)
+    .skip((pageNumber - 1) * limit)
+    .limit(limit);
 
   return new Response(JSON.stringify(users), { status: 200 });
 }

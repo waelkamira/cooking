@@ -2,6 +2,10 @@ import { getServerSession } from 'next-auth';
 import { mealsConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
 import { Meal } from '../models/CreateMealModel';
 import { authOptions } from '../authOptions/route';
+import NodeCache from 'node-cache';
+
+// إنشاء كاش بوقت انتهاء محدد
+const cache = new NodeCache({ stdTTL: 600 }); // التخزين المؤقت لمدة 10 دقائق
 
 // Ensure the connection is ready before using it
 async function ensureConnection() {
@@ -14,15 +18,12 @@ export async function GET(req) {
   await ensureConnection();
 
   // Parse query parameters for pagination and email filtering and selectedValue filtering
-  const { searchParams, url } = new URL(req.url);
+  const { searchParams } = new URL(req.url);
   const page = parseInt(searchParams.get('page')) || 1;
   const limit = parseInt(searchParams.get('limit')) || 10;
   const session = await getServerSession(authOptions);
   const email = session?.user?.email || '';
   const selectedValue = searchParams.get('selectedValue');
-
-  // Log the parsed parameters
-  console.log('Parsed parameters:', { page, limit, email, selectedValue, url });
 
   // Calculate the number of documents to skip
   const skip = (page - 1) * limit;
@@ -36,18 +37,22 @@ export async function GET(req) {
     query.selectedValue = selectedValue;
   }
 
-  // Log the constructed query
-  // console.log('Constructed query:', query);
+  // Create a cache key based on the query parameters
+  const cacheKey = `${JSON.stringify(query)}_${page}_${limit}`;
 
-  // Using the existing connection to perform the operation
-  const MealModel = mealsConnection.model('Meal', Meal.schema);
-  const allCookingRecipes = await MealModel.find(query)
-    .sort({ createdAt: -1 }) // Sort by newest first
-    .skip(skip)
-    .limit(limit);
+  // Check if the data is already in the cache
+  let allCookingRecipes = cache.get(cacheKey);
+  if (!allCookingRecipes) {
+    // Using the existing connection to perform the operation
+    const MealModel = mealsConnection.model('Meal', Meal.schema);
+    allCookingRecipes = await MealModel.find(query)
+      .sort({ createdAt: -1 }) // Sort by newest first
+      .skip(skip)
+      .limit(limit);
 
-  // Log the retrieved documents
-  // console.log('Retrieved documents:', allCookingRecipes);
+    // Store the result in the cache
+    cache.set(cacheKey, allCookingRecipes);
+  }
 
   return new Response(JSON.stringify(allCookingRecipes), {
     status: 200,
@@ -62,6 +67,9 @@ export async function DELETE(req) {
   // Using the existing connection to perform the operation
   const MealModel = mealsConnection.model('Meal', Meal.schema);
   const deleteRecipe = await MealModel.findByIdAndDelete({ _id });
+
+  // Clear the cache since the data has changed
+  cache.flushAll();
 
   return new Response(JSON.stringify(deleteRecipe), { status: 200 });
 }
@@ -89,6 +97,9 @@ export async function PUT(req) {
     },
     { new: true } // Return the updated document
   );
+
+  // Clear the cache since the data has changed
+  cache.flushAll();
 
   return new Response(JSON.stringify(updateLikes), { status: 200 });
 }

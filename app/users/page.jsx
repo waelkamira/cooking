@@ -6,8 +6,10 @@ import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
 import CustomToast from '../../components/CustomToast';
 import BackButton from '../../components/BackButton';
-import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
-import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
+import {
+  MdKeyboardDoubleArrowRight,
+  MdKeyboardDoubleArrowLeft,
+} from 'react-icons/md';
 import Link from 'next/link';
 import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
@@ -26,27 +28,21 @@ export default function Users() {
   }, [findUser, pageNumber]);
 
   if (!session?.status === 'authenticated' || !admin?.isAdmin) {
-    return;
+    return null;
   }
 
   async function fetchAllUsers() {
-    const response = await fetch('/api/allUsers');
+    const response = await fetch(
+      `/api/allUsers?pageNumber=${pageNumber}&pageSize=10&searchQuery=${findUser}`
+    );
     const json = await response.json();
     if (response.ok) {
-      const startPage = (pageNumber - 1) * 10;
-      const endPage = startPage + 10;
-      if (findUser) {
-        const user = json?.filter((item) => item?.email?.match(findUser));
-        setUsers(user);
-      } else {
-        setUsers(json?.slice(startPage, endPage));
-      }
+      setUsers(json);
     }
   }
 
-  //? هذه الدالة لحذف مستخدم معين
   async function handleDeleteUser(user) {
-    if (user?.isAdmin === true) {
+    if (user.isAdmin === true) {
       return toast.custom((t) => (
         <CustomToast t={t} message={'لايمكن حذف الأدمن ✖'} />
       ));
@@ -68,18 +64,18 @@ export default function Users() {
   }
 
   return (
-    <div className="relative flex flex-col justify-center items-center w-full bg-four rounded-lg text-lg text-white">
+    <div className="relative flex flex-col justify-center items-center w-full bg-gray-800 rounded-lg text-lg text-white">
       <BackButton />
       <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4">
         <TfiMenuAlt
-          className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
+          className="p-1 rounded-lg text-4xl lg:text-5xl text-yellow-500 cursor-pointer z-50 animate-pulse"
           onClick={() => {
             setIsOpen(!isOpen);
           }}
         />
         {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
       </div>
-      <div className="flex gap-4 justify-center items-center bg-four rounded-lg text-lg text-white w-full p-4 mt-16 xl:mt-24">
+      <div className="flex gap-4 justify-center items-center bg-gray-700 rounded-lg text-lg text-white w-full p-4 mt-16 xl:mt-24 shadow-lg">
         <input
           value={findUser}
           onChange={(e) => setFindUser(e.target.value)}
@@ -88,47 +84,49 @@ export default function Users() {
           name="user"
           placeholder="ابحث عن اسم مستخدم ..."
           autoFocus
-          className="text-right w-full p-2 rounded-lg text-lg outline-2 focus:outline-one h-10 text-black"
+          className="text-right w-full p-2 rounded-lg text-lg outline-none focus:outline-yellow-500 h-10 text-black"
         />
       </div>
       <div className="relative flex justify-between items-center p-4 sm:p-8 w-full">
-        {' '}
         <h1>جميع المستخدمين :</h1>
       </div>
       <div className="flex flex-col justify-start items-center w-full">
-        {users?.length === 0 && <Loading />}
-        <div className="w-full xl:w-1/2 flex flex-col gap-2 justify-center items-start p-4 sm:p-8 ">
-          {users?.length > 0 &&
-            users?.map((user, index) => (
+        {users.length === 0 && <Loading />}
+        <div className="w-full xl:w-1/2 flex flex-col gap-2 justify-center items-start p-4 sm:p-8">
+          {users.length > 0 ? (
+            users.map((user, index) => (
               <div
-                className="flex justify-between items-center bg-four my-2 text-wite w-full h-24 border-[3px] border-one p-2 rounded-lg"
+                className="flex justify-between items-center bg-gray-700 my-2 text-white w-full h-24 border-[3px] border-yellow-500 p-2 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
                 key={index}
               >
                 <div>
-                  <h1 className="text-sm sm-text-md lg:text-lg">
-                    اسم المستخدم: {user?.name}
+                  <h1 className="text-sm sm:text-md lg:text-lg">
+                    اسم المستخدم: {user.name}
                   </h1>
-                  <h1 className="text-sm sm-text-md lg:text-lg">
-                    الايميل: {user?.email}
+                  <h1 className="text-sm sm:text-md lg:text-lg">
+                    الايميل: {user.email}
                   </h1>
                 </div>
-                {user?.isAdmin ? (
+                {user.isAdmin ? (
                   'أدمن'
                 ) : (
                   <div
-                    className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
+                    className="flex flex-col items-center justify-center cursor-pointer bg-red-600 rounded-lg p-2 md:text-2xl text-white hover:bg-red-700"
                     onClick={() => handleDeleteUser(user)}
                   >
-                    <IoMdClose className="" />
+                    <IoMdClose />
                     <h6 className="text-sm select-none">حذف</h6>
                   </div>
                 )}
               </div>
-            ))}
+            ))
+          ) : (
+            <div className="text-white">لا توجد نتائج مطابقة للبحث.</div>
+          )}
         </div>
         <div className="flex items-center justify-around my-4 mt-8 text-white">
-          {users?.length >= 3 && (
-            <Link href={'#post1'}>
+          {users.length >= 10 && (
+            <Link href="#post1">
               <div
                 className="flex items-center justify-around cursor-pointer"
                 onClick={() => setPageNumber(pageNumber + 1)}
@@ -139,7 +137,7 @@ export default function Users() {
             </Link>
           )}
           {pageNumber > 1 && (
-            <Link href={'#post1'}>
+            <Link href="#post1">
               <div
                 className="flex items-center justify-around cursor-pointer"
                 onClick={() => setPageNumber(pageNumber - 1)}
