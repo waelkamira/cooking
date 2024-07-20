@@ -6,7 +6,7 @@ import { authOptions } from '../authOptions/route';
 // Ensure the connection is ready before using it
 async function ensureConnection() {
   if (!mealsConnection.readyState) {
-    await mealsConnection.openUri(process.env.NEXT_PUBLIC_MONGODB_MEALS_1);
+    await mealsConnection.openUri(process.env.NEXT_PUBLIC_MONGODB_MEALS);
   }
 }
 

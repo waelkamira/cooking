@@ -36,7 +36,7 @@ const favoritesConnection = makeNewConnection(
   process.env.NEXT_PUBLIC_MONGODB_FAVORITES
 );
 const mealsConnection = makeNewConnection(
-  process.env.NEXT_PUBLIC_MONGODB_MEALS_1
+  process.env.NEXT_PUBLIC_MONGODB_MEALS
 );
 
 // Handle application termination to gracefully close connections
