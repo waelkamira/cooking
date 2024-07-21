@@ -1,5 +1,7 @@
-import { mealsConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
+// import { mealsConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
 import { Meal } from '../models/CreateMealModel';
+const initializeConnections = require('../../../lib/MongoDBConnections');
+const { mealsConnection } = await initializeConnections();
 
 export async function POST(req) {
   const data = await req.json();

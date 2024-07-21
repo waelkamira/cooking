@@ -36,11 +36,11 @@ export async function GET(req) {
   }
 
   // Log the query for debugging
-  console.log('Query:', query);
+  // console.log('Query:', query);
 
   // Create a cache key based on the query parameters
   const cacheKey = `${JSON.stringify(query)}_${page}_${limit}`;
-  console.log('Cache Key:', cacheKey);
+  // console.log('Cache Key:', cacheKey);
 
   // Check if the data is already in the cache
   let allCookingRecipes = cache.get(cacheKey);
@@ -59,9 +59,6 @@ export async function GET(req) {
     cache.set(cacheKey, allCookingRecipes);
   }
 
-  // Log the number of recipes found
-  console.log('Number of recipes found:', allCookingRecipes.length);
-
   // If no recipes found, return a message indicating this
   if (!allCookingRecipes.length) {
     console.log('No recipes found for the given query');
@@ -70,7 +67,6 @@ export async function GET(req) {
     });
   }
 
-  console.log('All cooking recipes:', allCookingRecipes);
   return new Response(JSON.stringify(allCookingRecipes), {
     status: 200,
   });
