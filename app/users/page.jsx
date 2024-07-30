@@ -33,7 +33,7 @@ export default function Users() {
 
   async function fetchAllUsers() {
     const response = await fetch(
-      `/api/allUsers?pageNumber=${pageNumber}&pageSize=10&searchQuery=${findUser}`
+      `/api/user?pageNumber=${pageNumber}&searchQuery=${findUser}`
     );
     const json = await response.json();
     if (response.ok) {
@@ -47,7 +47,7 @@ export default function Users() {
         <CustomToast t={t} message={'لايمكن حذف الأدمن ✖'} />
       ));
     }
-    const response = await fetch('/api/allUsers', {
+    const response = await fetch('/api/user', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(user),
@@ -68,7 +68,7 @@ export default function Users() {
       <BackButton />
       <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4">
         <TfiMenuAlt
-          className="p-1 rounded-lg text-4xl lg:text-5xl text-yellow-500 cursor-pointer z-50 animate-pulse"
+          className="p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50 animate-pulse"
           onClick={() => {
             setIsOpen(!isOpen);
           }}
@@ -84,7 +84,7 @@ export default function Users() {
           name="user"
           placeholder="ابحث عن اسم مستخدم ..."
           autoFocus
-          className="text-right w-full p-2 rounded-lg text-lg outline-none focus:outline-yellow-500 h-10 text-black"
+          className="text-right w-full p-2 rounded-lg text-lg outline-none focus:outline-one h-10 text-black"
         />
       </div>
       <div className="relative flex justify-between items-center p-4 sm:p-8 w-full">
@@ -96,7 +96,7 @@ export default function Users() {
           {users.length > 0 ? (
             users.map((user, index) => (
               <div
-                className="flex justify-between items-center bg-gray-700 my-2 text-white w-full h-24 border-[3px] border-yellow-500 p-2 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
+                className="flex justify-between items-center bg-gray-700 my-2 text-white w-full h-24 border-[3px] border-one p-2 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
                 key={index}
               >
                 <div>
@@ -125,14 +125,14 @@ export default function Users() {
           )}
         </div>
         <div className="flex items-center justify-around my-4 mt-8 text-white">
-          {users.length >= 10 && (
+          {users.length >= 5 && (
             <Link href="#post1">
               <div
                 className="flex items-center justify-around cursor-pointer"
                 onClick={() => setPageNumber(pageNumber + 1)}
               >
                 <h1 className="text-white font-bold">الصفحة التالية</h1>
-                <MdKeyboardDoubleArrowRight className="text-2xl animate-pulse" />
+                <MdKeyboardDoubleArrowRight className="text-2xl animate-pulse text-one select-none" />
               </div>
             </Link>
           )}
@@ -142,7 +142,7 @@ export default function Users() {
                 className="flex items-center justify-around cursor-pointer"
                 onClick={() => setPageNumber(pageNumber - 1)}
               >
-                <MdKeyboardDoubleArrowLeft className="text-2xl animate-pulse" />
+                <MdKeyboardDoubleArrowLeft className="text-2xl animate-pulse text-one select-none" />
                 <h1 className="text-white font-bold">الصفحة السابقة</h1>
               </div>
             </Link>

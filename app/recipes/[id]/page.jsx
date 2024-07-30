@@ -12,11 +12,12 @@ export default function Page() {
   }, []);
 
   async function fetchOneCookingRecipe() {
-    const response = await fetch('/api/allCookingRecipes');
+    console.log('id', id);
+    const response = await fetch(`/api/showMealById?id=${id}`);
     const json = await response?.json();
     if (response.ok) {
-      const res = await json?.filter((item) => item?._id === id);
-      setOneCookingRecipe(res[0]);
+      // console.log('json', json);
+      setOneCookingRecipe(json[0]);
     }
   }
 

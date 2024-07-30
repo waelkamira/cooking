@@ -16,22 +16,16 @@ import LoadingPhoto from './LoadingPhoto';
 
 export default function SmallItem({ recipe, index, show = true, id = false }) {
   const [currentUser, setCurrentUser] = useState('');
-  const [favorites, setFavorites] = useState();
-  const [numberOfLikes, setNumberOfLikes] = useState(
-    recipe?.usersWhoLikesThisRecipe?.length
-  );
-  const [numberOfEmojis, setNumberOfEmojis] = useState(
-    recipe?.usersWhoPutEmojiOnThisRecipe?.length
-  );
-  const [numberOfHearts, setNumberOfHearts] = useState(
-    recipe?.usersWhoPutHeartOnThisRecipe?.length
-  );
+
+  const [numberOfLikes, setNumberOfLikes] = useState(recipe?.likes);
+  const [numberOfEmojis, setNumberOfEmojis] = useState(recipe?.emojis);
+  const [numberOfHearts, setNumberOfHearts] = useState(recipe?.hearts);
 
   const [like, setLike] = useState(false);
   const [heart, setHeart] = useState(false);
   const [emoji, setEmoji] = useState(false);
 
-  const { dispatch, action } = useContext(inputsContext);
+  const { dispatch } = useContext(inputsContext);
   const session = useSession();
   const router = useRouter();
   const path = usePathname();
@@ -44,215 +38,108 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
         setCurrentUser(user);
       }
     }
-    fetchFavoritePosts();
-    setActions();
-  }, []);
 
-  function setActions() {
-    const isLiked = recipe?.usersWhoLikesThisRecipe?.filter(
-      (item) => item === session?.data?.user?.email
-    );
-    if (isLiked?.length > 0) {
-      setLike(true);
-    }
-    const isEmoji = recipe?.usersWhoPutEmojiOnThisRecipe?.filter(
-      (item) => item === session?.data?.user?.email
-    );
-    if (isEmoji?.length > 0) {
-      setEmoji(true);
-    }
-    const isHeart = recipe?.usersWhoPutHeartOnThisRecipe?.filter(
-      (item) => item === session?.data?.user?.email
-    );
-    if (isHeart?.length > 0) {
-      setHeart(true);
+    checkRecipeActionsStatus(recipe);
+  }, [recipe?.id]);
+
+  async function checkRecipeActionsStatus(recipe) {
+    try {
+      const response = await fetch(`/api/actions?mealId=${recipe?.id}`);
+      const json = await response?.json();
+      if (response.ok) {
+        // console.log('json', json);
+        setLike(json[0]?.likes === 1);
+        setHeart(json[0]?.hearts === 1);
+        setEmoji(json[0]?.emojis === 1);
+      }
+    } catch (error) {
+      console.error('Error in updateRecipeActionNumbers:', error);
     }
   }
 
-  //? يتم تفعيل هذه الدالة عند الضغط على زر حفظ ليتم حفظ البوست الذي تم الضغط عليه من قبل المستخدم في قائمة مفضلاته
-  //? أو سوف يتم حذف هذا البوست من قائمة مفضلة المستخدم إذا كان موجودا أي أن المستخدم لم يعد يريده في قائمته
-  async function handleFavoritePost() {
-    const findPost = favorites.filter((post) => post?.postId === recipe?._id);
-    if (!findPost[0]) {
-      const { _id, ...props } = recipe;
-      const response = await fetch('/api/favoritePosts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+  async function updateRecipeActionNumbers(mealId, actionType, newActionValue) {
+    try {
+      const response = await fetch(`/api/allCookingRecipes?id=${mealId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
-          ...props,
-          postId: _id,
-          favoritedByUser: currentUser?.email,
+          actionType,
+          newActionValue,
         }),
       });
+
+      if (!response.ok) {
+        console.error(`Failed to update ${actionType} for meal ${mealId}`);
+      }
+    } catch (error) {
+      console.error('Error in updateRecipeActionNumbers:', error);
+    }
+  }
+
+  async function handleInteraction(
+    mealId,
+    action,
+    currentState,
+    setState,
+    setNumber
+  ) {
+    setState(!action);
+    try {
+      const email = session?.data?.user?.email;
+      console.log(email);
+      const response = await fetch(`/api/actions?email=${email}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          mealId,
+          actionType: action,
+          actionValue: currentState ? 0 : 1,
+        }),
+      });
+
       if (response.ok) {
-        fetchFavoritePosts();
+        const result = await response.json();
+        const newActionValue = result.newActionValue;
+        setState(true);
+        // قم بتحديث العدد في قاعدة البيانات
+        await updateRecipeActionNumbers(mealId, action, newActionValue);
 
         toast.custom((t) => (
           <CustomToast
             t={t}
-            message={'تم إضافة هذه الوصفة إلى قائمة وصفاتك المفضلة'}
+            message={result.message}
             greenEmoji={'✔'}
             emoji={'😋'}
           />
         ));
       } else {
+        console.error(`Failed to toggle ${action}`);
         toast.custom((t) => (
-          <CustomToast
-            t={t}
-            message={'حدث خطأ ما حاول مرة أخرى'}
-            redEmoji={'✖'}
-            emoji={'😐'}
-          />
+          <CustomToast t={t} message={'حدث خطأ ما'} emoji={'😐'} />
         ));
       }
-    } else {
-      const response = await fetch('/api/favoritePosts', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...findPost[0],
-        }),
-      });
-      if (response.ok) {
-        fetchFavoritePosts();
-        toast.custom((t) => (
-          <CustomToast
-            t={t}
-            message={'تم إزالة هذه الوصفة من قائمة مفضلاتك بنجاح'}
-            redEmoji={'✖'}
-          />
-        ));
-      } else {
-        toast.custom((t) => (
-          <CustomToast t={t} message={'😐 حدث خطأ ما حاول مرة أخرى ✖'} />
-        ));
-      }
-    }
-  }
-  //? للبحث عن هذا البوست في قائمة المفضلة اذا موجود يتم تفعيل اللون الاحمر بأن المستخدم بالفعل أعجب بهذا البوست من قبل
-  async function fetchFavoritePosts() {
-    const response = await fetch('/api/favoritePosts');
-    const json = await response.json();
-    setFavorites(json);
-    // console.log(json);
-    const findPost = json.filter((post) => post?.postId === recipe?._id);
-    // console.log('findPost', findPost);
-    if (findPost[0]) {
-      setHeart(true);
-    } else {
-      setHeart(false);
-    }
-  }
-
-  //? إذا كان المستخدم غير موجود في مصفوفة المعجبين  بهذا البوست heart يتم تفعيل هذه الدالة عند الضغط على زر
-  //? فسوف تتم إضافته وإلا سوف يتم حذفه من هذه المصفوفة
-  async function handleHeart() {
-    const user = recipe?.usersWhoPutHeartOnThisRecipe.filter(
-      (item) => item === session?.data?.user?.email
-    );
-
-    if (!user[0]) {
-      const response = await fetch('/api/allCookingRecipes', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          _id: recipe?._id,
-          usersWhoPutHeartOnThisRecipe: [
-            ...recipe?.usersWhoPutHeartOnThisRecipe,
-            session?.data?.user?.email,
-          ],
-        }),
-      });
-    } else {
-      const users = recipe?.usersWhoPutHeartOnThisRecipe.filter(
-        (item) => item !== session?.data?.user?.email
-      );
-      const response = await fetch('/api/allCookingRecipes', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          _id: recipe?._id,
-          usersWhoPutHeartOnThisRecipe: [...users],
-        }),
-      });
-    }
-  }
-
-  //? إذا كان المستخدم غير موجود في مصفوفة المعجبين  بهذا البوست like يتم تفعيل هذه الدالة عند الضغط على زر
-  //? فسوف تتم إضافته وإلا سوف يتم حذفه من هذه المصفوفة
-  async function handleLike() {
-    const user = recipe?.usersWhoLikesThisRecipe?.filter(
-      (item) => item === session?.data?.user?.email
-    );
-
-    if (!user[0]) {
-      const response = await fetch('/api/allCookingRecipes', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          _id: recipe?._id,
-          usersWhoLikesThisRecipe: [
-            ...recipe?.usersWhoLikesThisRecipe,
-            session?.data?.user?.email,
-          ],
-        }),
-      });
-    } else {
-      const users = recipe?.usersWhoLikesThisRecipe?.filter(
-        (item) => item !== session?.data?.user?.email
-      );
-      const response = await fetch('/api/allCookingRecipes', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          _id: recipe?._id,
-          usersWhoLikesThisRecipe: [...users],
-        }),
-      });
-    }
-  }
-
-  //? إذا كان المستخدم غير موجود في مصفوفة المعجبين  بهذا البوست emoji يتم تفعيل هذه الدالة عند الضغط على زر
-  //? فسوف تتم إضافته وإلا سوف يتم حذفه من هذه المصفوفة
-  async function handleEmoji() {
-    const user = recipe?.usersWhoPutEmojiOnThisRecipe.filter(
-      (item) => item === session?.data?.user?.email
-    );
-
-    if (!user[0]) {
-      const response = await fetch('/api/allCookingRecipes', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          _id: recipe?._id,
-          usersWhoPutEmojiOnThisRecipe: [
-            ...recipe?.usersWhoPutEmojiOnThisRecipe,
-            session?.data?.user?.email,
-          ],
-        }),
-      });
-    } else {
-      const users = recipe?.usersWhoPutEmojiOnThisRecipe.filter(
-        (item) => item !== session?.data?.user?.email
-      );
-      const response = await fetch('/api/allCookingRecipes', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          _id: recipe?._id,
-          usersWhoPutEmojiOnThisRecipe: [...users],
-        }),
-      });
+    } catch (error) {
+      console.error('Error in handleInteraction:', error);
+      toast.custom((t) => (
+        <CustomToast t={t} message={'حدث خطأ ما'} emoji={'😐'} />
+      ));
     }
   }
 
   //? لحذف أي بوست من أي مستخدم هذه الدالة خاصة بالأدمن فقط
   async function handleDeletePost(recipe) {
-    const response = await fetch('/api/allCookingRecipes', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(recipe),
-    });
+    const response = await fetch(
+      `/api/allCookingRecipes?id=${recipe?.id}&isAdmin=${true}`,
+      {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(recipe),
+      }
+    );
 
     if (response.ok) {
       toast.custom((t) => (
@@ -277,22 +164,21 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
       ? 'Invalid date'
       : formatDistanceToNow(date, { addSuffix: true });
   };
-
   return (
     <>
       {!recipe && <Loading />}
       <div
         key={index}
         id="post1"
-        className="flex flex-col justify-center items-center shadow-md w-full p-4 rounded-lg mb-4 bg-white border-t-[20px] border-green-500 transition-all duration-300"
+        className="flex flex-col justify-center items-center shadow-md w-full p-2 sm:p-4 rounded-lg mb-4 bg-white border-t-[20px] border-twelve transition-all duration-300"
       >
-        <div className="flex items-center justify-center w-full p-2">
+        <div className="flex items-center justify-center w-full sm:p-2">
           <Link
             href={'/profile'}
             className="cursor-pointer flex justify-start items-center gap-2 w-full h-fit "
           >
             <div className="overflow-hidden rounded-full">
-              <div className="relative size-12 rounded-full overflow-hidden">
+              <div className="relative size-8 sm:size-12  rounded-full overflow-hidden">
                 {!recipe?.userImage && <LoadingPhoto />}
                 {recipe?.userImage && (
                   <Image
@@ -324,7 +210,7 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
             </div>
           )}
         </div>
-        <h1 className="text-one my-2 sm:my-4 text-xl sm:text-3xl font-medium bg-white select-none line-clamp-1">
+        <h1 className="text-one my-1 sm:my-4 text-xl sm:text-3xl font-medium bg-white select-none line-clamp-1">
           {recipe?.mealName}
         </h1>
         <div
@@ -347,15 +233,19 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
               <div
                 className="flex justify-center items-center gap-2 cursor-pointer hover:bg-seven p-1 lg:p-2 rounded-lg select-none"
                 onClick={() => {
+                  handleInteraction(
+                    recipe.id,
+                    'hearts',
+                    heart,
+                    setHeart,
+                    setNumberOfHearts
+                  );
                   if (session?.status === 'authenticated') {
-                    handleHeart();
                     if (!heart) {
                       setNumberOfHearts(numberOfHearts + 1);
                     } else {
                       setNumberOfHearts(numberOfHearts - 1);
                     }
-                    handleFavoritePost();
-                    fetchFavoritePosts();
                   } else {
                     toast.custom((t) => (
                       <CustomToast
@@ -392,8 +282,13 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
               <div
                 className="flex justify-center items-center gap-2 cursor-pointer hover:bg-seven p-1 lg:p-2 rounded-lg select-none"
                 onClick={() => {
-                  handleLike();
-
+                  handleInteraction(
+                    recipe.id,
+                    'likes',
+                    like,
+                    setLike,
+                    setNumberOfLikes
+                  );
                   if (session?.status === 'authenticated') {
                     setLike(!like);
                     if (!like) {
@@ -401,6 +296,7 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
                     } else {
                       setNumberOfLikes(+numberOfLikes - 1);
                     }
+                    // For likes
                   } else {
                     toast.custom((t) => (
                       <CustomToast
@@ -433,8 +329,14 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
               <div
                 className="flex justify-center items-center gap-2 cursor-pointer hover:bg-seven py-1 px-2 rounded-lg select-none"
                 onClick={() => {
+                  handleInteraction(
+                    recipe.id,
+                    'emojis',
+                    emoji,
+                    setEmoji,
+                    setNumberOfEmojis
+                  );
                   if (session?.status === 'authenticated') {
-                    handleEmoji();
                     setEmoji(!emoji);
                     if (!emoji) {
                       setNumberOfEmojis(numberOfEmojis + 1);
@@ -480,14 +382,14 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
           <h1 className="text-one sm:font-bold text-xl text-start w-full my-2 select-none">
             المقادير:
           </h1>
-          <pre className="text-sm sm:text-lg text-start w-full line-clamp-5 select-none">
+          <pre className="text-sm sm:text-lg text-start w-full line-clamp-3 select-none">
             {recipe?.ingredients}
           </pre>
         </div>
         <button
           onClick={() => {
             if (session?.status === 'authenticated') {
-              router.push(`/recipes/${id ? recipe?.postId : recipe?._id}`);
+              router.push(`/recipes/${id ? recipe?.postId : recipe?.id}`);
             } else {
               toast.custom((t) => (
                 <CustomToast
@@ -497,7 +399,7 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
               ));
             }
           }}
-          className="sm:text-2xl p-2 bg-green-500 text-white hover:scale-[102%] hover:text-white font-medium text-center select-none w-full rounded-full shadow-lg transition-all duration-300 "
+          className="sm:text-2xl p-2 my-2 bg-twelve text-white hover:scale-[102%] hover:text-white font-medium text-center select-none w-full rounded-full shadow-lg transition-all duration-300 "
         >
           عرض الوصفة
         </button>

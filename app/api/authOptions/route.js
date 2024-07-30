@@ -1,24 +1,11 @@
-// import { usersConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
-const initializeConnections = require('../../../lib/MongoDBConnections');
-const { usersConnection } = await initializeConnections();
+import userPrisma from '../../../lib/UserPrismaClient';
 
-import { User } from '../models/UserModel';
+import bcrypt from 'bcrypt';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
-import bcrypt from 'bcrypt';
-import { MongoDBAdapter } from '@auth/mongodb-adapter';
-import clientPromise from '../../../lib/Mongodb';
-
-// Ensure the connection is ready before using it
-async function connectToDatabase() {
-  if (!usersConnection.readyState) {
-    await usersConnection.openUri(process.env.NEXT_PUBLIC_MONGODB);
-  }
-}
 
 export const authOptions = {
   secret: process.env.NEXT_PUBLIC_SECRET,
-  adapter: MongoDBAdapter(clientPromise),
   providers: [
     GoogleProvider({
       clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
@@ -41,11 +28,12 @@ export const authOptions = {
         },
       },
       async authorize(credentials) {
-        await connectToDatabase();
         const email = credentials?.email;
         const password = credentials?.password;
-        const UserModel = usersConnection.model('User', User.schema);
-        const user = await UserModel.findOne({ email });
+        await userPrisma.$connect(); // التأكد من أن Prisma جاهزة
+        const user = await userPrisma.user.findUnique({
+          where: { email },
+        });
 
         if (!user) {
           throw new Error('Email not found');
@@ -56,7 +44,7 @@ export const authOptions = {
           throw new Error('Incorrect password');
         }
 
-        return user || null;
+        return user;
       },
     }),
   ],
@@ -66,22 +54,29 @@ export const authOptions = {
       return session;
     },
     async signIn({ account, profile }) {
+      await userPrisma.$connect(); // التأكد من أن Prisma جاهزة
+
       if (account.provider === 'google') {
-        await connectToDatabase();
-        const UserModel = usersConnection.model('User', User.schema);
-        const existingUser = await UserModel.findOne({ email: profile.email });
+        const existingUser = await userPrisma.user.findUnique({
+          where: { email: profile.email },
+        });
 
         if (existingUser) {
+          await userPrisma.$connect(); // التأكد من أن Prisma جاهزة
           if (!existingUser.googleId) {
-            existingUser.googleId = profile.sub;
-            await existingUser.save();
+            await userPrisma.user.update({
+              where: { email: profile.email },
+              data: { googleId: profile.sub },
+            });
           }
         } else {
-          await UserModel.create({
-            email: profile.email,
-            name: profile.name,
-            image: profile.picture,
-            googleId: profile.sub,
+          await userPrisma.user.create({
+            data: {
+              email: profile.email,
+              name: profile.name,
+              image: profile.picture,
+              googleId: profile.sub,
+            },
           });
         }
 
@@ -105,29 +100,17 @@ export const authOptions = {
   debug: process.env.NODE_ENV === 'development',
   pages: { signIn: '/login' },
 };
-
-// import mongoose from 'mongoose';
-// import { User } from '../models/UserModel';
+// import prisma from '../../../lib/PrismaClient';
+// import bcrypt from 'bcrypt';
 // import CredentialsProvider from 'next-auth/providers/credentials';
 // import GoogleProvider from 'next-auth/providers/google';
-// import bcrypt from 'bcrypt';
-// import { MongoDBAdapter } from '@auth/mongodb-adapter';
-// import clientPromise from '../../../lib/Mongodb';
-
-// const connectToDatabase = async () => {
-//   if (mongoose.connection.readyState !== 1) {
-//     await mongoose.createConnection(process.env.NEXT_PUBLIC_MONGODB);
-//   }
-// };
 
 // export const authOptions = {
 //   secret: process.env.NEXT_PUBLIC_SECRET,
-//   adapter: MongoDBAdapter(clientPromise),
 //   providers: [
 //     GoogleProvider({
 //       clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
 //       clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET,
-//       //! يجب وضع هذا السطر هنا و الا سوف يقوم برفض كل الايميلات التي نريد التسجيل من خلالها
 //       allowDangerousEmailAccountLinking: true,
 //     }),
 //     CredentialsProvider({
@@ -146,10 +129,12 @@ export const authOptions = {
 //         },
 //       },
 //       async authorize(credentials) {
-//         await connectToDatabase();
 //         const email = credentials?.email;
 //         const password = credentials?.password;
-//         const user = await User.findOne({ email });
+
+//         const user = await prisma.user.findUnique({
+//           where: { email },
+//         });
 
 //         if (!user) {
 //           throw new Error('Email not found');
@@ -160,7 +145,7 @@ export const authOptions = {
 //           throw new Error('Incorrect password');
 //         }
 
-//         return user || null;
+//         return user;
 //       },
 //     }),
 //   ],
@@ -171,20 +156,25 @@ export const authOptions = {
 //     },
 //     async signIn({ account, profile }) {
 //       if (account.provider === 'google') {
-//         await connectToDatabase();
-//         const existingUser = await User.findOne({ email: profile.email });
+//         const existingUser = await prisma.user.findUnique({
+//           where: { email: profile.email },
+//         });
 
 //         if (existingUser) {
 //           if (!existingUser.googleId) {
-//             existingUser.googleId = profile.sub;
-//             await existingUser.save();
+//             await prisma.user.update({
+//               where: { email: profile.email },
+//               data: { googleId: profile.sub },
+//             });
 //           }
 //         } else {
-//           await User.create({
-//             email: profile.email,
-//             name: profile.name,
-//             image: profile.picture,
-//             googleId: profile.sub,
+//           await prisma.user.create({
+//             data: {
+//               email: profile.email,
+//               name: profile.name,
+//               image: profile.picture,
+//               googleId: profile.sub,
+//             },
 //           });
 //         }
 

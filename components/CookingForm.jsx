@@ -12,6 +12,7 @@ import { Confetti } from './SuccessComponent';
 import { getVideoIdAndPlatform } from './youtubeUtils';
 import { MdOutlineAddPhotoAlternate } from 'react-icons/md';
 import { TbArrowBigLeftLinesFilled } from 'react-icons/tb';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function CookingForm({
   setIsVisible,
@@ -48,6 +49,9 @@ export default function CookingForm({
     theWay: '',
     advise: '',
     link: '',
+    hearts: 0,
+    likes: 0,
+    emojis: 0,
   });
   const { data, dispatch, imageError } = useContext(inputsContext);
 
@@ -78,7 +82,7 @@ export default function CookingForm({
       createdBy
     ) {
       try {
-        const response = await fetch('/api/createMeal', {
+        const response = await fetch('/api/allCookingRecipes', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

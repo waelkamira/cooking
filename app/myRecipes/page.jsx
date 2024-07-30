@@ -25,30 +25,40 @@ export default function MyRecipes() {
   const { dispatch } = useContext(inputsContext);
   const [pageNumber, setPageNumber] = useState(1);
   const [currentUser, setCurrentUser] = useState('');
+  const [userRecipesCount, setUserRecipesCount] = useState(0);
   const session = useSession();
   const [myRecipes, setMyRecipes] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
     fetchMyRecipes();
-  }, [pageNumber]);
+  }, [pageNumber, session]);
 
   const fetchMyRecipes = async () => {
-    await fetch(`/api/allCookingRecipes?page=${pageNumber}&limit=10`)
+    const email = session?.data?.user?.email;
+    // console.log('email ******', email);
+
+    await fetch(`/api/myRecipes?page=${pageNumber}&email=${email}&limit=5`)
       .then((res) => res?.json())
       .then((res) => {
-        setMyRecipes(res);
+        setMyRecipes(res?.recipes);
+        setUserRecipesCount(res?.count);
+        // console.log(res?.recipes);
         dispatch({ type: 'MY_RECIPES', payload: res });
       });
   };
 
   //? هذه الدالة لحذف المنشورات
   async function handleDeletePost(recipeId) {
-    const response = await fetch('/api/allCookingRecipes', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ _id: recipeId }),
-    });
+    const email = session?.data?.user?.email;
+    const response = await fetch(
+      `/api/allCookingRecipes?email=${email}&id=${recipeId}`,
+      {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: recipeId, email: email }),
+      }
+    );
 
     if (response.ok) {
       toast.custom((t) => (
@@ -58,8 +68,8 @@ export default function MyRecipes() {
           redEmoji={'✖'}
         />
       ));
-      setIsVisible(false);
       fetchMyRecipes();
+      setIsVisible(false);
     } else {
       toast.custom((t) => <CustomToast t={t} message={'حدث خطأ ما 😐'} />);
       setIsVisible(false);
@@ -129,7 +139,7 @@ export default function MyRecipes() {
         <BackButton />
         <h1 className="grow text-lg lg:text-2xl w-full text-white">
           <span className="text-one font-bold text-2xl ml-2">#</span>
-          وصفاتي{' '}
+          وصفاتي <span className="text-one"> {userRecipesCount}</span>
         </h1>
       </div>
       <div className="my-8">
@@ -143,14 +153,14 @@ export default function MyRecipes() {
           {myRecipes?.length > 0 &&
             myRecipes.map((recipe, index) => (
               <div
-                className="relative flex flex-col items-start justify-start gap-0 bg-green-500 rounded-lg overflow-hidden"
+                className="relative flex flex-col items-start justify-start gap-0 bg-twelve rounded-lg overflow-hidden"
                 key={index}
               >
                 {session?.status === 'authenticated' && (
-                  <div className="flex justify-between items-center bg-green-500 w-full pt-4 px-4">
+                  <div className="flex justify-between items-center bg-twelve w-full pt-4 px-4">
                     <div
                       className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
-                      onClick={() => router.push(`/editRecipe/${recipe?._id}`)}
+                      onClick={() => router.push(`/editRecipe/${recipe?.id}`)}
                     >
                       <MdEdit className="" />
 
@@ -160,7 +170,7 @@ export default function MyRecipes() {
                       className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
                       onClick={() => {
                         setIsVisible(true);
-                        setRecipeId(recipe?._id);
+                        setRecipeId(recipe?.id);
                       }}
                     >
                       <IoMdClose className="" />
@@ -172,15 +182,15 @@ export default function MyRecipes() {
               </div>
             ))}
         </div>
-        <div className="flex items-center justify-around text-white">
-          {myRecipes?.length >= 10 && (
+        <div className="flex items-center justify-around text-white mt-4">
+          {myRecipes?.length >= 5 && (
             <Link href={'#post1'}>
               <div
                 className="flex items-center justify-around cursor-pointer"
                 onClick={() => setPageNumber(pageNumber + 1)}
               >
                 <h1 className="text-white font-bold">الصفحة التالية</h1>
-                <MdKeyboardDoubleArrowRight className="text-2xl animate-pulse" />
+                <MdKeyboardDoubleArrowRight className="text-2xl animate-pulse text-one select-none" />
               </div>
             </Link>
           )}
@@ -190,7 +200,7 @@ export default function MyRecipes() {
                 className="flex items-center justify-around cursor-pointer"
                 onClick={() => setPageNumber(pageNumber - 1)}
               >
-                <MdKeyboardDoubleArrowLeft className="text-2xl animate-pulse" />
+                <MdKeyboardDoubleArrowLeft className="text-2xl animate-pulse text-one select-none" />
                 <h1 className="text-white font-bold">الصفحة السابقة</h1>
               </div>
             </Link>

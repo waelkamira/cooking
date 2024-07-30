@@ -22,35 +22,69 @@ export default function Page() {
   const [userFavorites, setUserFavorites] = useState([]);
 
   useEffect(() => {
-    fetchUserFavorites();
+    if (session) {
+      fetchUserFavorites();
+    }
   }, [pageNumber]);
 
   const fetchUserFavorites = async () => {
-    await fetch(`/api/favoritePosts?page=${pageNumber}&limit=10`)
-      .then((res) => res.json())
-      .then((res) => {
-        // console.log('these are user favorites', res);
-        setUserFavorites(res);
-      });
+    const email = session?.data?.user?.email;
+    if (email) {
+      try {
+        const res = await fetch(
+          `/api/actions?page=${pageNumber}&email=${email}&limit=5`
+        );
+        const data = await res.json();
+        if (res.ok) {
+          console.log('data', data);
+
+          // Collect the promises from the fetch operations
+          const promises = data.map(async (item) => {
+            // console.log('item', item);
+            const response = await fetch(`/api/editRecipe?id=${item?.mealId}`);
+            if (response.ok) {
+              const json = await response.json();
+              console.log('json', json);
+              return json;
+            } else {
+              throw new Error('Failed to fetch cooking recipe');
+            }
+          });
+
+          // Wait for all promises to resolve
+          const arr = await Promise.all(promises);
+          // console.log('arr', arr);
+
+          // Set the user favorites
+          setUserFavorites(arr);
+        }
+      } catch (error) {
+        console.error('Error fetching user favorites:', error);
+      }
+    }
   };
 
   async function handleDeletePost(recipe) {
-    const response = await fetch('/api/favoritePosts', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(recipe),
-    });
+    const email = session?.data?.user?.email;
 
-    if (response.ok) {
-      toast.custom((t) => (
-        <CustomToast
-          t={t}
-          message={'👍 تم حذف هذا البوست من قائمة المفضلة لديك'}
-        />
-      ));
-      fetchUserFavorites();
-    } else {
-      toast.custom((t) => <CustomToast t={t} message={'حدث خطأ ما 😐'} />);
+    if (email) {
+      const response = await fetch(`/api/actions?email=${email}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mealId: recipe?.id, actionType: 'hearts' }),
+      });
+
+      if (response.ok) {
+        toast.custom((t) => (
+          <CustomToast
+            t={t}
+            message={'👍 تم حذف هذا البوست من قائمة المفضلة لديك'}
+          />
+        ));
+        fetchUserFavorites();
+      } else {
+        toast.custom((t) => <CustomToast t={t} message={'حدث خطأ ما 😐'} />);
+      }
     }
   }
 
@@ -127,7 +161,7 @@ export default function Page() {
             ))}
         </div>
         <div className="flex items-center justify-around my-4 mt-8 text-white">
-          {userFavorites?.length >= 10 && (
+          {userFavorites?.length >= 5 && (
             <Link href={'#post1'}>
               <div
                 className="flex items-center justify-around cursor-pointer"

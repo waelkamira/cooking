@@ -1,182 +1,420 @@
-const initializeConnections = require('../../../lib/MongoDBConnections');
-import { getServerSession } from 'next-auth';
-import { Meal } from '../models/CreateMealModel';
-import { authOptions } from '../authOptions/route';
+import prisma from '../../../lib/PrismaClient';
+import actionPrisma from '../../../lib/ActionPrismaClient';
 import NodeCache from 'node-cache';
 
-const { mealsConnection } = await initializeConnections();
+// تحسين التكوين مع تحديد حجم أقصى للذاكرة
+const cache = new NodeCache({
+  stdTTL: 60 * 10,
+  checkperiod: 60,
+  maxKeys: 1000,
+});
 
-// Create a cache with a specific TTL (Time To Live)
-const cache = new NodeCache({ stdTTL: 600 }); // Cache for 10 minutes
-
-// Ensure the connection is ready before using it
-async function ensureConnection() {
-  if (!mealsConnection.readyState) {
-    await mealsConnection.openUri(process.env.NEXT_PUBLIC_MONGODB_MEALS);
-  }
+function createCacheKey(params) {
+  return `meals_${JSON.stringify(params)}`;
 }
 
-export async function GET(req) {
-  await ensureConnection();
-
-  // Parse query parameters for pagination and filtering
-  const { searchParams } = new URL(req.url);
-  const page = parseInt(searchParams.get('page')) || 1;
-  const limit = parseInt(searchParams.get('limit')) || 10;
-  const session = await getServerSession(authOptions);
-  const selectedValue = searchParams.get('selectedValue');
-
-  // Calculate the number of documents to skip
-  const skip = (page - 1) * limit;
-
-  // Build the query object
-  const query = {};
-  if (selectedValue) {
-    query.selectedValue = selectedValue;
-  }
-
-  // Log the query for debugging
-  // console.log('Query:', query);
-
-  // Create a cache key based on the query parameters
-  const cacheKey = `${JSON.stringify(query)}_${page}_${limit}`;
-  // console.log('Cache Key:', cacheKey);
-
-  // Check if the data is already in the cache
-  let allCookingRecipes = cache.get(cacheKey);
-  if (allCookingRecipes) {
-    console.log('Cache hit');
-  } else {
-    console.log('Cache miss');
-    // Using the existing connection to perform the operation
-    const MealModel = mealsConnection.model('Meal', Meal.schema);
-    allCookingRecipes = await MealModel.find(query)
-      .sort({ createdAt: -1 }) // Sort by newest first
-      .skip(skip)
-      .limit(limit);
-
-    // Store the result in the cache
-    cache.set(cacheKey, allCookingRecipes);
-  }
-
-  // If no recipes found, return a message indicating this
-  if (!allCookingRecipes.length) {
-    console.log('No recipes found for the given query');
-    return new Response(JSON.stringify({ message: 'No recipes found' }), {
-      status: 200,
-    });
-  }
-
-  return new Response(JSON.stringify(allCookingRecipes), {
-    status: 200,
+function invalidateCacheByPrefix(prefix) {
+  const keys = cache.keys();
+  keys.forEach((key) => {
+    if (key.startsWith(prefix)) {
+      cache.del(key);
+    }
   });
 }
 
-// //! شغال لكن لا يحدث في البرودكشن
+export async function GET(req) {
+  try {
+    // Parse query parameters for pagination and filtering
+    const url = new URL(req.url);
+    const searchParams = url.searchParams;
+    const page = parseInt(searchParams.get('page')) || 1;
+    const limit = parseInt(searchParams.get('limit')) || 5;
+    const selectedValue = searchParams.get('selectedValue');
+    const id = searchParams.get('id'); // Keep as string
+    const skip = (page - 1) * limit;
 
-// import axios from 'axios';
+    // Build the query object
+    const query = {};
+    if (selectedValue) {
+      query.selectedValue = selectedValue;
+    }
+
+    // إنشاء مفتاح التخزين المؤقت
+    const cacheKey = createCacheKey({ id, page, limit, query });
+
+    // محاولة الحصول على البيانات من التخزين المؤقت
+    let meals = cache.get(cacheKey);
+    if (!meals) {
+      // التأكد من أن Prisma جاهزة
+      await prisma.$connect();
+      await actionPrisma.$connect();
+
+      meals = await prisma.meal.findMany({
+        where: query,
+        orderBy: { createdAt: 'desc' },
+        skip: skip,
+        take: limit,
+      });
+
+      // تخزين البيانات في التخزين المؤقت
+      cache.set(cacheKey, meals);
+    }
+
+    // مراقبة الأداء
+    console.log('Cache Stats:', cache.getStats());
+
+    return new Response(JSON.stringify(meals), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 200,
+    });
+  } catch (error) {
+    console.error('Error fetching recipes:', error);
+    return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 500,
+    });
+  }
+}
+
+export async function POST(req) {
+  await prisma.$connect();
+
+  const data = await req.json();
+  console.log('data', data);
+
+  try {
+    const meal = await prisma.meal.create({
+      data: { ...data },
+    });
+
+    // تحديث التخزين المؤقت
+    invalidateCacheByPrefix('meals_'); // إزالة المفاتيح المتعلقة بالوجبات
+
+    return new Response(JSON.stringify(meal), { status: 201 });
+  } catch (error) {
+    console.error('Error creating meal:', error);
+    return new Response(JSON.stringify({ error: 'حدث خطأ ما' }), {
+      status: 500,
+    });
+  }
+}
+
+export async function PUT(req) {
+  const url = new URL(req.url);
+  const searchParams = url.searchParams;
+  const id = searchParams.get('id');
+  const { actionType, newActionValue, ...data } = await req.json();
+  await prisma.$connect();
+  await actionPrisma.$connect();
+
+  try {
+    const meal = await prisma.meal.findUnique({ where: { id } });
+
+    let updateData = {};
+    if (actionType && newActionValue) {
+      function getUpdatedValue(currentValue, actionValue) {
+        const newValue = currentValue + (actionValue === 1 ? 1 : -1);
+        return newValue >= 0 ? newValue : currentValue;
+      }
+
+      if (actionType === 'hearts') {
+        updateData = { hearts: getUpdatedValue(meal?.hearts, newActionValue) };
+      } else if (actionType === 'likes') {
+        updateData = { likes: getUpdatedValue(meal?.likes, newActionValue) };
+      } else if (actionType === 'emojis') {
+        updateData = { emojis: getUpdatedValue(meal?.emojis, newActionValue) };
+      }
+
+      await prisma.meal.update({
+        where: { id },
+        data: updateData,
+      });
+    } else {
+      await prisma.meal.update({
+        where: { id },
+        data: data,
+      });
+    }
+
+    // تحديث التخزين المؤقت
+    invalidateCacheByPrefix('meals_'); // إزالة المفاتيح المتعلقة بالوجبات
+
+    return new Response(
+      JSON.stringify({ message: 'تم التعديل بنجاح', newActionValue }),
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error('Error updating meal:', error);
+    return new Response(JSON.stringify({ error: 'حدث خطأ ما' }), {
+      status: 500,
+    });
+  }
+}
+
+export async function DELETE(req) {
+  const url = new URL(req.url);
+  const searchParams = url.searchParams;
+  const id = searchParams.get('id');
+  const email = searchParams.get('email');
+  const isAdmin = searchParams.get('isAdmin');
+  await prisma.$connect();
+  await actionPrisma.$connect();
+  console.log(
+    'id from delete ********************',
+    id,
+    isAdmin,
+    typeof isAdmin,
+    email
+  );
+
+  try {
+    if (isAdmin === 'true') {
+      console.log('id from delete ********************', id, isAdmin);
+
+      const actionsExist = await actionPrisma.action.findMany({
+        where: { mealId: id },
+      });
+
+      if (actionsExist.length > 0) {
+        const actionsExist = await actionPrisma.action.findMany({
+          where: { mealId: id },
+        });
+
+        await actionPrisma.action.deleteMany({
+          where: { mealId: id },
+        });
+      }
+
+      // Delete the meal
+      await prisma.meal.delete({
+        where: { id },
+      });
+
+      return new Response(
+        JSON.stringify({
+          message: 'Meal deleted successfully ✔',
+        }),
+        { status: 200 }
+      );
+    }
+
+    // Check if id and email are provided
+    if (!id || !email) {
+      return new Response(
+        JSON.stringify({ error: 'Meal ID and email must be provided' }),
+        { status: 400 }
+      );
+    }
+
+    // Check if the meal exists and is created by the given email
+    const mealExists = await prisma.meal.findUnique({
+      where: { id, createdBy: email },
+    });
+
+    if (!mealExists) {
+      return new Response(
+        JSON.stringify({
+          error:
+            'Meal not found or you do not have permission to delete this meal',
+        }),
+        { status: 404 }
+      );
+    }
+
+    // console.log('id from delete ********************', id);
+    // console.log('type of id', typeof id);
+    // Check if actions exist for this meal
+    const actionsExist = await actionPrisma.action.findMany({
+      where: { mealId: id },
+    });
+
+    if (actionsExist.length > 0) {
+      const actionsExist = await actionPrisma.action.findMany({
+        where: { mealId: id },
+      });
+
+      await actionPrisma.action.deleteMany({
+        where: { mealId: id },
+      });
+    }
+
+    // Delete the meal
+    await prisma.meal.delete({
+      where: { id },
+    });
+
+    //! هذه خاصة بالأدمن فقط لحذف أي منشور مخالف
+
+    // Invalidate cache related to meals
+    invalidateCacheByPrefix('meals_');
+
+    return new Response(
+      JSON.stringify({
+        message: 'Meal deleted successfully ✔',
+      }),
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error('Error deleting meal:', error);
+    return new Response(
+      JSON.stringify({
+        error: 'Internal Server Error',
+      }),
+      { status: 500 }
+    );
+  } finally {
+    await prisma.$disconnect();
+    await actionPrisma.$disconnect();
+  }
+}
+
+// import prisma from '../../../lib/PrismaClient';
 
 // export async function GET(req) {
-//   // 1. Retrieve API key securely:
-//   const { NEXT_PUBLIC_MONGODB_ID_MEALS } = process.env;
+//   try {
+//     // Parse query parameters for pagination and filtering
+//     const url = new URL(req.url);
+//     const searchParams = url.searchParams;
+//     const page = parseInt(searchParams.get('page')) || 1;
+//     const limit = parseInt(searchParams.get('limit')) || 5;
+//     const selectedValue = searchParams.get('selectedValue');
+//     const id = searchParams.get('id'); // Keep as string
+//     const skip = (page - 1) * limit;
 
-//   if (!NEXT_PUBLIC_MONGODB_ID_MEALS) {
-//     return new Response('Missing environment variable', { status: 500 });
+//     // Build the query object
+//     const query = {};
+//     if (selectedValue) {
+//       query.selectedValue = selectedValue;
+//     }
+
+//     // Fetch the meal from the database
+//     let meals;
+//     if (id) {
+//       meals = await prisma.meal?.findUnique({
+//         where: { id }, // Convert to number for the database
+//       });
+//     } else {
+//       meals = await prisma.meal?.findMany({
+//         where: Object.keys(query).length ? query : undefined,
+//         orderBy: { createdAt: 'desc' },
+//         skip,
+//         take: limit,
+//       });
+//     }
+
+//     // Convert meals to an array if a single object is fetched
+//     meals = Array.isArray(meals) ? meals : [meals].filter(Boolean);
+
+//     return new Response(JSON.stringify(meals), {
+//       headers: { 'Content-Type': 'application/json' },
+//       status: 200,
+//     });
+//   } catch (error) {
+//     console.error('Error fetching recipes:', error);
+//     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
+//       headers: { 'Content-Type': 'application/json' },
+//       status: 500,
+//     });
 //   }
-
-//   // 3. Construct API request URL :
-//   const url = `${process.env.NEXT_PUBLIC_MONGODB_DATA_API_URL_MEALS}/action/find`; // Assuming stored as an environment variable
-
-//   // 4. Construct request body:
-//   const body = JSON.stringify({
-//     dataSource: 'Cluster0', // Replace with your actual data source name
-//     database: 'test',
-//     collection: 'meals',
-//   });
-
-//   // 5. Fetch data using Axios:
-
-//   const config = {
-//     method: 'post',
-//     url,
-//     data: body,
-//     headers: {
-//       Authorization: `Bearer ${NEXT_PUBLIC_MONGODB_ID_MEALS}`,
-//       'Content-Type': 'application/json',
-//     },
-//   };
-
-//   const response = await axios(config);
-//   // console.log(
-//   //   'res ********************************************',
-//   //   response?.data
-//   // );
-
-//   return new Response(JSON.stringify(response?.data?.documents.reverse()));
 // }
 
-// // pages/api/users.js
+// export async function PUT(req) {
+//   const url = new URL(req.url);
+//   const searchParams = url.searchParams;
+//   const id = searchParams.get('id');
+//   const { actionType, newActionValue, ...data } = await req.json();
 
-// export async function GET() {
-//   const apiKey = '669a4d49bec50c1daac43a29';
-//   // 3. Construct API Request URL and Body:
-//   const url = `https://eu-central-1.aws.data.mongodb-api.com/app/data-wbnnweq/endpoint/data/v1/action/find`;
-//   const body = JSON.stringify({
-//     dataSource: 'Cluster0', // Your data source
-//     database: 'test', // Your database name
-//     collection: 'meals', // Your collection name
-//     filter: {}, // Your query filter if any
-//   });
+//   console.log(
+//     'data ***********************************',
+//     actionType,
+//     newActionValue,
+//     id,
+//     typeof id
+//   );
+//   try {
+//     const meal = await prisma.meal.findUnique({ where: { id } });
+//     // console.log('meal ***********************************', meal);
 
-//   // 4. Fetch Data and Handle Errors:
+//     if (actionType && newActionValue) {
+//       // دالة مساعدة لحساب القيم المحدثة
+//       function getUpdatedValue(currentValue, actionValue) {
+//         const newValue = currentValue + (actionValue === 1 ? 1 : -1);
+//         return newValue >= 0 ? newValue : currentValue;
+//       }
 
-//   const response = await fetch(url, {
-//     method: 'GET',
-//     headers: {
-//       Authorization: `Bearer ${apiKey}`,
-//       'Content-Type': 'application/json',
-//     },
-//   });
-//   console.log('response *****************************************', response);
+//       let updateData = {};
+//       if (actionType === 'hearts') {
+//         updateData = { hearts: getUpdatedValue(meal?.hearts, newActionValue) };
+//       } else if (actionType === 'likes') {
+//         updateData = { likes: getUpdatedValue(meal?.likes, newActionValue) };
+//       } else if (actionType === 'emojis') {
+//         updateData = { emojis: getUpdatedValue(meal?.emojis, newActionValue) };
+//       }
 
-//   return Response.json(response);
-// }
+//       await prisma.meal.update({
+//         where: { id },
+//         data: updateData,
+//       });
 
-//*********************************************************************************** */
-// import mongoose from 'mongoose';
-// import { Meal } from '../models/CreateMealModel';
+//       return new Response(
+//         JSON.stringify({ message: 'تم التعديل بنجاح', newActionValue })
+//       );
+//     }
 
-// export async function GET() {
-//   await mongoose.createConnection(process.env.NEXT_PUBLIC_MONGODB_MEALS);
-//   const allCookingRecipes = await Meal?.find();
-//   return Response.json(allCookingRecipes.reverse());
+//     await prisma.meal.update({
+//       where: { id },
+//       data: data,
+//     });
+
+//     return new Response(JSON.stringify({ message: 'تم التعديل بنجاح' }));
+//   } catch (error) {
+//     console.error('Error updating meal:', error);
+//     return new Response(JSON.stringify({ error: 'حدث خطأ ما' }));
+//   }
 // }
 
 // export async function DELETE(req) {
-//   await mongoose.createConnection(process.env.NEXT_PUBLIC_MONGODB_MEALS);
-//   const { _id } = await req.json();
-//   const deleteRecipe = await Meal?.findByIdAndDelete({ _id });
-//   return Response.json(deleteRecipe);
-// }
-// export async function PUT(req) {
-//   await mongoose.createConnection(process.env.NEXT_PUBLIC_MONGODB_MEALS);
-//   const {
-//     _id,
-//     usersWhoLikesThisRecipe,
-//     usersWhoPutEmojiOnThisRecipe,
-//     usersWhoPutHeartOnThisRecipe,
-//     ...rest
-//   } = await req.json();
+//   const { id, email } = await req.json();
+//   console.log(id);
+//   console.log(email);
+//   console.log(typeof id);
 
-//   const updateLikes = await Meal?.findByIdAndUpdate(
-//     { _id },
-//     {
-//       usersWhoLikesThisRecipe: usersWhoLikesThisRecipe,
-//       usersWhoPutEmojiOnThisRecipe: usersWhoPutEmojiOnThisRecipe,
-//       usersWhoPutHeartOnThisRecipe: usersWhoPutHeartOnThisRecipe,
-//       ...rest,
-//     }
+//   // تحقق إذا كانت الوجبة موجودة وأن المستخدم صاحب الوجبة
+//   const mealExists = await prisma.meal?.findMany({
+//     where: { id: id, createdBy: email }, // استخدم id كنص
+//   });
+//   console.log('mealExists', mealExists);
+
+//   if (!mealExists) {
+//     return new Response(
+//       JSON.stringify({
+//         error:
+//           'Meal not found or you do not have permission to delete this meal',
+//       }),
+//       {
+//         status: 404,
+//       }
+//     );
+//   }
+
+//   // تحقق واحذف القلوب المرتبطة (إذا وجدت)
+//   const heartsExist = await prisma.action?.findMany({
+//     where: { mealId: id, userEmail: email }, // استخدم id كنص
+//   });
+
+//   if (heartsExist?.length > 0) {
+//     await prisma.action?.deleteMany({
+//       where: { mealId: id, userEmail: email }, // استخدم id كنص
+//     });
+//   }
+
+//   // احذف الوجبة
+//   await prisma.meal?.delete({
+//     where: { id }, // استخدم id كنص
+//   });
+//   return new Response(
+//     JSON.stringify({
+//       message: 'تم الحذف بنجاح ✔',
+//     })
 //   );
-//   // console.log(updateLikes);
-//   return Response.json(updateLikes);
 // }

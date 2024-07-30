@@ -29,38 +29,42 @@ export default function SearchBar() {
   const router = useRouter();
 
   useEffect(() => {
-    response();
+    search();
   }, [searchedWord, searchedCategory, pageNumber]);
 
-  const response = async () => {
-    const res = await fetch('/api/allCookingRecipes').then((res) =>
-      res?.json()
-    );
-    const startPage = (pageNumber - 1) * 10;
-    const endPage = startPage + 10;
+  const search = async () => {
+    const queryParams = new URLSearchParams({
+      page: pageNumber.toString(),
+      limit: '10',
+    });
 
     const normalizedSearchedWord = normalizeArabic(searchedWord);
     const normalizedCategory = normalizeArabic(searchedCategory);
 
-    if (!searchedCategory && !searchedWord) {
+    if (normalizedSearchedWord) {
+      queryParams.append('mealName', normalizedSearchedWord);
+    }
+
+    if (normalizedCategory) {
+      queryParams.append('selectedValue', normalizedCategory);
+    }
+
+    const res = await fetch(`/api/search?${queryParams.toString()}`);
+    const json = await res?.json();
+
+    if (!normalizedSearchedWord && !normalizedCategory) {
       setIsVisible(false);
     }
 
-    if (searchedWord) {
+    if (normalizedSearchedWord) {
       setIsVisible(true);
-      const searchResults = res.filter((item) =>
-        normalizeArabic(item.mealName).includes(normalizedSearchedWord)
-      );
-      setSearchedValues(searchResults.slice(startPage, endPage));
+      setSearchedValues(json);
       setSearchByCategory([]); // Clear category search results
     }
 
-    if (searchedCategory) {
+    if (normalizedCategory) {
       setIsVisible(true);
-      const categoryResults = res?.filter(
-        (item) => normalizeArabic(item.selectedValue) === normalizedCategory
-      );
-      setSearchByCategory(categoryResults.slice(startPage, endPage));
+      setSearchByCategory(json);
       setSearchedValues([]); // Clear text search results
     }
   };
