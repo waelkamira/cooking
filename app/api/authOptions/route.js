@@ -40,6 +40,7 @@ export const authOptions = {
         }
 
         const checkPassword = await bcrypt.compare(password, user.password);
+
         if (!checkPassword) {
           throw new Error('Incorrect password');
         }
