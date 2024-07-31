@@ -74,6 +74,7 @@ export default function ImageUpload({ image, style }) {
               <div className={style ? style : 'relative w-full h-44'}>
                 <Image
                   priority
+                  loading="lazy"
                   src={imageUrl}
                   layout="fill"
                   objectFit="cover"

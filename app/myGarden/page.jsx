@@ -58,6 +58,7 @@ export default function TheGarden() {
           <div className="relative size-[62px] lg:size-[100px] transition-all duration-200 hover:scale-110">
             <Image
               priority
+              loading="lazy"
               src={icons[i]}
               layout="fill"
               objectFit="contain"
@@ -89,6 +90,7 @@ export default function TheGarden() {
       <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
         <Image
           priority
+          loading="lazy"
           src={'/photo (20).png'}
           layout="fill"
           objectFit="cover"
@@ -98,6 +100,7 @@ export default function TheGarden() {
       <div className="relative w-full h-52 overflow-hidden xl:mt-8">
         <Image
           priority
+          loading="lazy"
           src={'/photo (28).png'}
           layout="fill"
           objectFit="contain"

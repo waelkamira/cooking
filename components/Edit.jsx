@@ -129,6 +129,7 @@ export default function EditRecipe() {
           <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
             <Image
               priority
+              loading="lazy"
               src={'/photo (20).png'}
               layout="fill"
               objectFit="cover"
@@ -148,6 +149,7 @@ export default function EditRecipe() {
           <div className="relative w-full h-52 overflow-hidden my-4 xl:mt-8">
             <Image
               priority
+              loading="lazy"
               src={'/photo (28).png'}
               layout="fill"
               objectFit="contain"
@@ -165,6 +167,7 @@ export default function EditRecipe() {
                 <div className="relative size-14 overflow-hidden rounded-full">
                   <Image
                     priority
+                    loading="lazy"
                     src={editedRecipe?.userImage}
                     fill
                     alt={editedRecipe?.mealName}
@@ -237,6 +240,7 @@ export default function EditRecipe() {
                   <div className="relative size-40 md:size-44 xl:size-48 overflow-hidden rounded-lg grow">
                     <Image
                       priority
+                      loading="lazy"
                       src={'/photo (24).png'}
                       layout="fill"
                       objectFit="contain"
@@ -284,6 +288,7 @@ export default function EditRecipe() {
                   <div className="relative size-28 md:size-40 xl:size-48  overflow-hidden rounded-lg rotate-45">
                     <Image
                       priority
+                      loading="lazy"
                       src={'/photo (25).png'}
                       layout="fill"
                       objectFit="contain"
@@ -333,6 +338,7 @@ export default function EditRecipe() {
                       <div className="relative size-28 md:size-32 xl:size-44 overflow-hidden rounded-lg">
                         <Image
                           priority
+                          loading="lazy"
                           src={'/photo (27).png'}
                           layout="fill"
                           objectFit="contain"
@@ -382,6 +388,7 @@ export default function EditRecipe() {
                   <div className="relative size-28 md:size-32 xl:size-44 overflow-hidden rounded-lg rotate-20">
                     <Image
                       priority
+                      loading="lazy"
                       src={'/photo (26).png'}
                       layout="fill"
                       objectFit="contain"

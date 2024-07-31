@@ -52,6 +52,7 @@ export default function CategoriesSlid() {
           >
             <Image
               priority
+              loading="lazy"
               src={category?.image}
               layout="fill"
               objectFit="cover"

@@ -49,14 +49,14 @@ export default function NewRecipeButton() {
                 ' relative border border-one w-full top-0 flex items-start justify-start rounded-lg overflow-hidden bg-one'
               }
             >
-              <Image priority 
+              <Image  priority loading="lazy" 
                 src={
                   'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718959983/background_uzv9vh.png'
                 }
                 layout="fill"
                 objectFit={'cover'}
                 alt="photo"
-                priority
+                 priority loading="lazy"
               />
             </div> */}
 
@@ -64,6 +64,7 @@ export default function NewRecipeButton() {
               <div className="relative h-44 sm:h-72 lg:h-[600px] w-full ">
                 <Image
                   priority
+                  loading="lazy"
                   src={'/photo (22).png'}
                   fill
                   alt="decoration"
@@ -81,7 +82,7 @@ export default function NewRecipeButton() {
               {session?.status === 'authenticated' && (
                 <div className="w-full">
                   <div className="flex justify-center items-center w-full px-8 mt-8">
-                    {/* <Image priority Upload /> */}
+                    {/* <Image  priority loading="lazy" Upload /> */}
                     <UploadingAndDisplayingImage />
                   </div>
                   <CookingForm

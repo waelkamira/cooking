@@ -102,6 +102,7 @@ export default function Page() {
       <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
         <Image
           priority
+          loading="lazy"
           src={'/photo (19).png'}
           layout="fill"
           objectFit="cover"
@@ -112,6 +113,7 @@ export default function Page() {
       <div className="relative w-full h-52 overflow-hidden xl:mt-8">
         <Image
           priority
+          loading="lazy"
           src={'/photo (28).png'}
           layout="fill"
           objectFit="contain"
