@@ -63,7 +63,6 @@ export default function Item({
           <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
             <Image
               priority
-              priority
               src={'/photo (20).png'}
               layout="fill"
               objectFit="cover"
@@ -82,7 +81,6 @@ export default function Item({
           </div>
           <div className="relative w-full h-52 overflow-hidden my-4 xl:mt-8">
             <Image
-              priority
               priority
               src={'/photo (28).png'}
               layout="fill"

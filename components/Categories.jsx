@@ -53,7 +53,6 @@ export default function CategoriesSlid() {
             <Image
               priority
               src={category?.image}
-              priority
               layout="fill"
               objectFit="cover"
               alt="photo"

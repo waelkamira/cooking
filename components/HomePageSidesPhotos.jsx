@@ -13,7 +13,6 @@ export default function HomePageSidesPhotos() {
           layout="fill"
           objectFit="cover"
           alt="photo"
-          priority
         />
       </div>
       <div className="absolute w-72 h-full -right-[130px] top-0 z-10 rotate-180">
@@ -25,7 +24,6 @@ export default function HomePageSidesPhotos() {
           layout="fill"
           objectFit="cover"
           alt="photo"
-          priority
         />
       </div>
     </div>

@@ -45,7 +45,6 @@ export default function NewRecipe() {
               src={'/photo (22).png'}
               fill
               alt="decoration"
-              priority
               className="m-0"
             />
           </div>
