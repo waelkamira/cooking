@@ -92,11 +92,8 @@ export const authOptions = {
       return token;
     },
     async redirect({ url, baseUrl }) {
-      return baseUrl;
+      return url.startsWith(baseUrl) ? url : baseUrl;
     },
-    // async redirect({ url, baseUrl }) {
-    //   return url.startsWith(baseUrl) ? url : baseUrl;
-    // },
   },
   session: {
     strategy: 'jwt',
