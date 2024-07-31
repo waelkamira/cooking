@@ -41,9 +41,7 @@ export default function NewRecipe() {
         <div className=" w-full h-full flex flex-col items-center justify-start rounded-lg grow z-40 ">
           <div className="relative h-44 sm:h-72 lg:h-96 w-full ">
             <Image
-              src={
-                'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718994271/cooking/yrcziegsjcyzwszl4bjh.png'
-              }
+              src={'/photo (22).png'}
               fill
               alt="decoration"
               priority

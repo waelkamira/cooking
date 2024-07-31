@@ -102,9 +102,7 @@ export default function Page() {
       <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
         <Image
           priority
-          src={
-            'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716951/cooking/88_fob2si.png'
-          }
+          src={'/photo (19).png'}
           layout="fill"
           objectFit="cover"
           alt="photo"
@@ -114,9 +112,7 @@ export default function Page() {
       <div className="relative w-full h-52 overflow-hidden xl:mt-8">
         <Image
           priority
-          src={
-            'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716956/cooking/logo1_uwwlyk.png'
-          }
+          src={'/photo (28).png'}
           layout="fill"
           objectFit="contain"
           alt="photo"

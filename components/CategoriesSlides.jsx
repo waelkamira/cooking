@@ -9,41 +9,31 @@ const animation = { duration: 50000, easing: (t) => t };
 const smallSize = [
   {
     name: 'وجبة رئيسية',
-
-    image:
-      'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716946/cooking/1_trrjyx.png',
+    image: '/photo (5).png',
   },
   {
     name: 'معجنات',
-
-    image:
-      'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718726082/huap39y7d4csoxckmshu.png',
+    image: '/photo (6).png',
   },
   {
     name: 'شوربات',
-
-    image:
-      'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716946/cooking/3_dj2pgz.png',
+    image: '/photo (7).png',
   },
   {
     name: 'مقبلات',
-    image:
-      'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716948/cooking/7_viimv5.png',
+    image: '/photo (11).png',
   },
   {
     name: 'سلطات',
-    image:
-      'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716947/cooking/6_svkguu.png',
+    image: '/photo (10).png',
   },
   {
     name: 'حلويات',
-    image:
-      'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716946/cooking/5_os6okj.png',
+    image: '/photo (9).png',
   },
   {
     name: 'عصائر و مشروبات',
-    image:
-      'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718718789/cooking/xtg1v4qttyutalljjt2x.png',
+    image: '/photo (8).png',
   },
 ];
 

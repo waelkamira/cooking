@@ -63,9 +63,7 @@ export default function NewRecipeButton() {
             <div className="absolute w-full h-full flex flex-col items-center justify-start rounded-lg grow z-50 bg-four ">
               <div className="relative h-44 sm:h-72 lg:h-[600px] w-full ">
                 <Image
-                  src={
-                    'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718994271/cooking/yrcziegsjcyzwszl4bjh.png'
-                  }
+                  src={'/photo (22).png'}
                   fill
                   alt="decoration"
                   priority

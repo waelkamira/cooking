@@ -54,9 +54,7 @@ export default function HomePage() {
           <div className="relative hidden lg:block w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
             <Image
               priority
-              src={
-                'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716946/cooking/1_trrjyx.png'
-              }
+              src={'/photo (5).png'}
               layout="fill"
               objectFit="cover"
               alt="photo"

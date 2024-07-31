@@ -129,9 +129,7 @@ export default function EditRecipe() {
           <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
             <Image
               priority
-              src={
-                'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716950/cooking/99_onuwhf.png'
-              }
+              src={'/photo (20).png'}
               layout="fill"
               objectFit="cover"
               alt="photo"
@@ -150,9 +148,7 @@ export default function EditRecipe() {
           <div className="relative w-full h-52 overflow-hidden my-4 xl:mt-8">
             <Image
               priority
-              src={
-                'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716956/cooking/logo1_uwwlyk.png'
-              }
+              src={'/photo (28).png'}
               layout="fill"
               objectFit="contain"
               alt="photo"
@@ -239,9 +235,7 @@ export default function EditRecipe() {
                   </h1>
                   <div className="relative size-40 md:size-44 xl:size-48 overflow-hidden rounded-lg grow">
                     <Image
-                      src={
-                        'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716954/cooking/item7_eg8p34.png'
-                      }
+                      src={'/photo (24).png'}
                       layout="fill"
                       objectFit="contain"
                       alt={editedRecipe?.mealName}
@@ -287,9 +281,7 @@ export default function EditRecipe() {
                   </h1>
                   <div className="relative size-28 md:size-40 xl:size-48  overflow-hidden rounded-lg rotate-45">
                     <Image
-                      src={
-                        'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716954/cooking/item9_fl6au4.png'
-                      }
+                      src={'/photo (25).png'}
                       layout="fill"
                       objectFit="contain"
                       alt={editedRecipe?.mealName}
@@ -337,9 +329,7 @@ export default function EditRecipe() {
                       </h1>
                       <div className="relative size-28 md:size-32 xl:size-44 overflow-hidden rounded-lg">
                         <Image
-                          src={
-                            'https://res.cloudinary.com/dh2xlutfu/image/upload/v1719047940/cooking/qtkwhiyf7hywaeh3yvd0.png'
-                          }
+                          src={'/photo (27).png'}
                           layout="fill"
                           objectFit="contain"
                           alt={editedRecipe?.mealName}
@@ -387,9 +377,7 @@ export default function EditRecipe() {
                   </h1>
                   <div className="relative size-28 md:size-32 xl:size-44 overflow-hidden rounded-lg rotate-20">
                     <Image
-                      src={
-                        'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716954/cooking/item10_zjts4w.png'
-                      }
+                      src={'/photo (26).png'}
                       layout="fill"
                       objectFit="contain"
                       alt={editedRecipe?.mealName}

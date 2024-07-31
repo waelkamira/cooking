@@ -6,38 +6,31 @@ import { useRouter } from 'next/navigation';
 const smallSize = [
   {
     name: 'وجبة رئيسية',
-    image:
-      'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716947/cooking/11_x2264c.png',
+    image: '/photo (12).png',
   },
   {
     name: 'معجنات',
-    image:
-      'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716948/cooking/22_wqvvw7.png',
+    image: '/photo (13).png',
   },
   {
     name: 'شوربات',
-    image:
-      'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716949/cooking/33_lkcmzq.png',
+    image: '/photo (14).png',
   },
   {
     name: 'مقبلات',
-    image:
-      'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716948/cooking/7_viimv5.png',
+    image: '/photo (11).png',
   },
   {
     name: 'سلطات',
-    image:
-      'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716947/cooking/6_svkguu.png',
+    image: '/photo (10).png',
   },
   {
     name: 'حلويات',
-    image:
-      'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716949/cooking/55_fj72id.png',
+    image: '/photo (16).png',
   },
   {
     name: 'عصائر و مشروبات',
-    image:
-      'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716950/cooking/44_fxwhfg.png',
+    image: '/photo (15).png',
   },
 ];
 export default function CategoriesSlid() {
@@ -58,7 +51,8 @@ export default function CategoriesSlid() {
             onClick={() => router.push(`?searchedCategory=${category?.name}`)}
           >
             <Image
-              src={category.image}
+              src={category?.image}
+              priority
               layout="fill"
               objectFit="cover"
               alt="photo"

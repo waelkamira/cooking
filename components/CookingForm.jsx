@@ -291,9 +291,7 @@ export default function CookingForm({
           <div className="w-full my-4">
             <div className="relative w-full h-28">
               <Image
-                src={
-                  'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716954/cooking/vege1_jvpnhw.png'
-                }
+                src={'/photo (4).png'}
                 layout="fill"
                 objectFit="contain"
                 alt="photo"
@@ -333,9 +331,7 @@ export default function CookingForm({
           <div className="w-full my-4">
             <div className="relative w-full h-28">
               <Image
-                src={
-                  'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716956/cooking/spices_v4n9lm.png'
-                }
+                src={'/photo (3).png'}
                 layout="fill"
                 objectFit="contain"
                 alt="photo"
