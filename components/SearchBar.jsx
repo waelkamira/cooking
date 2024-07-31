@@ -92,7 +92,6 @@ export default function SearchBar() {
             <div className="relative w-full xl:w-96 h-52 overflow-hidden">
               <Image
                 priority
-                priority
                 src="https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716956/cooking/logo1_uwwlyk.png"
                 layout="fill"
                 objectFit="contain"

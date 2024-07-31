@@ -42,7 +42,6 @@ export default function NewRecipe() {
           <div className="relative h-44 sm:h-72 lg:h-96 w-full ">
             <Image
               priority
-              priority
               src={'/photo (22).png'}
               fill
               alt="decoration"

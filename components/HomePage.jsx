@@ -54,7 +54,6 @@ export default function HomePage() {
           <div className="relative hidden lg:block w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
             <Image
               priority
-              priority
               src={'/photo (5).png'}
               layout="fill"
               objectFit="cover"

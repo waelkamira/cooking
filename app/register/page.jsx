@@ -196,7 +196,6 @@ export default function RegisterPage() {
           <div className="relative h-8 w-8">
             <Image
               priority
-              priority
               src={'/google.png'}
               alt="google image"
               layout="fill"

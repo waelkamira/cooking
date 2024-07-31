@@ -114,7 +114,6 @@ export default function Profile() {
                 <div className="absolute right-1 -bottom-6 h-20 w-20 bg-four rounded-full cursor-pointer overflow-hidden z-40">
                   <Image
                     priority
-                    priority
                     Upload
                     image={user?.image}
                     style={
