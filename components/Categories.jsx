@@ -51,7 +51,6 @@ export default function CategoriesSlid() {
             onClick={() => router.push(`?searchedCategory=${category?.name}`)}
           >
             <Image
-              priority
               loading="lazy"
               src={category?.image}
               layout="fill"

@@ -22,7 +22,7 @@ export default function SideBarMenu({ setIsOpen }) {
                 {user?.image && (
                   <Image
                     priority
-                    loading="lazy"
+                    priority
                     src={user?.image}
                     fill
                     alt={session?.data?.user?.name}

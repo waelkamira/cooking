@@ -183,7 +183,7 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
                 {recipe?.userImage && (
                   <Image
                     priority
-                    loading="lazy"
+                    priority
                     src={recipe?.userImage}
                     layout="fill"
                     objectFit="cover"
@@ -223,7 +223,7 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
           {recipe?.image && (
             <Image
               priority
-              loading="lazy"
+              priority
               src={recipe?.image}
               layout="fill"
               objectFit="cover"

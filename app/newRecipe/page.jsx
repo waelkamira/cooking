@@ -42,7 +42,7 @@ export default function NewRecipe() {
           <div className="relative h-44 sm:h-72 lg:h-96 w-full ">
             <Image
               priority
-              loading="lazy"
+              priority
               src={'/photo (22).png'}
               fill
               alt="decoration"
@@ -66,7 +66,7 @@ export default function NewRecipe() {
             <div className="w-full">
               <div className="flex justify-center items-center w-full px-8">
                 <TbArrowBigLeftLinesFilled className="hidden xl:block text-one text-5xl mx-32 animate-pulse transition-all duration-300" />
-                {/* <Image  priority loading="lazy" Upload /> */}
+                {/* <Image priority Upload /> */}
                 <UploadingAndDisplayingImage />
               </div>
               <CookingForm

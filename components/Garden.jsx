@@ -47,7 +47,7 @@ export default function TheGarden() {
           <div className="relative size-[62px] transition-all duration-200 hover:scale-110">
             <Image
               priority
-              loading="lazy"
+              priority
               src={icons[i]}
               layout="fill"
               objectFit="contain"

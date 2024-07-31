@@ -292,7 +292,7 @@ export default function CookingForm({
             <div className="relative w-full h-28">
               <Image
                 priority
-                loading="lazy"
+                priority
                 src={'/photo (4).png'}
                 layout="fill"
                 objectFit="contain"
@@ -334,7 +334,7 @@ export default function CookingForm({
             <div className="relative w-full h-28">
               <Image
                 priority
-                loading="lazy"
+                priority
                 src={'/photo (3).png'}
                 layout="fill"
                 objectFit="contain"

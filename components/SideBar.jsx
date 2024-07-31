@@ -57,7 +57,7 @@ export default function SideBar() {
                 {user?.image && (
                   <Image
                     priority
-                    loading="lazy"
+                    priority
                     src={user?.image}
                     fill
                     alt={user?.name}
@@ -89,7 +89,7 @@ export default function SideBar() {
             <div className=" relative w-full h-32">
               <Image
                 priority
-                loading="lazy"
+                priority
                 src={
                   'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716955/cooking/nasoh_and_bahiga_cn3e7h.png'
                 }

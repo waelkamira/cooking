@@ -74,7 +74,7 @@ export default function UploadingAndDisplayingImage({ img }) {
           <div className="w-full h-72 sm:h-96 border rounded-lg border-green-400">
             <Image
               priority
-              loading="lazy"
+              priority
               src={img}
               alt="Uploaded"
               layout="fill"
@@ -86,7 +86,7 @@ export default function UploadingAndDisplayingImage({ img }) {
           <div className="relative w-full h-72 sm:h-96">
             <Image
               priority
-              loading="lazy"
+              priority
               src={uploadedImage}
               alt="Uploaded"
               layout="fill"
@@ -173,12 +173,12 @@ export default function UploadingAndDisplayingImage({ img }) {
 
 //         {img && !uploadedImage && (
 //           <div className="w-full h-72 sm:h-96 border rounded-lg border-green-400">
-//             <Image  priority loading="lazy"  src={img} alt="Uploaded" layout="fill" objectFit="cover" />
+//             <Image priority  src={img} alt="Uploaded" layout="fill" objectFit="cover" />
 //           </div>
 //         )}
 //         {uploadedImage && (
 //           <div className="relative w-full h-72 sm:h-96">
-//             <Image  priority loading="lazy"
+//             <Image priority
 //               src={uploadedImage}
 //               alt="Uploaded"
 //               layout="fill"

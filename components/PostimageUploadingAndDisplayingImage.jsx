@@ -42,7 +42,7 @@ const UploadForm = () => {
           <div className="relative w-80 h-64">
             <Image
               priority
-              loading="lazy"
+              priority
               src={uploadedImage}
               alt="Uploaded"
               layout="fill"
