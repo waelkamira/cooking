@@ -147,6 +147,7 @@ export default function LogInPage() {
         >
           <div className="relative h-8 w-8 ">
             <Image
+              priority
               src={'/google.png'}
               alt="google image"
               layout="fill"

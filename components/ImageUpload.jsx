@@ -73,6 +73,7 @@ export default function ImageUpload({ image, style }) {
             {(image ? image : imageUrl) && (
               <div className={style ? style : 'relative w-full h-44'}>
                 <Image
+                  priority
                   src={imageUrl}
                   layout="fill"
                   objectFit="cover"

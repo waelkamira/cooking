@@ -63,6 +63,7 @@ export default function Item({
           <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
             <Image
               priority
+              priority
               src={'/photo (20).png'}
               layout="fill"
               objectFit="cover"
@@ -82,6 +83,7 @@ export default function Item({
           <div className="relative w-full h-52 overflow-hidden my-4 xl:mt-8">
             <Image
               priority
+              priority
               src={'/photo (28).png'}
               layout="fill"
               objectFit="contain"
@@ -98,7 +100,9 @@ export default function Item({
               <div className="flex justify-start items-center gap-2 w-full mb-4">
                 <div className="relative size-14 overflow-hidden rounded-full">
                   {!userImage && <LoadingPhoto />}
-                  {userImage && <Image src={userImage} fill alt={mealName} />}
+                  {userImage && (
+                    <Image priority src={userImage} fill alt={mealName} />
+                  )}
                 </div>
                 <div className="flex flex-col justify-center">
                   <h6 className="text-[13px] sm:text-[18px] text-eight select-none">
@@ -119,6 +123,7 @@ export default function Item({
               {image && (
                 <div className="relative w-full h-44 sm:h-96 overflow-hidden rounded-lg border bg-gray-100">
                   <Image
+                    priority
                     src={image}
                     layout="fill"
                     objectFit="cover"
@@ -137,6 +142,7 @@ export default function Item({
                   </h1>
                   <div className="relative size-40 md:size-44 xl:size-48 overflow-hidden rounded-lg grow">
                     <Image
+                      priority
                       src={'/photo (24).png'}
                       layout="fill"
                       objectFit="contain"
@@ -156,6 +162,7 @@ export default function Item({
                   </h1>
                   <div className="relative size-28 md:size-40 xl:size-48  overflow-hidden rounded-lg rotate-45">
                     <Image
+                      priority
                       src={'/photo (25).png'}
                       layout="fill"
                       objectFit="contain"
@@ -177,6 +184,7 @@ export default function Item({
                       </h1>
                       <div className="relative size-28 md:size-32 xl:size-44 overflow-hidden rounded-lg">
                         <Image
+                          priority
                           src={'/photo (27).png'}
                           layout="fill"
                           objectFit="contain"
@@ -198,6 +206,7 @@ export default function Item({
                   </h1>
                   <div className="relative size-28 md:size-32 xl:size-44 overflow-hidden rounded-lg rotate-20">
                     <Image
+                      priority
                       src={'/photo (26).png'}
                       layout="fill"
                       objectFit="contain"

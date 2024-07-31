@@ -6,6 +6,7 @@ export default function HomePageSidesPhotos() {
     <div className="hidden xl:block h-full">
       <div className="absolute w-72 h-full -left-[130px] top-0 z-10 ">
         <Image
+          priority
           src={
             'https://res.cloudinary.com/dh2xlutfu/image/upload/v1719060136/lzyndtjo7n0cr0kkczzd.png'
           }
@@ -17,6 +18,7 @@ export default function HomePageSidesPhotos() {
       </div>
       <div className="absolute w-72 h-full -right-[130px] top-0 z-10 rotate-180">
         <Image
+          priority
           src={
             'https://res.cloudinary.com/dh2xlutfu/image/upload/v1719060136/lzyndtjo7n0cr0kkczzd.png'
           }

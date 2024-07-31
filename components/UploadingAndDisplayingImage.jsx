@@ -72,12 +72,19 @@ export default function UploadingAndDisplayingImage({ img }) {
 
         {img && !uploadedImage && (
           <div className="w-full h-72 sm:h-96 border rounded-lg border-green-400">
-            <Image src={img} alt="Uploaded" layout="fill" objectFit="cover" />
+            <Image
+              priority
+              src={img}
+              alt="Uploaded"
+              layout="fill"
+              objectFit="cover"
+            />
           </div>
         )}
         {uploadedImage && (
           <div className="relative w-full h-72 sm:h-96">
             <Image
+              priority
               src={uploadedImage}
               alt="Uploaded"
               layout="fill"
@@ -164,12 +171,12 @@ export default function UploadingAndDisplayingImage({ img }) {
 
 //         {img && !uploadedImage && (
 //           <div className="w-full h-72 sm:h-96 border rounded-lg border-green-400">
-//             <Image src={img} alt="Uploaded" layout="fill" objectFit="cover" />
+//             <Image priority  src={img} alt="Uploaded" layout="fill" objectFit="cover" />
 //           </div>
 //         )}
 //         {uploadedImage && (
 //           <div className="relative w-full h-72 sm:h-96">
-//             <Image
+//             <Image priority
 //               src={uploadedImage}
 //               alt="Uploaded"
 //               layout="fill"

@@ -21,6 +21,7 @@ export default function SideBarMenu({ setIsOpen }) {
                 {!user?.image && <LoadingPhoto />}
                 {user?.image && (
                   <Image
+                    priority
                     src={user?.image}
                     fill
                     alt={session?.data?.user?.name}

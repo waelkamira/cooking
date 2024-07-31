@@ -55,7 +55,7 @@ export default function SideBar() {
                 {!user?.image && <LoadingPhoto />}
 
                 {user?.image && (
-                  <Image src={user?.image} fill alt={user?.name} />
+                  <Image priority src={user?.image} fill alt={user?.name} />
                 )}
               </div>
               <h1 className=" text-white text-nowrap">{user?.name} </h1>
@@ -82,6 +82,7 @@ export default function SideBar() {
           <div className="p-4 rounded-r-lg bg-four overflow-hidden my-4">
             <div className=" relative w-full h-32">
               <Image
+                priority
                 priority
                 src={
                   'https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716955/cooking/nasoh_and_bahiga_cn3e7h.png'

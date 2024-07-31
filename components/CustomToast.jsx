@@ -19,6 +19,7 @@ export default function CustomToast({
           <div className="flex justify-center items-center gap-2">
             <div className="relative w-14 h-14 flex-shrink-0 pt-0.5 rounded-full ">
               <Image
+                priority
                 className="h-10 w-10 rounded-full"
                 src="/bahiga.png"
                 alt="photo"

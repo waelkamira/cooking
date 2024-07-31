@@ -46,6 +46,7 @@ export default function TheGarden() {
         <div className="bg-four p-1 m-2 rounded-lg overflow-hidden" key={i}>
           <div className="relative size-[62px] transition-all duration-200 hover:scale-110">
             <Image
+              priority
               src={icons[i]}
               layout="fill"
               objectFit="contain"

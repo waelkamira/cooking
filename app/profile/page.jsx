@@ -93,6 +93,7 @@ export default function Profile() {
             <div className="relative w-full ">
               <div className="relative h-96 w-full  rounded-lg">
                 <Image
+                  priority
                   src={'/photo (2).png'}
                   layout="fill"
                   objectFit="cover"
@@ -101,7 +102,7 @@ export default function Profile() {
               </div>
               <div className="relative">
                 {/* <div className="absolute right-1 -bottom-6 h-20 w-20 bg-four border-2 border-one rounded-full cursor-pointer overflow-hidden z-40">
-                  <Image
+                  <Image priority 
                     src={user?.image}
                     layout="fill"
                     objectFit="cover"
@@ -111,7 +112,9 @@ export default function Profile() {
               </div>
               <div className="relative">
                 <div className="absolute right-1 -bottom-6 h-20 w-20 bg-four rounded-full cursor-pointer overflow-hidden z-40">
-                  <ImageUpload
+                  <Image
+                    priority
+                    Upload
                     image={user?.image}
                     style={
                       'peer/image rounded-lg w-20 h-20 cursor-pointer overflow-hidden'
