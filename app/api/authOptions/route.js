@@ -1,8 +1,13 @@
-import userPrisma from '../../../lib/UserPrismaClient';
-
+import { createClient } from '@supabase/supabase-js';
 import bcrypt from 'bcrypt';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
+
+// إعداد Supabase
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_API
+);
 
 export const authOptions = {
   secret: process.env.NEXT_PUBLIC_SECRET,
@@ -30,12 +35,14 @@ export const authOptions = {
       async authorize(credentials) {
         const email = credentials?.email;
         const password = credentials?.password;
-        await userPrisma.$connect(); // التأكد من أن Prisma جاهزة
-        const user = await userPrisma.user.findUnique({
-          where: { email },
-        });
 
-        if (!user) {
+        const { data: user, error } = await supabase
+          .from('User')
+          .select('*')
+          .eq('email', email)
+          .single();
+
+        if (error || !user) {
           throw new Error('Email not found');
         }
 
@@ -55,30 +62,39 @@ export const authOptions = {
       return session;
     },
     async signIn({ account, profile }) {
-      await userPrisma.$connect(); // التأكد من أن Prisma جاهزة
-
       if (account.provider === 'google') {
-        const existingUser = await userPrisma.user.findUnique({
-          where: { email: profile.email },
-        });
+        const { data: existingUser, error: existingUserError } = await supabase
+          .from('User')
+          .select('*')
+          .eq('email', profile.email)
+          .single();
+
+        if (existingUserError && existingUserError.code !== 'PGRST116') {
+          throw new Error(existingUserError.message);
+        }
 
         if (existingUser) {
-          await userPrisma.$connect(); // التأكد من أن Prisma جاهزة
           if (!existingUser.googleId) {
-            await userPrisma.user.update({
-              where: { email: profile.email },
-              data: { googleId: profile.sub },
-            });
+            const { error } = await supabase
+              .from('User')
+              .update({ googleId: profile.sub })
+              .eq('email', profile.email);
+
+            if (error) {
+              throw new Error(error.message);
+            }
           }
         } else {
-          await userPrisma.user.create({
-            data: {
-              email: profile.email,
-              name: profile.name,
-              image: profile.picture,
-              googleId: profile.sub,
-            },
+          const { error } = await supabase.from('User').insert({
+            email: profile.email,
+            name: profile.name,
+            image: profile.picture,
+            googleId: profile.sub,
           });
+
+          if (error) {
+            throw new Error(error.message);
+          }
         }
 
         return true;
@@ -101,7 +117,9 @@ export const authOptions = {
   debug: process.env.NODE_ENV === 'development',
   pages: { signIn: '/login' },
 };
-// import prisma from '../../../lib/PrismaClient';
+
+// import userPrisma from '../../../lib/UserPrismaClient';
+
 // import bcrypt from 'bcrypt';
 // import CredentialsProvider from 'next-auth/providers/credentials';
 // import GoogleProvider from 'next-auth/providers/google';
@@ -132,8 +150,8 @@ export const authOptions = {
 //       async authorize(credentials) {
 //         const email = credentials?.email;
 //         const password = credentials?.password;
-
-//         const user = await prisma.user.findUnique({
+//         await userPrisma.$connect(); // التأكد من أن Prisma جاهزة
+//         const user = await userPrisma.user.findUnique({
 //           where: { email },
 //         });
 
@@ -142,6 +160,7 @@ export const authOptions = {
 //         }
 
 //         const checkPassword = await bcrypt.compare(password, user.password);
+
 //         if (!checkPassword) {
 //           throw new Error('Incorrect password');
 //         }
@@ -156,20 +175,23 @@ export const authOptions = {
 //       return session;
 //     },
 //     async signIn({ account, profile }) {
+//       await userPrisma.$connect(); // التأكد من أن Prisma جاهزة
+
 //       if (account.provider === 'google') {
-//         const existingUser = await prisma.user.findUnique({
+//         const existingUser = await userPrisma.user.findUnique({
 //           where: { email: profile.email },
 //         });
 
 //         if (existingUser) {
+//           await userPrisma.$connect(); // التأكد من أن Prisma جاهزة
 //           if (!existingUser.googleId) {
-//             await prisma.user.update({
+//             await userPrisma.user.update({
 //               where: { email: profile.email },
 //               data: { googleId: profile.sub },
 //             });
 //           }
 //         } else {
-//           await prisma.user.create({
+//           await userPrisma.user.create({
 //             data: {
 //               email: profile.email,
 //               name: profile.name,

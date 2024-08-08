@@ -6,6 +6,7 @@ export default function CurrentUser() {
   const { profile_image } = useContext(inputsContext);
   const [user, setUser] = useState();
   const { data: session, status } = useSession();
+  console.log('profile_image?.image', profile_image?.image);
 
   useEffect(() => {
     if (status === 'authenticated') {
@@ -22,10 +23,10 @@ export default function CurrentUser() {
       // console.log('json', json);
       if (response.ok) {
         if (typeof window !== 'undefined') {
-          localStorage.setItem('CurrentUser', JSON.stringify(json));
+          localStorage.setItem('CurrentUser', JSON.stringify(json[0]));
         }
 
-        setUser(json);
+        setUser(json[0]);
       }
     }
   }

@@ -21,14 +21,14 @@ export default function Profile() {
   const user = CurrentUser();
   const { profile_image, dispatch } = useContext(inputsContext);
   const [newUserName, setNewUserName] = useState('');
-  const [newImage, setNewImage] = useState('');
+  console.log('user?.image', user?.image);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const newName = JSON.parse(localStorage.getItem('CurrentUser'));
       setNewUserName(newName?.name);
     }
-    setNewImage(profile_image?.image);
+    // setNewImage(profile_image?.image);
     editProfileImageAndUserName();
   }, [profile_image?.image]);
 
@@ -63,6 +63,7 @@ export default function Profile() {
       }
     }
   }
+
   return (
     <>
       {session?.status === 'unauthenticated' && (
@@ -94,34 +95,23 @@ export default function Profile() {
               <div className="relative h-96 w-full  rounded-lg">
                 <Image
                   priority
-                  src={'/photo (2).png'}
+                  src={user?.image}
                   layout="fill"
                   objectFit="cover"
                   alt={user?.name}
                 />
               </div>
               <div className="relative">
-                {/* <div className="absolute right-1 -bottom-6 h-20 w-20 bg-four border-2 border-one rounded-full cursor-pointer overflow-hidden z-40">
-                  <Image priority 
-                    src={user?.image}
-                    layout="fill"
-                    objectFit="cover"
-                    alt={user?.name}
-                  />
-                </div> */}
-              </div>
-              <div className="relative">
-                <div className="absolute right-1 -bottom-6 h-20 w-20 bg-four rounded-full cursor-pointer overflow-hidden z-40">
-                  <Image
+                <div className="absolute right-1 -bottom-6 h-20 w-20  rounded-full cursor-pointer overflow-hidden z-40">
+                  <ImageUpload
                     priority
-                    Upload
-                    image={user?.image}
+                    src={user?.image}
                     style={
                       'peer/image rounded-lg w-20 h-20 cursor-pointer overflow-hidden'
                     }
                   />
                 </div>
-                <MdOutlineAddPhotoAlternate className="absolute text-one text-xl -top-12 right-1 z-50" />
+                {/* <MdOutlineAddPhotoAlternate className="absolute text-one text-xl -top-12 right-1 z-50" /> */}
               </div>
             </div>
 

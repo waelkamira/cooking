@@ -48,7 +48,7 @@ export default function SideBarMenu({ setIsOpen }) {
           <Button title={'شو أطبخ اليوم؟'} path={'/whatToCookToday'} />
           <Button title={'طبخاتي'} path="/myRecipes" />
           <Button title={'وصفات أعجبتني'} path={'/favoritePosts'} />
-          {/* <Button title={'الجوائز'} path="/myGarden" /> */}
+          <Button title={'الجوائز'} path="/myGarden" />
           <Button title={'تسجيل الخروج'} path={'/'} onClick={() => signOut()} />
         </div>
       )}

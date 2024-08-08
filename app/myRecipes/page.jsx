@@ -185,8 +185,8 @@ export default function MyRecipes() {
                 className="flex items-center justify-around cursor-pointer"
                 onClick={() => setPageNumber(pageNumber + 1)}
               >
-                <h1 className="text-white font-bold">الصفحة التالية</h1>
-                <MdKeyboardDoubleArrowRight className="text-2xl animate-pulse text-one select-none" />
+                <h1 className="text-white">الصفحة التالية</h1>
+                <MdKeyboardDoubleArrowRight className="text-2xl animate-pulse text-green-500 select-none" />
               </div>
             </Link>
           )}
@@ -196,8 +196,8 @@ export default function MyRecipes() {
                 className="flex items-center justify-around cursor-pointer"
                 onClick={() => setPageNumber(pageNumber - 1)}
               >
-                <MdKeyboardDoubleArrowLeft className="text-2xl animate-pulse text-one select-none" />
-                <h1 className="text-white font-bold">الصفحة السابقة</h1>
+                <MdKeyboardDoubleArrowLeft className="text-2xl animate-pulse text-green-500 select-none" />
+                <h1 className="text-white">الصفحة السابقة</h1>
               </div>
             </Link>
           )}

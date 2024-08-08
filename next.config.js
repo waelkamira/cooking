@@ -18,6 +18,22 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'i.imgur.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.allrecipes.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'kitchen.sayidaty.net',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cooking-ways.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'v-genius.fatafeat.com',
+      },
     ],
   },
 };

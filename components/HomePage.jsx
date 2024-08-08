@@ -9,7 +9,6 @@ import SideBarMenu from './SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import CategoriesSlides from './CategoriesSlides';
 import { Suspense } from 'react';
-import VideoPlayer from './VideoPlayer';
 import UploadingAndDisplayingImage from './UploadingAndDisplayingImage';
 import { useRouter } from 'next/navigation';
 import Button from './Button';
@@ -19,7 +18,7 @@ export default function HomePage() {
   const session = useSession();
   const router = useRouter();
 
-  //! التطبيق build حتى لاتسبب مشكلة عند  useEffect يجب وضع الجملة الشرطية هذه ضمن
+  //! التطبيق build حتى لا تسبب مشكلة عند  useEffect يجب وضع الجملة الشرطية هذه ضمن
   // useEffect(() => {
   //   if (session?.data?.user?.email === undefined) {
   //     router.push('/login');
@@ -61,7 +60,6 @@ export default function HomePage() {
             />
           </div>
           <SearchBar />
-          {/* <VideoPlayer /> */}
           <div className={'xl:hidden'}>
             <NewRecipeButton />
             {session?.status === 'unauthenticated' && (

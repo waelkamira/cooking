@@ -2,7 +2,7 @@
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import CurrentUser from '../../components/CurrentUser';
-import { IoMdClose } from 'react-icons/io';
+import { IoMdClose, IoIosSearch } from 'react-icons/io';
 import toast from 'react-hot-toast';
 import CustomToast from '../../components/CustomToast';
 import BackButton from '../../components/BackButton';
@@ -25,15 +25,14 @@ export default function Users() {
 
   useEffect(() => {
     fetchAllUsers();
-  }, [findUser, pageNumber]);
-
+  }, []);
   if (!session?.status === 'authenticated' || !admin?.isAdmin) {
     return null;
   }
 
   async function fetchAllUsers() {
     const response = await fetch(
-      `/api/user?pageNumber=${pageNumber}&searchQuery=${findUser}`
+      `/api/allUsers?pageNumber=${pageNumber}&searchQuery=${findUser}&limit=5&isAdmin=true`
     );
     const json = await response.json();
     if (response.ok) {
@@ -63,6 +62,17 @@ export default function Users() {
     }
   }
 
+  const handleSearch = () => {
+    setPageNumber(1);
+    fetchAllUsers();
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <div className="relative flex flex-col justify-center items-center w-full bg-gray-800 rounded-lg text-lg text-white">
       <BackButton />
@@ -79,6 +89,7 @@ export default function Users() {
         <input
           value={findUser}
           onChange={(e) => setFindUser(e.target.value)}
+          onKeyDown={handleKeyDown}
           type="text"
           id="user"
           name="user"
@@ -86,6 +97,12 @@ export default function Users() {
           autoFocus
           className="text-right w-full p-2 rounded-lg text-lg outline-none focus:outline-one h-10 text-black"
         />
+        <button
+          onClick={handleSearch}
+          className="flex items-center justify-center p-2 rounded-lg bg-one text-white"
+        >
+          <IoIosSearch className="text-2xl" />
+        </button>
       </div>
       <div className="relative flex justify-between items-center p-4 sm:p-8 w-full">
         <h1>جميع المستخدمين :</h1>

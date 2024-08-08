@@ -94,28 +94,23 @@ export default function SideBar() {
             <div className="hidden lg:flex flex-col justify-between items-center w-full h-full rounded-r-lg">
               <NewRecipeButton />
             </div>
-
             <Button
               title={'شو أطبخ اليوم؟'}
               style={' '}
               path="/whatToCookToday"
             />
-
             <Button title={'طبخاتي'} style={' '} path="/myRecipes" />
             <Button title={'وصفات أعجبتني'} style={' '} path="/favoritePosts" />
-            {/* {userRecipeCount > 0 && (
-              <Button title={'الجوائز'} style={' '} path="/myGarden" />
-            )} */}
-
+            <Button title={'الجوائز'} style={' '} path="/myGarden" />
             {session?.status === 'authenticated' && user?.isAdmin && (
               <Button title={'المستخدمين'} style={' '} path="/users" />
             )}
           </div>
-          {/* {userRecipeCount > 0 && (
+          {userRecipeCount > 0 && (
             <div className="p-4 rounded-r-lg bg-four overflow-hidden my-4">
               <TheGarden />
             </div>
-          )} */}
+          )}
 
           <div className="px-2 rounded-r-lg bg-four overflow-hidden my-4">
             <Categories />

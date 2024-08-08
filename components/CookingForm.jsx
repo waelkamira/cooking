@@ -42,6 +42,7 @@ export default function CookingForm({
   });
 
   const [inputs, setInputs] = useState({
+    id: uuidv4(),
     mealName: '',
     selectedValue: '',
     image: '',

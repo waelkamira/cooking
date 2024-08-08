@@ -1,18 +1,24 @@
-import userPrisma from '../../../lib/UserPrismaClient';
 import bcrypt from 'bcrypt';
+import { supabase } from '../../../lib/supabaseClient';
+import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(req) {
-  await userPrisma.$connect(); // التأكد من أن Prisma جاهزة
-
   try {
     const { name, email, password } = await req.json();
 
     // Check if the user already exists
-    const isExist = await userPrisma.user.findUnique({
-      where: { email },
-    });
+    const { data: existingUser, error: existError } = await supabase
+      .from('User')
+      .select('*')
+      .eq('email', email)
+      .single();
 
-    if (isExist) {
+    if (existError && existError.code !== 'PGRST116') {
+      // إذا كان الخطأ ليس بسبب عدم وجود المستخدم
+      throw existError;
+    }
+
+    if (existingUser) {
       throw new Error(
         'هذا الايميل موجود بالفعل قم بتسجيل الدخول او استخدم بريد الكتروني أخر'
       );
@@ -22,13 +28,23 @@ export async function POST(req) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create a new user
-    const user = await userPrisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-      },
-    });
+    const { data: user, error: createError } = await supabase
+      .from('User')
+      .insert([
+        {
+          id: uuidv4(),
+          name,
+          email,
+          password: hashedPassword,
+          image:
+            'https://res.cloudinary.com/dh2xlutfu/image/upload/v1722957470/cooking/q9s2dvz8slw43lnyl0gf.png',
+        },
+      ])
+      .single();
+
+    if (createError) {
+      throw createError;
+    }
 
     return new Response(JSON.stringify(user), { status: 201 });
   } catch (error) {
@@ -38,15 +54,18 @@ export async function POST(req) {
     });
   }
 }
-// import prisma from '../../../lib/PrismaClient';
+
+// import userPrisma from '../../../lib/UserPrismaClient';
 // import bcrypt from 'bcrypt';
 
 // export async function POST(req) {
+//   await userPrisma.$connect(); // التأكد من أن Prisma جاهزة
+
 //   try {
 //     const { name, email, password } = await req.json();
 
 //     // Check if the user already exists
-//     const isExist = await prisma.user.findUnique({
+//     const isExist = await userPrisma.user.findUnique({
 //       where: { email },
 //     });
 
@@ -60,7 +79,7 @@ export async function POST(req) {
 //     const hashedPassword = await bcrypt.hash(password, 10);
 
 //     // Create a new user
-//     const user = await prisma.user.create({
+//     const user = await userPrisma.user.create({
 //       data: {
 //         name,
 //         email,
@@ -75,61 +94,4 @@ export async function POST(req) {
 //       status: 500,
 //     });
 //   }
-// }
-
-// // import { usersConnection } from '../../../lib/MongoDBConnections'; // Adjust the import path accordingly
-// const initializeConnections = require('../../../lib/MongoDBConnections');
-// const { usersConnection } = await initializeConnections();
-// import { User } from '../models/UserModel';
-// import bcrypt from 'bcrypt';
-
-// // Ensure the connection is ready before using it
-// async function ensureConnection() {
-//   if (!usersConnection.readyState) {
-//     await usersConnection.openUri(process.env.NEXT_PUBLIC_MONGODB);
-//   }
-// }
-
-// export async function POST(req) {
-//   await ensureConnection();
-
-//   const { name, email, password } = await req.json();
-//   const UserModel = usersConnection.model('User', User.schema);
-
-//   const isExist = await UserModel.findOne({ email });
-//   if (isExist) {
-//     throw new Error(
-//       'هذا الايميل موجود بالفعل قم بتسجيل الدخول او استخدم بريد الكتروني أخر'
-//     );
-//   }
-
-//   const hashedPassword = await bcrypt.hash(password, 10);
-//   const user = await UserModel.create({
-//     name,
-//     email,
-//     password: hashedPassword,
-//   });
-
-//   return new Response(JSON.stringify(user), { status: 201 });
-// }
-
-// import mongoose from 'mongoose';
-// import { User } from '../models/UserModel';
-// import bcrypt from 'bcrypt';
-
-// export async function POST(req) {
-//   await mongoose.createConnection(process.env.NEXT_PUBLIC_MONGODB);
-//   const { name, email, password } = await req.json();
-
-//   const isExist = await User.findOne({ email });
-//   if (isExist) {
-//     throw new Error(
-//       'هذا الايميل موجود بالفعل قم بتسجيل الدخول او استخدم بريد الكتروني أخر'
-//     );
-//   }
-//   const hashedPassword = await bcrypt.hash(password, 10);
-//   const user = await User.create({ name, email, password: hashedPassword });
-//   // console.log('user', user);
-
-//   return Response.json(user);
 // }

@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { IoIosSearch } from 'react-icons/io';
 import SmallItem from './SmallItem';
 import Image from 'next/image';
@@ -28,14 +28,10 @@ export default function SearchBar() {
   const searchedCategory = searchCategory.get('searchedCategory');
   const router = useRouter();
 
-  useEffect(() => {
-    search();
-  }, [searchedWord, searchedCategory, pageNumber]);
-
   const search = async () => {
     const queryParams = new URLSearchParams({
       page: pageNumber.toString(),
-      limit: '10',
+      limit: '3',
     });
 
     const normalizedSearchedWord = normalizeArabic(searchedWord);
@@ -66,6 +62,17 @@ export default function SearchBar() {
       setIsVisible(true);
       setSearchByCategory(json);
       setSearchedValues([]); // Clear text search results
+    }
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    search();
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      search();
     }
   };
 
@@ -103,15 +110,26 @@ export default function SearchBar() {
             <input
               value={searchedWord}
               onChange={(e) => setSearchedWord(e.target.value)}
+              onKeyDown={handleKeyDown}
               autoFocus
               type="text"
               id="search_meal"
               name="search_meal"
               placeholder="ابحث عن وصفة طبخ   ..."
-              className="w-full rounded-full border-2 text-lg md:text-xl placeholder:text-lg py-2 px-10 outline-2 placeholder:px-2 focus:outline-one text-right"
+              className=" w-full rounded-full border-2 text-lg md:text-xl placeholder:text-sm sm:placeholder:text-lg py-2 pr-24 lg:pr-28 outline-2 placeholder:px-4 focus:outline-one text-right"
             />
-            <div className="absolute top-3 md:top-4 right-4">
-              <IoIosSearch className="text-one font-bold size-5 mr-1 mt-1 sm:mr-4 sm:mt-0" />
+            <div className="absolute flex items-center top-0 md:top-0 md:right-4 md:w-24 w-[80px] right-0 h-full bg-one rounded-r-full ">
+              <button
+                onClick={handleSearch}
+                className="text-white size-5 sm:mr-4 mb-2 hover:font-bold px-2"
+              >
+                <div className="flex items-center gap-1">
+                  <div className="text-white text-xl">
+                    <IoIosSearch />
+                  </div>
+                  <span className="text-white text-lg"> ابحث</span>
+                </div>
+              </button>
             </div>
           </div>
         </div>
@@ -145,15 +163,14 @@ export default function SearchBar() {
                 </div>
               ))}
             <div className="flex items-center justify-around my-4 mt-8 w-full">
-              {(searchByCategory.length >= 10 ||
-                searchedValues.length >= 10) && (
+              {(searchByCategory.length >= 3 || searchedValues.length >= 3) && (
                 <Link href="#post1">
                   <div
                     className="flex items-center justify-around cursor-pointer"
                     onClick={() => setPageNumber(pageNumber + 1)}
                   >
-                    <h1 className="text-gray-600 font-bold">الصفحة التالية</h1>
-                    <MdKeyboardDoubleArrowRight className="text-2xl animate-pulse" />
+                    <h1 className="text-white font-bold">الصفحة التالية</h1>
+                    <MdKeyboardDoubleArrowRight className="text-2xl animate-pulse text-green-500" />
                   </div>
                 </Link>
               )}
@@ -163,8 +180,8 @@ export default function SearchBar() {
                     className="flex items-center justify-around cursor-pointer"
                     onClick={() => setPageNumber(pageNumber - 1)}
                   >
-                    <MdKeyboardDoubleArrowLeft className="text-2xl animate-pulse" />
-                    <h1 className="text-gray-600 font-bold">الصفحة السابقة</h1>
+                    <MdKeyboardDoubleArrowLeft className="text-2xl animate-pulse text-green-500" />
+                    <h1 className="text-white font-bold">الصفحة السابقة</h1>
                   </div>
                 </Link>
               )}

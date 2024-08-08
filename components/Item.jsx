@@ -195,23 +195,26 @@ export default function Item({
                     </pre>{' '}
                   </>
                 )}
-                <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
-                  <h1 className="text-white font-bold text-2xl lg:text-3xl w-full my-2 select-none">
-                    <span className="text-one font-bold text-2xl mx-2 select-none">
-                      #
-                    </span>
-                    فيديو
-                  </h1>
-                  <div className="relative size-28 md:size-32 xl:size-44 overflow-hidden rounded-lg rotate-20">
-                    <Image
-                      priority
-                      src={'/photo (26).png'}
-                      layout="fill"
-                      objectFit="contain"
-                      alt={mealName}
-                    />
+
+                {(link || iframeSrc) && (
+                  <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
+                    <h1 className="text-white font-bold text-2xl lg:text-3xl w-full my-2 select-none">
+                      <span className="text-one font-bold text-2xl mx-2 select-none">
+                        #
+                      </span>
+                      فيديو
+                    </h1>
+                    <div className="relative size-28 md:size-32 xl:size-44 overflow-hidden rounded-lg rotate-20">
+                      <Image
+                        priority
+                        src={'/photo (26).png'}
+                        layout="fill"
+                        objectFit="contain"
+                        alt={mealName}
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div className="flex justify-center items-center w-full mt-16">
                   {iframeSrc && (
@@ -229,6 +232,7 @@ export default function Item({
                       />
                     </div>
                   )}
+
                   {!iframeSrc && (
                     <div className=" flex flex-col items-center justify-center w-full">
                       <iframe

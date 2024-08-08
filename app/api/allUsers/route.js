@@ -1,25 +1,44 @@
-import { createClient } from '@supabase/supabase-js';
-
-// إعداد Supabase Client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL, // عنوان URL الخاص بـ Supabase
-  process.env.NEXT_PUBLIC_SUPABASE_API // مفتاح API العمومي الخاص بـ Supabase
-);
+import { supabase } from '../../../lib/supabaseClient';
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
-  const email = searchParams.get('email') || '';
-
+  const pageNumber = parseInt(searchParams.get('pageNumber') || '1', 10);
+  const limit = parseInt(searchParams.get('limit') || '5', 10);
+  const searchQuery = searchParams.get('searchQuery') || '';
+  const isAdmin = searchParams.get('isAdmin') === 'true';
   console.log('Full Query String:', req.url);
-  console.log('email', email);
+  console.log(
+    'searchQuery',
+    searchQuery,
+    ' limit',
+    limit,
+
+    'pageNumber',
+    pageNumber,
+    'isAdmin',
+    isAdmin
+  );
   try {
-    if (email) {
+    if (searchQuery && isAdmin) {
       let { data: User, error } = await supabase
         .from('User')
         .select('*')
-        .eq('email', email);
+        .like('email', `%${searchQuery}%`) // استخدم like للبحث الجزئي
+        .range((pageNumber - 1) * limit, pageNumber * limit - 1);
+
+      console.log('User', User);
       if (error) throw error;
-      // console.log('User', User);
+      return Response.json(User);
+    } else if (isAdmin) {
+      let { data: User, error } = await supabase
+        .from('User')
+        .select('email')
+        .order('createdAt', { ascending: false })
+        .range((pageNumber - 1) * limit, pageNumber * limit - 1);
+
+      if (error) throw error;
+      console.log('User', User);
+      console.log('User', User?.length);
       return Response.json(User);
     }
   } catch (error) {
