@@ -7,7 +7,7 @@ import Loading from './Loading';
 export default function TheGarden() {
   const { myRecipes } = useContext(inputsContext);
   const [icons, setIcons] = useState([]);
-  const [userRecipesCount, setUserRecipesCount] = useState(0);
+  const [userRecipesCount, setUserRecipesCount] = useState();
   const [pageNumber, setPageNumber] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 

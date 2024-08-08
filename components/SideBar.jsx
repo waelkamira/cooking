@@ -16,14 +16,14 @@ export default function SideBar() {
   const session = useSession();
   const [newImage, setNewImage] = useState('');
   const user = CurrentUser();
-  const [userRecipeCount, setUserRecipeCount] = useState(0);
+  const [userRecipeCount, setUserRecipeCount] = useState();
 
   // console.log('user', user);
   useEffect(() => {
     getTheUserRecipeCount();
     if (typeof window !== 'undefined') {
-      const ima = localStorage.getItem('image');
-      setNewImage(ima);
+      const img = localStorage.getItem('image');
+      setNewImage(img);
     }
   }, []);
 
@@ -36,6 +36,7 @@ export default function SideBar() {
       setUserRecipeCount(json?.count);
     }
   }
+  console.log('userRecipeCount from sidebar', userRecipeCount);
 
   return (
     <div className="hidden xl:block w-80 h-full border-l-[16px] border-one">

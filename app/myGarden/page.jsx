@@ -35,7 +35,7 @@ export default function TheGarden() {
           `/api/userIcons?email=${email}&page=${pageNumber}`
         );
         const json = await response.json();
-
+        console.log('json', json);
         if (response.ok) {
           setUserRecipesCount(json.count);
           setIcons(json.icons);

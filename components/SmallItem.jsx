@@ -201,7 +201,7 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
             </div>
           </Link>
 
-          {currentUser?.isAdmin === true && path === '/' && (
+          {currentUser?.isAdmin === 1 && path === '/' && (
             <div
               className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
               onClick={() => handleDeletePost(recipe)}

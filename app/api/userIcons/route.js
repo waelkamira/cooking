@@ -14,7 +14,7 @@ export async function GET(req) {
   const email = searchParams.get('email') || '';
   const page = parseInt(searchParams.get('page')) || 1;
   const limit = 9; // Number of icons per page
-
+  console.log('email', email);
   try {
     if (!email) {
       return NextResponse.json(
@@ -25,9 +25,10 @@ export async function GET(req) {
 
     // Fetch the count of meals created by the user
     const { count: userRecipesCount, error: countError } = await supabase
-      .from('meal')
-      .select('id', { count: 'exact' })
+      .from('Meal')
+      .select('*', { count: 'exact' })
       .eq('createdBy', email);
+    console.log('userRecipesCount', userRecipesCount);
 
     if (countError) {
       throw countError;
