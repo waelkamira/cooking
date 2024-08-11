@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IoIosSearch } from 'react-icons/io';
 import SmallItem from './SmallItem';
 import Image from 'next/image';
@@ -10,7 +10,6 @@ import {
   MdKeyboardDoubleArrowLeft,
 } from 'react-icons/md';
 import { Suspense } from 'react';
-import Button from './Button';
 
 // Function to normalize Arabic text
 const normalizeArabic = (text) => {
@@ -24,11 +23,14 @@ export default function SearchBar() {
   const [searchByCategory, setSearchByCategory] = useState([]);
   const [searchedWord, setSearchedWord] = useState('');
   const [searchedValues, setSearchedValues] = useState([]);
+  const [searchTriggered, setSearchTriggered] = useState(false); // حالة جديدة لتعقب تفعيل البحث
   const searchCategory = useSearchParams();
   const searchedCategory = searchCategory.get('searchedCategory');
   const router = useRouter();
 
+  // Function to perform search
   const search = async () => {
+    setSearchTriggered(true); // تفعيل حالة البحث عند تشغيله
     const queryParams = new URLSearchParams({
       page: pageNumber.toString(),
       limit: '3',
@@ -50,20 +52,27 @@ export default function SearchBar() {
 
     if (!normalizedSearchedWord && !normalizedCategory) {
       setIsVisible(false);
+    } else {
+      setIsVisible(true);
     }
 
     if (normalizedSearchedWord) {
-      setIsVisible(true);
       setSearchedValues(json);
       setSearchByCategory([]); // Clear category search results
     }
 
     if (normalizedCategory) {
-      setIsVisible(true);
       setSearchByCategory(json);
       setSearchedValues([]); // Clear text search results
     }
   };
+
+  // useEffect to perform search when searchedCategory changes or pageNumber changes
+  useEffect(() => {
+    if (searchedCategory) {
+      search();
+    }
+  }, [searchedCategory, pageNumber]); // Added pageNumber to dependencies to fetch new results when page changes
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -81,6 +90,7 @@ export default function SearchBar() {
     setSearchByCategory([]);
     setSearchedValues([]);
     setSearchedWord('');
+    setSearchTriggered(false); // إعادة تعيين حالة البحث عند الإغلاق
     router.push('/');
   };
 
@@ -88,7 +98,7 @@ export default function SearchBar() {
     <Suspense>
       <div
         className={
-          (searchedWord || searchedCategory
+          (searchTriggered || searchedCategory
             ? 'absolute z-50 top-4 left-0 h-screen overflow-scroll'
             : '') +
           ' flex flex-col items-start justify-center w-full lg:mt-8 bg-four rounded-lg'

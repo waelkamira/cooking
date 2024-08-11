@@ -12,7 +12,7 @@ import { Suspense } from 'react';
 import UploadingAndDisplayingImage from './UploadingAndDisplayingImage';
 import { useRouter } from 'next/navigation';
 import Button from './Button';
-
+import VideoPlayer from './VideoPlayer';
 export default function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
@@ -59,6 +59,18 @@ export default function HomePage() {
               alt="photo"
             />
           </div>
+          {/* <div className="h-96 w-96 ">
+            <h1>مشغل</h1>
+            <div class="flex items-center justify-center">
+              <video controls controlsList="nodownload" class="w-96 h-64">
+                <source
+                  src="https://cdn.arteenz.com/75441e2b95254493ab02a4e94d7710e9:arteenz/001/a7lam_wa_fra7/a7lam_wa_fra7_01.mp4"
+                  type="video/mp4"
+                />
+              </video>
+            </div>
+          </div> */}
+
           <SearchBar />
           <div className={'xl:hidden'}>
             <NewRecipeButton />

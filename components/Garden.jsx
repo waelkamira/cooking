@@ -73,17 +73,15 @@ export default function TheGarden() {
 
   return (
     <>
-      {userRecipesCount > 0 && (
-        <div className="text-white">
-          {isLoading && <Loading />}
-          {!isLoading && icons.length === 0 && <Loading />}
-          {!isLoading && icons.length > 0 && (
-            <div className="flex flex-wrap justify-center items-center bg-one rounded-lg size-[270px]">
-              {renderIconsAndPlaceholders()}
-            </div>
-          )}
-        </div>
-      )}
+      <div className="text-white">
+        {isLoading && <Loading />}
+        {!isLoading && icons.length === 0 && <Loading />}
+        {!isLoading && icons.length > 0 && (
+          <div className="flex flex-wrap justify-center items-center bg-one rounded-lg size-[270px]">
+            {renderIconsAndPlaceholders()}
+          </div>
+        )}
+      </div>
     </>
   );
 }

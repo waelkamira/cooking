@@ -39,7 +39,7 @@ export default function SideBarMenu({ setIsOpen }) {
         <Button title={'تسجيل الدخول'} path={'/login'} />
       )}
 
-      {session?.status === 'authenticated' && user?.isAdmin && (
+      {session?.status === 'authenticated' && user?.isAdmin === 0 && (
         <Button path={'/users'} title={'المستخدمين'} />
       )}
       {session?.status === 'authenticated' && (

@@ -103,7 +103,7 @@ export default function SideBar() {
             <Button title={'طبخاتي'} style={' '} path="/myRecipes" />
             <Button title={'وصفات أعجبتني'} style={' '} path="/favoritePosts" />
             <Button title={'الجوائز'} style={' '} path="/myGarden" />
-            {session?.status === 'authenticated' && user?.isAdmin && (
+            {session?.status === 'authenticated' && user?.isAdmin === 0 && (
               <Button title={'المستخدمين'} style={' '} path="/users" />
             )}
           </div>
