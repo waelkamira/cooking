@@ -41,6 +41,20 @@ const clientIds = [
   '561157ee542d9f5',
   '73431a4b7bb5ed0',
   '8a5943196650146',
+  '2732501e00d7113',
+  'ead751bd667f663',
+  'bdc0b39a3027ff2',
+  'f788bfef6e0497a',
+  '0e5e7498da732e0',
+  'd9cbb3d1423c087',
+  '6f95ddb40071379',
+  'b97db63eda77c30',
+  '34859e75993e7a3',
+  'ceaac45ee60faab',
+  '33872b94b7df6e0',
+  'b8e1cfe38064c35',
+  '52731468f6ce6a0',
+  'a10dde5ab9b85b0',
 ];
 
 const imgurClientManager = new ImgurClientManager(clientIds);
