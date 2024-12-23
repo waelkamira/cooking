@@ -1,15 +1,10 @@
-import { createClient } from '@supabase/supabase-js';
+import axios from 'axios';
+import Papa from 'papaparse';
 import NodeCache from 'node-cache';
 
-// إعداد Supabase
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_API
-);
-
-// تحسين التكوين مع تحديد حجم أقصى للذاكرة
+// إعداد التخزين المؤقت
 const cache = new NodeCache({
-  stdTTL: 60 * 10,
+  stdTTL: 60 * 10, // مدة التخزين المؤقت 10 دقائق
   checkperiod: 60,
   maxKeys: 1000,
 });
@@ -29,38 +24,38 @@ function invalidateCacheByPrefix(prefix) {
 
 export async function GET(req) {
   try {
-    // Parse query parameters for pagination and filtering
+    // إعداد الرابط للملف CSV
+    const csvUrl =
+      'https://raw.githubusercontent.com/waelkamira/cooking_csv/refs/heads/main/ar_recipes.csv';
+
+    // تحليل المعاملات الواردة من الطلب
     const url = new URL(req.url);
     const searchParams = url.searchParams;
     const page = parseInt(searchParams.get('page')) || 1;
     const limit = parseInt(searchParams.get('limit')) || 5;
-    const selectedValue = searchParams.get('selectedValue');
-    const id = searchParams.get('id'); // Keep as string
     const skip = (page - 1) * limit;
 
-    // Build the query object
-    let query = supabase
-      .from('Meal')
-      .select('*')
-      .order('createdAt', { ascending: false })
-      .range(skip, skip + limit - 1);
-
-    if (selectedValue) {
-      query = query.eq('selectedValue', selectedValue);
-    }
-
     // إنشاء مفتاح التخزين المؤقت
-    const cacheKey = createCacheKey({ id, page, limit, query });
+    const cacheKey = createCacheKey({ page, limit });
 
     // محاولة الحصول على البيانات من التخزين المؤقت
     let meals = cache.get(cacheKey);
     if (!meals) {
-      const { data, error } = await query;
-      if (error) {
-        throw error;
-      }
+      // جلب البيانات من الرابط
+      const response = await axios.get(csvUrl);
+      const csvData = response.data;
 
-      meals = data;
+      // تحليل البيانات باستخدام PapaParse
+      const parsedData = Papa.parse(csvData, {
+        header: true, // تحليل الرؤوس كأسماء أعمدة
+        skipEmptyLines: true, // تخطي الصفوف الفارغة
+      });
+
+      // البيانات المحللة
+      const allMeals = parsedData.data;
+
+      // تقسيم البيانات للصفحة المطلوبة
+      meals = allMeals.slice(skip, skip + limit);
 
       // تخزين البيانات في التخزين المؤقت
       cache.set(cacheKey, meals);
@@ -69,9 +64,9 @@ export async function GET(req) {
     // مراقبة الأداء
     console.log('Cache Stats:', cache.getStats());
 
-    // console.log('meals', meals);
-    console.log('meals', meals?.length);
-    return Response.json(meals);
+    return new Response(JSON.stringify(meals), {
+      headers: { 'Content-Type': 'application/json' },
+    });
   } catch (error) {
     console.error('Error fetching meals:', error);
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
