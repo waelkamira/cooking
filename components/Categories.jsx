@@ -110,7 +110,7 @@ export default function CategoriesSlid() {
                 />
 
                 {/* Category Info */}
-                <div className="absolute inset-0 z-20 flex items-center justify-between p-4">
+                <div className="absolute inset-0 z-50 flex items-center justify-between p-4">
                   <div className="flex items-center">
                     <span className="text-2xl mr-3">{category.icon}</span>
                     <h3 className="text-white font-bold text-lg drop-shadow-md">

@@ -7,10 +7,10 @@ import { TfiMenuAlt } from 'react-icons/tfi';
 import Button from '../../components/Button';
 import Loading from '../../components/Loading';
 import { useEffect, useState } from 'react';
-
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaArrowRight, FaUtensils, FaDice, FaRandom } from 'react-icons/fa';
+import { FaUtensils, FaDice, FaRandom } from 'react-icons/fa';
+import { FaArrowLeft } from 'react-icons/fa6';
 
 export default function WhatToCookToday() {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +18,7 @@ export default function WhatToCookToday() {
   const [isLoading, setIsLoading] = useState(true);
   const [isShuffling, setIsShuffling] = useState(false);
   const [favorites, setFavorites] = useState([]);
+  const [refreshKey, setRefreshKey] = useState(0); // مفتاح التحديث
 
   useEffect(() => {
     fetchAllMainCookingRecipes();
@@ -25,42 +26,23 @@ export default function WhatToCookToday() {
 
   const fetchAllMainCookingRecipes = async () => {
     setIsLoading(true);
+    setIsShuffling(true);
     try {
       const response = await fetch(
-        '/api/allCookingRecipes?limit=3&selectedValue=وجبة رئيسية'
+        '/api/allCookingRecipes?limit=8&random=true'
       );
       if (response.ok) {
         const json = await response.json();
         setRandomCookingRecipes(json);
+        setRefreshKey((prevKey) => prevKey + 1); // تحديث المفتاح
       }
     } catch (error) {
       console.error('Error fetching recipes:', error);
     } finally {
       setIsLoading(false);
+      setIsShuffling(false);
     }
   };
-
-  function shuffleArray(array) {
-    setIsShuffling(true);
-
-    // Create a copy of the array to avoid mutating the original state
-    const shuffledArray = [...array];
-
-    // Fisher-Yates shuffle algorithm
-    for (let i = shuffledArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledArray[i], shuffledArray[j]] = [
-        shuffledArray[j],
-        shuffledArray[i],
-      ];
-    }
-
-    // Simulate a loading delay for better UX
-    setTimeout(() => {
-      setRandomCookingRecipes(shuffledArray.slice(0, 3));
-      setIsShuffling(false);
-    }, 800);
-  }
 
   const toggleFavorite = (id) => {
     if (favorites.includes(id)) {
@@ -103,20 +85,20 @@ export default function WhatToCookToday() {
           />
 
           {/* Back button */}
-          <div className="absolute top-4 left-4 z-20">
+          <div className="absolute top-4 left-4 z-50 cursor-pointer">
             <Link href="/">
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 className="bg-white/20 backdrop-blur-sm p-3 rounded-full text-white hover:bg-white/30 transition-colors"
               >
-                <FaArrowRight className="h-5 w-5" />
+                <FaArrowLeft className="h-5 w-5" />
               </motion.button>
             </Link>
           </div>
 
           {/* Menu button */}
-          <div className="absolute top-4 right-4 z-20">
+          <div className="absolute top-4 right-4 z-50">
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
@@ -197,8 +179,8 @@ export default function WhatToCookToday() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => shuffleArray(randomCookingRecipes)}
-              disabled={isShuffling || isLoading}
+              onClick={() => fetchAllMainCookingRecipes()}
+              disabled={isShuffling}
               className="w-full bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-orange-700 text-white font-bold py-4 px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isShuffling ? (
@@ -249,9 +231,8 @@ export default function WhatToCookToday() {
               <Loading />
             </div>
           ) : (
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait" key={refreshKey}>
               <motion.div
-                key={randomCookingRecipes.map((r) => r.id).join('-')}
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"

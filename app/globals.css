@@ -7,10 +7,10 @@
 } */
 
 :root {
-  --primary: #fe5800; /* لون أخضر */
+  --primary: #ff7300; /* لون أخضر */
   --primary-foreground: #ffffff; /* لون نص أبيض */
 
-  --secondary: #ff7300; /* لون أخضر فاتح */
+  --secondary: #fe5800; /* لون أخضر فاتح */
   --secondary-foreground: #ffffff; /* لون نص أبيض */
 
   --secondary: #f08b33; /* لون أخضر باهت */
@@ -50,13 +50,10 @@ pre {
   font-family: 'Rubik', sans-serif;
   font-size: 12px;
 }
-.keen-slider__slide {
-  border-radius: 0px;
-}
 
 .btn {
   position: relative;
-  background: rgba(255, 255, 255, 0.171);
+  background: #fd6e00;
   /* color: rgb(255, 255, 255); */
   height: 100%;
   z-index: 1;

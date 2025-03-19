@@ -12,7 +12,7 @@ import { TfiMenuAlt } from 'react-icons/tfi';
 import Loading from '../../components/Loading';
 import Button from '../../components/Button';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaArrowRight, FaHeart, FaPlus, FaUtensils } from 'react-icons/fa';
+import { FaArrowLeft, FaHeart, FaPlus, FaUtensils } from 'react-icons/fa';
 import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from 'react-icons/md';
 
 export default function FavoriteRecipes() {
@@ -141,20 +141,20 @@ export default function FavoriteRecipes() {
           />
 
           {/* Back button */}
-          <div className="absolute top-4 left-4 z-20">
+          <div className="absolute top-4 left-4 z-50">
             <Link href="/">
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 className="bg-white/20 backdrop-blur-sm p-3 rounded-full text-white hover:bg-white/30 transition-colors"
               >
-                <FaArrowRight className="h-5 w-5" />
+                <FaArrowLeft className="h-5 w-5" />
               </motion.button>
             </Link>
           </div>
 
           {/* Menu button */}
-          <div className="absolute top-4 right-4 z-20">
+          <div className="absolute top-4 right-4 z-50">
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}

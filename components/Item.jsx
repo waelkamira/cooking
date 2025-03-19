@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 import {
-  FaArrowRight,
+  FaArrowLeft,
   FaListUl,
   FaClipboardList,
   FaLightbulb,
@@ -20,7 +20,6 @@ import { TfiMenuAlt } from 'react-icons/tfi';
 import Button from './Button';
 import SideBarMenu from './SideBarMenu';
 import LoadingPhoto from './LoadingPhoto';
-import { FaArrowLeft } from 'react-icons/fa6';
 
 export default function Item({
   image,
@@ -140,7 +139,7 @@ export default function Item({
         />
 
         {/* Back button and menu */}
-        <div className="absolute top-4 left-4 z-20">
+        <div className="absolute top-4 left-4 z-50">
           <Link href="/">
             <motion.button
               whileHover={{ scale: 1.1 }}
@@ -152,7 +151,7 @@ export default function Item({
           </Link>
         </div>
 
-        <div className="absolute top-4 right-4 z-20">
+        <div className="absolute top-4 right-4 z-50">
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
@@ -185,7 +184,7 @@ export default function Item({
         </AnimatePresence>
 
         {/* Recipe title and author info */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 p-6 bg-gradient-to-t from-black/80 to-transparent">
+        <div className="absolute bottom-0 left-0 right-0 z-50 p-6 bg-gradient-to-t from-black/80 to-transparent">
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
             {mealName}
           </h1>

@@ -58,7 +58,7 @@ export default function UploadingAndDisplayingImage({ img }) {
           </h1>
         )}
       </div>
-      <div className="absolute top-0 mx-auto w-full h-72 sm:h-96 border-2 border-one rounded-lg overflow-hidden z-20 ">
+      <div className="absolute top-0 mx-auto w-full h-72 sm:h-96 border-2 border-one rounded-lg overflow-hidden z-50 ">
         <div class="absolute top-0 left-0 custom-file-upload w-full h-full">
           <div className="flex flex-col justify-center items-center size-full ">
             <label
@@ -160,7 +160,7 @@ export default function UploadingAndDisplayingImage({ img }) {
 //           </h1>
 //         )}
 //       </div>
-//       <div className="absolute top-0 mx-auto w-full h-72 sm:h-96 border-2 border-one rounded-lg overflow-hidden z-20">
+//       <div className="absolute top-0 mx-auto w-full h-72 sm:h-96 border-2 border-one rounded-lg overflow-hidden z-50">
 //         <div className="absolute top-0 left-0 custom-file-upload w-full h-full">
 //           <div className="flex flex-col justify-center items-center size-full">
 //             <label htmlFor="file-upload" className="absolute top-0 size-full cursor-pointer"></label>

@@ -16,6 +16,7 @@ import Button from './Button';
 import Loading from './Loading';
 import Link from 'next/link';
 import SideBar from './SideBar';
+import { MdEmojiFoodBeverage } from 'react-icons/md';
 
 export default function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -96,7 +97,7 @@ export default function HomePage() {
             </AnimatePresence>
 
             {/* Header content */}
-            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-white px-4">
+            <div className="absolute inset-0 z-50 flex flex-col items-center justify-center text-white px-4">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -199,12 +200,9 @@ export default function HomePage() {
             >
               <div className="flex items-center justify-between mb-4 w-full p-4">
                 <h2 className="text-2xl font-bold">تصفح حسب التصنيف</h2>
-                <Link
-                  href="/categories"
-                  className="text-primary hover:text-secondary transition-colors"
-                >
-                  عرض الكل
-                </Link>
+                <div className="h-14 w-14 rounded-full bg-gradient-to-r from-primary to-secondary text-white flex items-center justify-center mb-4">
+                  <MdEmojiFoodBeverage className="text-3xl" />
+                </div>
               </div>
               <div className="bg-white rounded-xl p-4 shadow-md">
                 <CategoriesSlides />

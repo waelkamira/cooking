@@ -1,88 +1,98 @@
-import { NextResponse } from 'next/server';
-import { supabase } from '../../../lib/supabaseClient';
+import axios from 'axios';
+import Papa from 'papaparse';
+import NodeCache from 'node-cache';
+
+// إعداد التخزين المؤقت
+const cache = new NodeCache({
+  stdTTL: 60 * 10, // مدة التخزين المؤقت 10 دقائق
+  checkperiod: 60,
+  maxKeys: 1000,
+});
+
+function createCacheKey(params) {
+  return `meals_${JSON.stringify(params)}`;
+}
+
+function invalidateCacheByPrefix(prefix) {
+  const keys = cache.keys();
+  keys.forEach((key) => {
+    if (key.startsWith(prefix)) {
+      cache.del(key);
+    }
+  });
+}
 
 export async function GET(req) {
   try {
-    const { searchParams } = new URL(req.url, 'http://localhost');
-    const page = parseInt(searchParams.get('page') || '1', 10);
-    const limit = parseInt(searchParams.get('limit') || '3', 10);
+    // إعداد الرابط للملف CSV
+    const csvUrl =
+      'https://raw.githubusercontent.com/waelkamira/cooking_csv/refs/heads/main/ar_recipes.csv';
+
+    // تحليل المعاملات الواردة من الطلب
+    const url = new URL(req.url);
+    const searchParams = url.searchParams;
+    const page = parseInt(searchParams.get('page')) || 1;
+    const limit = 8; // تم تعيين الحد الأقصى للنتائج هنا
     const mealName = searchParams.get('mealName') || '';
     const selectedValue = searchParams.get('selectedValue') || '';
-
     const skip = (page - 1) * limit;
 
-    // بناء شروط الاستعلام
-    const whereConditions = {};
-    if (mealName) {
-      whereConditions['mealName'] = mealName;
-    }
-    if (selectedValue) {
-      whereConditions['selectedValue'] = selectedValue;
+    // إنشاء مفتاح التخزين المؤقت
+    const cacheKey = createCacheKey({ page, limit, mealName, selectedValue });
+
+    // محاولة الحصول على البيانات من التخزين المؤقت
+    let meals = cache.get(cacheKey);
+    if (!meals) {
+      // جلب البيانات من الرابط
+      const response = await axios.get(csvUrl);
+      const csvData = response.data;
+
+      // تحليل البيانات باستخدام PapaParse
+      const parsedData = Papa.parse(csvData, {
+        header: true, // تحليل الرؤوس كأسماء أعمدة
+        skipEmptyLines: true, // تخطي الصفوف الفارغة
+      });
+
+      // البيانات المحللة
+      let allMeals = parsedData.data;
+
+      // تصفية البيانات بناءً على معلمات البحث
+      if (mealName) {
+        allMeals = allMeals.filter(
+          (meal) =>
+            meal.mealName &&
+            meal.mealName.toLowerCase().includes(mealName.toLowerCase())
+        );
+      }
+
+      if (selectedValue) {
+        allMeals = allMeals.filter(
+          (meal) =>
+            meal.selectedValue &&
+            meal.selectedValue
+              .toLowerCase()
+              .includes(selectedValue.toLowerCase())
+        );
+      }
+
+      // تقسيم البيانات للصفحة المطلوبة
+      meals = allMeals.slice(skip, skip + limit);
+
+      // تخزين البيانات في التخزين المؤقت
+      cache.set(cacheKey, meals);
     }
 
-    // تنفيذ الاستعلام في Supabase
-    let { data: meals, error } = await supabase
-      .from('Meal')
-      .select('*')
-      .ilike('mealName', `%${mealName}%`)
-      .ilike('selectedValue', `%${selectedValue}%`)
-      .range(skip, skip + limit - 1);
+    // مراقبة الأداء
+    console.log('Cache Stats:', cache.getStats());
 
-    if (error) {
-      throw error;
-    }
-
-    return NextResponse.json(meals, { status: 200 });
+    return new Response(JSON.stringify(meals), {
+      headers: { 'Content-Type': 'application/json' },
+    });
   } catch (error) {
     console.error('Error fetching meals:', error);
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
-    );
+    return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 500,
+    });
   }
 }
-
-// import { NextResponse } from 'next/server';
-// import prisma from '../../../lib/PrismaClient';
-
-// export async function GET(req) {
-//   await prisma.$connect(); // التأكد من أن Prisma جاهزة
-
-//   const { searchParams } = new URL(req.url, 'http://localhost');
-//   const page = parseInt(searchParams.get('page') || '1', 10);
-//   const limit = parseInt(searchParams.get('limit') || '3', 10);
-//   const mealName = searchParams.get('mealName') || '';
-//   const selectedValue = searchParams.get('selectedValue') || '';
-
-//   const whereConditions = {};
-
-//   if (mealName) {
-//     whereConditions.mealName = {
-//       contains: mealName,
-//     };
-//   }
-
-//   if (selectedValue) {
-//     whereConditions.selectedValue = {
-//       contains: selectedValue,
-//     };
-//   }
-
-//   try {
-//     const meals = await prisma.meal.findMany({
-//       where: whereConditions,
-//       skip: (page - 1) * limit,
-//       take: limit,
-//     });
-
-//     await prisma.$disconnect(); // إغلاق الاتصال بقاعدة البيانات
-//     return NextResponse.json(meals, { status: 200 });
-//   } catch (error) {
-//     console.error('Error fetching meals:', error);
-//     await prisma.$disconnect(); // إغلاق الاتصال بقاعدة البيانات في حالة الخطأ
-//     return NextResponse.json(
-//       { error: 'Internal Server Error' },
-//       { status: 500 }
-//     );
-//   }
-// }

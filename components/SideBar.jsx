@@ -66,7 +66,7 @@ export default function SideBar() {
       path: '/favoritePosts',
       icon: <FaHeart className="ml-2" />,
     },
-    { title: 'الجوائز', path: '/myGarden', icon: <FaAward className="ml-2" /> },
+    // { title: 'الجوائز', path: '/myGarden', icon: <FaAward className="ml-2" /> },
   ];
 
   // Animation variants
@@ -181,7 +181,7 @@ export default function SideBar() {
               ))}
 
               {/* Admin Section */}
-              {session?.status === 'authenticated' && user?.isAdmin === 0 && (
+              {session?.status === 'authenticated' && user?.isAdmin === 1 && (
                 <motion.div
                   variants={itemVariants}
                   whileHover={{ scale: 1.03 }}
@@ -199,7 +199,7 @@ export default function SideBar() {
               )}
 
               {/* Sign Out Button */}
-              <motion.div
+              {/* <motion.div
                 variants={itemVariants}
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
@@ -213,7 +213,7 @@ export default function SideBar() {
                   onClick={() => signOut()}
                   icon={<FaSignOutAlt className="ml-2" />}
                 />
-              </motion.div>
+              </motion.div> */}
             </motion.div>
           </div>
         )}

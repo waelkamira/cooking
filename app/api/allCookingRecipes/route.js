@@ -1,7 +1,13 @@
 import axios from 'axios';
 import Papa from 'papaparse';
 import NodeCache from 'node-cache';
+import { createClient } from '@supabase/supabase-js';
 
+// إعداد Supabase Client
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL, // عنوان URL الخاص بـ Supabase
+  process.env.NEXT_PUBLIC_SUPABASE_API // مفتاح API العمومي الخاص بـ Supabase
+);
 // إعداد التخزين المؤقت
 const cache = new NodeCache({
   stdTTL: 60 * 10, // مدة التخزين المؤقت 10 دقائق

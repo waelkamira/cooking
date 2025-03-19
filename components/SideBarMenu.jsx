@@ -45,7 +45,7 @@ export default function SideBarMenu({ setIsOpen }) {
       path: '/favoritePosts',
       icon: <FaHeart className="ml-2" />,
     },
-    { title: 'الجوائز', path: '/myGarden', icon: <FaAward className="ml-2" /> },
+    // { title: 'الجوائز', path: '/myGarden', icon: <FaAward className="ml-2" /> },
   ];
 
   // Animation variants

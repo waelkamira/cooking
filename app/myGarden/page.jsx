@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 // import { Card } from '@/components/ui/card';
 import { Menu, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
+import { FaArrowLeft, FaUtensils } from 'react-icons/fa6';
+import { TfiMenuAlt } from 'react-icons/tfi';
 
 // Loading component
 const Loading = ({ myMessage }) => {
@@ -173,27 +175,96 @@ export default function TheGarden() {
   };
 
   return (
-    <div className="relative w-full bg-[#2d3748] min-h-screen p-4 lg:p-8 rounded-lg">
+    <div className="relative w-full bg-gradient-to-b from-primary to-secondary min-h-screen p-4 lg:p-8 rounded-lg">
       {/* Header banner - hidden on small screens */}
-      <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-[#1a202c]">
-        <Image
-          priority
-          src="/placeholder.svg?height=200&width=1200"
-          fill
-          className="object-cover"
-          alt="Garden banner"
-        />
-      </div>
+      {/* Header */}
+      <div className="relative">
+        {/* Background image with overlay */}
+        <div className="relative h-[250px] w-full overflow-hidden">
+          <div className="absolute inset-0 bg-black/40 z-10"></div>
+          <Image
+            priority
+            src="/photo (22).png"
+            layout="fill"
+            objectFit="cover"
+            alt="New Recipe"
+            className="object-center"
+          />
 
-      {/* Main illustration */}
-      <div className="relative w-full h-52 overflow-hidden xl:mt-8">
-        <Image
-          priority
-          src="/placeholder.svg?height=208&width=1200"
-          fill
-          className="object-contain"
-          alt="Garden illustration"
-        />
+          {/* Back button */}
+          <div className="absolute top-4 left-4 z-50">
+            <Link href="/">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="bg-white/20 backdrop-blur-sm p-3 rounded-full text-white hover:bg-white/30 transition-colors"
+              >
+                <FaArrowLeft className="h-5 w-5" />
+              </motion.button>
+            </Link>
+          </div>
+
+          {/* Menu button */}
+          <div className="absolute top-4 right-4 z-50">
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => setIsOpen(!isOpen)}
+              className="bg-white/20 backdrop-blur-sm p-3 rounded-full text-white hover:bg-white/30 transition-colors"
+            >
+              <TfiMenuAlt className="h-5 w-5" />
+            </motion.button>
+          </div>
+
+          {/* Mobile menu */}
+          <AnimatePresence>
+            {isOpen && (
+              <motion.div
+                initial={{ opacity: 0, x: 300 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 300 }}
+                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
+                onClick={() => setIsOpen(false)}
+              >
+                <div
+                  className="absolute top-0 right-0 h-full w-[80%] max-w-sm"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <SideBarMenu setIsOpen={setIsOpen} />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Page title */}
+          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-white">
+            <motion.h1
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="text-3xl md:text-5xl font-bold mb-2 text-center"
+            >
+              <Link
+                href="/newRecipe"
+                className="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+              >
+                إنشاء وصفة جديدة
+              </Link>
+            </motion.h1>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="flex items-center bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full"
+            >
+              <FaUtensils className="mr-2 text-orange-300" />
+              <span className="text-white/90">
+                شارك وصفتك المفضلة مع الآخرين
+              </span>
+            </motion.div>
+          </div>
+        </div>
       </div>
 
       {/* Content section */}
