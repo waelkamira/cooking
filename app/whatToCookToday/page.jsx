@@ -1,99 +1,363 @@
 'use client';
 import SmallItem from '../../components/SmallItem';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
 import BackButton from '../../components/BackButton';
 import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import Button from '../../components/Button';
 import Loading from '../../components/Loading';
+import { useEffect, useState } from 'react';
+
+import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaArrowRight, FaUtensils, FaDice, FaRandom } from 'react-icons/fa';
 
 export default function WhatToCookToday() {
-  const [isOpen, setIsOpen] = useState(false); // State to control sidebar menu visibility
-  const [randomCookingRecipes, setRandomCookingRecipes] = useState([]); // State to store the fetched recipes
+  const [isOpen, setIsOpen] = useState(false);
+  const [randomCookingRecipes, setRandomCookingRecipes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isShuffling, setIsShuffling] = useState(false);
+  const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
-    fetchAllMainCookingRecipes(); // Fetch recipes when the component mounts
+    fetchAllMainCookingRecipes();
   }, []);
 
-  // Fetch recipes from the API with a limit of 3 and filter by 'selectedValue'
   const fetchAllMainCookingRecipes = async () => {
-    const response = await fetch(
-      '/api/allCookingRecipes?limit=3&selectedValue=وجبة رئيسية'
-    );
-    const json = await response?.json();
-    if (response.ok) {
-      setRandomCookingRecipes(json); // Update state with fetched recipes
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        '/api/allCookingRecipes?limit=3&selectedValue=وجبة رئيسية'
+      );
+      if (response.ok) {
+        const json = await response.json();
+        setRandomCookingRecipes(json);
+      }
+    } catch (error) {
+      console.error('Error fetching recipes:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Shuffle the array of recipes and set the state with the first 3 recipes
   function shuffleArray(array) {
-    const shuffledArray = [...array]; // Make a copy of the array to avoid mutating the original state
+    setIsShuffling(true);
+
+    // Create a copy of the array to avoid mutating the original state
+    const shuffledArray = [...array];
+
+    // Fisher-Yates shuffle algorithm
     for (let i = shuffledArray.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [shuffledArray[i], shuffledArray[j]] = [
         shuffledArray[j],
         shuffledArray[i],
-      ]; // Swap elements
+      ];
     }
-    setRandomCookingRecipes(shuffledArray.slice(0, 3)); // Update state with the first 3 shuffled recipes
+
+    // Simulate a loading delay for better UX
+    setTimeout(() => {
+      setRandomCookingRecipes(shuffledArray.slice(0, 3));
+      setIsShuffling(false);
+    }, 800);
   }
 
-  return (
-    <div className="relative w-full bg-four h-full p-4 lg:p-8 rounded-lg">
-      <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
-        <Image
-          priority
-          src={'/photo (17).png'}
-          layout="fill"
-          objectFit="cover"
-          alt="photo"
-        />
-      </div>
-      <div className="relative w-full h-52 overflow-hidden xl:mt-8">
-        <Image
-          priority
-          src={'/photo (28).png'}
-          layout="fill"
-          objectFit="contain"
-          alt="photo"
-        />
-      </div>
-      <div className=" w-full gap-4 my-8">
-        <h1 className="text-white sm:text-lg">
-          اضغط هنا للحصول على ثلاث أفكار جديدة لطبخة اليوم
-        </h1>
-        <Button
-          onClick={() => shuffleArray(randomCookingRecipes)} // Shuffle recipes on button click
-          title={'اقتراح أفكار جديدة'}
-          style={'text-white bg-one rounded-full p-2 text-lg w-full lg:w-1/3'}
-        />
+  const toggleFavorite = (id) => {
+    if (favorites.includes(id)) {
+      setFavorites(favorites.filter((favId) => favId !== id));
+    } else {
+      setFavorites([...favorites, id]);
+    }
+  };
 
-        <BackButton />
-        <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
-          <TfiMenuAlt
-            className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
-            onClick={() => {
-              setIsOpen(!isOpen); // Toggle sidebar menu visibility
-            }}
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-primary to-secondary pb-12">
+      {/* Header */}
+      <div className="relative">
+        {/* Background image with overlay */}
+        <div className="relative h-[300px] w-full overflow-hidden">
+          <div className="absolute inset-0 bg-black/40 z-10"></div>
+          <Image
+            priority
+            src="/photo (17).png"
+            layout="fill"
+            objectFit="cover"
+            alt="Food background"
+            className="object-center"
           />
-          {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
+
+          {/* Back button */}
+          <div className="absolute top-4 left-4 z-20">
+            <Link href="/">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="bg-white/20 backdrop-blur-sm p-3 rounded-full text-white hover:bg-white/30 transition-colors"
+              >
+                <FaArrowRight className="h-5 w-5" />
+              </motion.button>
+            </Link>
+          </div>
+
+          {/* Menu button */}
+          <div className="absolute top-4 right-4 z-20">
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => setIsOpen(!isOpen)}
+              className="bg-white/20 backdrop-blur-sm p-3 rounded-full text-white hover:bg-white/30 transition-colors"
+            >
+              <TfiMenuAlt className="h-5 w-5" />
+            </motion.button>
+          </div>
+
+          {/* Mobile menu */}
+          <AnimatePresence>
+            {isOpen && (
+              <motion.div
+                initial={{ opacity: 0, x: 300 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 300 }}
+                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
+                onClick={() => setIsOpen(false)}
+              >
+                <div
+                  className="absolute top-0 right-0 h-full w-[80%] max-w-sm"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <SideBarMenu setIsOpen={setIsOpen} />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Page title */}
+          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-white">
+            <motion.h1
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="text-3xl md:text-5xl font-bold mb-4 text-center"
+            >
+              ماذا أطبخ اليوم؟
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="text-lg text-white/90 max-w-xl text-center px-4"
+            >
+              احصل على اقتراحات لوصفات شهية لوجبة اليوم
+            </motion.p>
+          </div>
         </div>
       </div>
-      <h1 className="grow text-sm sm:text-lg lg:text-2xl w-full text-white text-center select-none">
-        الأفكار المقترحة لطبخة اليوم
-      </h1>
-      <div className="my-8">
-        {randomCookingRecipes?.length === 0 && <Loading />}
-        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 justify-center items-center w-full ">
-          {randomCookingRecipes?.length > 0 &&
-            randomCookingRecipes.map((recipe, index) => (
-              <div className="relative " key={index}>
-                <SmallItem recipe={recipe} index={index} show={false} />
+
+      {/* Main content */}
+      <div className="container mx-auto px-4 -mt-16 relative z-30">
+        {/* Suggestion card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="bg-white rounded-xl shadow-xl overflow-hidden mb-12"
+        >
+          <div className="p-6 md:p-8">
+            <div className="flex items-center mb-6">
+              <div className="h-12 w-12 bg-orange-100 rounded-full flex items-center justify-center mr-4">
+                <FaUtensils className="h-6 w-6 text-primary" />
               </div>
-            ))}
+              <div>
+                <h2 className="text-2xl font-bold text-gray-800">
+                  اقتراحات الطبخ
+                </h2>
+                <p className="text-gray-600">
+                  اضغط على الزر للحصول على ثلاث أفكار جديدة لطبخة اليوم
+                </p>
+              </div>
+            </div>
+
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => shuffleArray(randomCookingRecipes)}
+              disabled={isShuffling || isLoading}
+              className="w-full bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-orange-700 text-white font-bold py-4 px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              {isShuffling ? (
+                <div className="flex items-center">
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  جاري الاقتراح...
+                </div>
+              ) : (
+                <>
+                  <FaDice className="h-5 w-5 ml-2" />
+                  اقتراح أفكار جديدة
+                </>
+              )}
+            </motion.button>
+          </div>
+        </motion.div>
+
+        {/* Recipe suggestions */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-white flex items-center">
+              <FaRandom className="ml-2" />
+              الأفكار المقترحة لطبخة اليوم
+            </h2>
+          </div>
+
+          {isLoading ? (
+            <div className="flex justify-center items-center min-h-[300px] bg-white/10 backdrop-blur-sm rounded-xl">
+              <Loading />
+            </div>
+          ) : (
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={randomCookingRecipes.map((r) => r.id).join('-')}
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              >
+                {randomCookingRecipes.length > 0 ? (
+                  randomCookingRecipes.map((recipe, index) => (
+                    <motion.div
+                      key={recipe.id || index}
+                      variants={itemVariants}
+                      transition={{ duration: 0.3 }}
+                      className="transform transition-all duration-300 hover:-translate-y-2"
+                    >
+                      <SmallItem recipe={recipe} index={index} show={false} />
+                    </motion.div>
+                  ))
+                ) : (
+                  <motion.div
+                    variants={itemVariants}
+                    className="col-span-full flex flex-col items-center justify-center bg-white/10 backdrop-blur-sm rounded-xl p-8 text-center"
+                  >
+                    <div className="h-20 w-20 bg-white/20 rounded-full flex items-center justify-center mb-4">
+                      <FaUtensils className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-2">
+                      لا توجد وصفات متاحة
+                    </h3>
+                    <p className="text-white/80 mb-6">
+                      لم نتمكن من العثور على وصفات. يرجى المحاولة مرة أخرى
+                      لاحقاً.
+                    </p>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={fetchAllMainCookingRecipes}
+                      className="bg-white text-primary font-bold py-2 px-6 rounded-full shadow-md hover:shadow-lg"
+                    >
+                      إعادة المحاولة
+                    </motion.button>
+                  </motion.div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          )}
         </div>
+
+        {/* Tips section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          className="bg-white/10 backdrop-blur-sm rounded-xl p-6 md:p-8 text-white"
+        >
+          <h3 className="text-xl font-bold mb-4">نصائح للطبخ</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-white/10 rounded-lg p-4">
+              <h4 className="font-bold mb-2 flex items-center">
+                <span className="h-6 w-6 bg-white/20 rounded-full flex items-center justify-center mr-2 text-sm">
+                  1
+                </span>
+                خطط لوجباتك مسبقاً
+              </h4>
+              <p className="text-white/80 text-sm">
+                التخطيط المسبق للوجبات يساعدك على توفير الوقت والجهد ويضمن تناول
+                وجبات متوازنة.
+              </p>
+            </div>
+            <div className="bg-white/10 rounded-lg p-4">
+              <h4 className="font-bold mb-2 flex items-center">
+                <span className="h-6 w-6 bg-white/20 rounded-full flex items-center justify-center mr-2 text-sm">
+                  2
+                </span>
+                استخدم المكونات الموسمية
+              </h4>
+              <p className="text-white/80 text-sm">
+                المكونات الموسمية تكون أكثر طزاجة ونكهة وغالباً ما تكون أقل
+                تكلفة.
+              </p>
+            </div>
+            <div className="bg-white/10 rounded-lg p-4">
+              <h4 className="font-bold mb-2 flex items-center">
+                <span className="h-6 w-6 bg-white/20 rounded-full flex items-center justify-center mr-2 text-sm">
+                  3
+                </span>
+                جرب وصفات جديدة
+              </h4>
+              <p className="text-white/80 text-sm">
+                تجربة وصفات جديدة تضيف تنوعاً لمائدتك وتساعدك على تطوير مهاراتك
+                في الطبخ.
+              </p>
+            </div>
+            <div className="bg-white/10 rounded-lg p-4">
+              <h4 className="font-bold mb-2 flex items-center">
+                <span className="h-6 w-6 bg-white/20 rounded-full flex items-center justify-center mr-2 text-sm">
+                  4
+                </span>
+                حضّر وجبات إضافية
+              </h4>
+              <p className="text-white/80 text-sm">
+                طبخ كميات إضافية يوفر لك وجبات جاهزة للأيام المزدحمة ويقلل من
+                هدر الطعام.
+              </p>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

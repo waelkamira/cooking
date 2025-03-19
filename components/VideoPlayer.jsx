@@ -56,7 +56,7 @@ export default function VideoPlayer() {
         </button>
         <button
           onClick={toggleFullscreen}
-          className="text-white p-2 rounded-full bg-green-600 hover:bg-green-500 focus:outline-none"
+          className="text-white p-2 rounded-full bg-secondary hover:bg-primary focus:outline-none"
         >
           ⛶
         </button>

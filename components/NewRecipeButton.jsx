@@ -16,11 +16,7 @@ export default function NewRecipeButton() {
 
   return (
     <div className="w-full rounded-lg z-50 ">
-      <Button
-        title={'إنشاء وصفة جديدة'}
-        style={' '}
-        onClick={() => setIsVisible(true)}
-      />
+      <Button title={'إنشاء وصفة جديدة'} style={' '} path="/newRecipe" />
 
       {isVisible && (
         <div
@@ -28,7 +24,7 @@ export default function NewRecipeButton() {
           onClick={() => setIsVisible(false)}
         >
           <div
-            className="absolute top-2 right-2 sm:top-16 sm:right-16 flex justify-center items-center z-50 bg-five hover:bg-one cursor-pointer h-fit px-4 py-1 text-white font-semibold rounded-lg hover:scale-105 shadow-lg "
+            className="absolute top-2 right-2 sm:top-16 sm:right-16 flex justify-center items-center z-50 bg-five hover:bg-primary cursor-pointer h-fit px-4 py-1 text-white font-semibold rounded-lg hover:scale-105 shadow-lg "
             onClick={() => setIsVisible(false)}
           >
             <h1 className="tex-sm">إغلاق</h1>
@@ -46,7 +42,7 @@ export default function NewRecipeButton() {
             {/* <div
               className={
                 (session?.status === 'authenticated' ? 'h-full' : 'h-[700px]') +
-                ' relative border border-one w-full top-0 flex items-start justify-start rounded-lg overflow-hidden bg-one'
+                ' relative border border-one w-full top-0 flex items-start justify-start rounded-lg overflow-hidden bg-primary'
               }
             >
               <Image priority 

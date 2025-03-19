@@ -7,37 +7,41 @@ import React, { useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
 import CustomToast from '../../components/CustomToast';
-import BackButton from '../../components/BackButton';
-import {
-  MdKeyboardDoubleArrowRight,
-  MdKeyboardDoubleArrowLeft,
-} from 'react-icons/md';
 import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import Loading from '../../components/Loading';
 import Button from '../../components/Button';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaArrowRight, FaHeart, FaPlus, FaUtensils } from 'react-icons/fa';
+import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from 'react-icons/md';
 
-export default function Page() {
+export default function FavoriteRecipes() {
   const [isOpen, setIsOpen] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
-  const session = useSession();
   const [userFavorites, setUserFavorites] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(null);
+  const session = useSession();
 
   useEffect(() => {
     if (session.status === 'authenticated') {
       fetchUserFavorites();
+    } else {
+      setIsLoading(false);
     }
   }, [session.status, pageNumber]);
 
   const fetchUserFavorites = async () => {
+    setIsLoading(true);
     const email = session?.data?.user?.email;
+
     if (email) {
       try {
         const res = await fetch(
-          `/api/actions?page=${pageNumber}&email=${email}&limit=5`
+          `/api/actions?page=${pageNumber}&email=${email}&limit=8`
         );
         const data = await res.json();
-        console.log('data', data);
+
         if (res.ok) {
           // Collect the promises from the fetch operations
           const promises = data.map(async (item) => {
@@ -56,11 +60,17 @@ export default function Page() {
         }
       } catch (error) {
         console.error('Error fetching user favorites:', error);
+        toast.custom((t) => (
+          <CustomToast t={t} message={'حدث خطأ في تحميل الوصفات المفضلة 😐'} />
+        ));
+      } finally {
+        setIsLoading(false);
       }
     }
   };
 
   async function handleDeletePost(recipe) {
+    setIsDeleting(recipe.id);
     const email = session?.data?.user?.email;
 
     if (email) {
@@ -79,298 +89,330 @@ export default function Page() {
           toast.custom((t) => (
             <CustomToast
               t={t}
-              message={'👍 تم حذف هذا البوست من قائمة المفضلة لديك'}
+              message={'👍 تم حذف هذه الوصفة من قائمة المفضلة لديك'}
             />
           ));
-          fetchUserFavorites(); // Refresh the favorites list
+          // Update the UI by filtering out the removed recipe
+          setUserFavorites(
+            userFavorites.filter((item) => item.id !== recipe.id)
+          );
         } else {
           toast.custom((t) => <CustomToast t={t} message={'حدث خطأ ما 😐'} />);
         }
       } catch (error) {
         console.error('Error deleting post:', error);
         toast.custom((t) => <CustomToast t={t} message={'حدث خطأ ما 😐'} />);
+      } finally {
+        setIsDeleting(null);
       }
     }
   }
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+
   return (
-    <div className="relative w-full bg-four h-full p-4 lg:p-8 rounded-lg z-50">
-      <div className="absolute flex flex-col items-start gap-2 z-40 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
-        <TfiMenuAlt
-          className="p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50 animate-pulse"
-          onClick={() => setIsOpen(!isOpen)}
-        />
-        {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
-      </div>
-      <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
-        <Image
-          priority
-          src={'/photo (19).png'}
-          layout="fill"
-          objectFit="cover"
-          alt="photo"
-        />
+    <div className="min-h-screen bg-gradient-to-b from-primary to-secondary pb-12">
+      {/* Header */}
+      <div className="relative">
+        {/* Background image with overlay */}
+        <div className="relative h-[250px] w-full overflow-hidden">
+          <div className="absolute inset-0 bg-black/40 z-10"></div>
+          <Image
+            priority
+            src="/photo (19).png"
+            layout="fill"
+            objectFit="cover"
+            alt="Favorite Recipes"
+            className="object-center"
+          />
+
+          {/* Back button */}
+          <div className="absolute top-4 left-4 z-20">
+            <Link href="/">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="bg-white/20 backdrop-blur-sm p-3 rounded-full text-white hover:bg-white/30 transition-colors"
+              >
+                <FaArrowRight className="h-5 w-5" />
+              </motion.button>
+            </Link>
+          </div>
+
+          {/* Menu button */}
+          <div className="absolute top-4 right-4 z-20">
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => setIsOpen(!isOpen)}
+              className="bg-white/20 backdrop-blur-sm p-3 rounded-full text-white hover:bg-white/30 transition-colors"
+            >
+              <TfiMenuAlt className="h-5 w-5" />
+            </motion.button>
+          </div>
+
+          {/* Mobile menu */}
+          <AnimatePresence>
+            {isOpen && (
+              <motion.div
+                initial={{ opacity: 0, x: 300 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 300 }}
+                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
+                onClick={() => setIsOpen(false)}
+              >
+                <div
+                  className="absolute top-0 right-0 h-full w-[80%] max-w-sm"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <SideBarMenu setIsOpen={setIsOpen} />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Page title */}
+          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-white">
+            <motion.h1
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="text-3xl md:text-5xl font-bold mb-2 text-center"
+            >
+              وصفاتي المفضلة
+            </motion.h1>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="flex items-center bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full"
+            >
+              <FaHeart className="mr-2 text-secondary" />
+              <span className="text-white/90">
+                الوصفات التي أعجبتك وأضفتها إلى المفضلة
+              </span>
+            </motion.div>
+          </div>
+        </div>
       </div>
 
-      <div className="relative w-full h-52 overflow-hidden xl:mt-8">
-        <Image
-          priority
-          src={'/photo (28).png'}
-          layout="fill"
-          objectFit="contain"
-          alt="photo"
-        />
-      </div>
-      <div className="flex justify-between items-center w-full gap-4 my-8">
-        <h1 className="text-right text-xl text-white font-bold my-2 ">
-          <span className="text-one font-bold text-2xl ml-2">#</span>
-          وصفاتي المفضلة
-        </h1>
-        <BackButton />
-      </div>
-      <div className="w-full sm:w-1/3 gap-4 my-8">
-        <Button title={'إنشاء وصفة جديدة'} style={' '} path="/newRecipe" />
-      </div>
-      <div className="my-8">
-        {userFavorites?.length === 0 && (
-          <Loading
-            myMessage={'لا يوجد نتائج لعرضها 😉 لم تقم بحفظ أي وصفة بعد'}
-          />
-        )}
-        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 justify-center items-center w-full ">
-          {userFavorites?.length > 0 &&
-            userFavorites.map((recipe, index) => (
-              <div className="relative " key={index}>
-                {session?.status === 'authenticated' && (
-                  <div
-                    className="absolute top-12 left-4 flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
-                    onClick={() => handleDeletePost(recipe)}
-                  >
-                    <IoMdClose className="" />
-                    <h6 className="text-sm select-none">حذف</h6>
-                  </div>
-                )}
-                <SmallItem
-                  recipe={recipe}
-                  index={index}
-                  show={false}
-                  id={true}
+      {/* Main content */}
+      <div className="container mx-auto px-4 -mt-16 relative z-30">
+        {session?.status === 'unauthenticated' ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="bg-white rounded-xl shadow-xl overflow-hidden p-8 text-center"
+          >
+            <div className="mb-6">
+              <div className="h-20 w-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto">
+                <FaHeart className="h-10 w-10 text-primary" />
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+              يجب تسجيل الدخول أولاً
+            </h2>
+            <p className="text-gray-600 mb-6">
+              يرجى تسجيل الدخول لعرض وصفاتك المفضلة
+            </p>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link href="/login">
+                <Button
+                  title="تسجيل الدخول"
+                  style="bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-orange-700 text-white px-8 py-3 text-lg font-bold rounded-full shadow-lg"
                 />
-              </div>
-            ))}
-        </div>
-        <div className="flex items-center justify-around my-4 mt-8 text-white">
-          {userFavorites?.length >= 5 && (
-            <Link href={'#post1'}>
-              <div
-                className="flex items-center justify-around cursor-pointer"
-                onClick={() => setPageNumber(pageNumber + 1)}
+              </Link>
+            </motion.div>
+          </motion.div>
+        ) : (
+          <>
+            {/* Action buttons */}
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
               >
-                <h1 className="font-bold">الصفحة التالية</h1>
-                <MdKeyboardDoubleArrowRight className="text-2xl animate-pulse" />
-              </div>
-            </Link>
-          )}
-          {pageNumber > 1 && (
-            <Link href={'#post1'}>
-              <div
-                className="flex items-center justify-around cursor-pointer"
-                onClick={() => setPageNumber(pageNumber - 1)}
+                <Link href="/newRecipe">
+                  <Button
+                    title="إنشاء وصفة جديدة"
+                    style="bg-white text-primary hover:bg-orange-50 flex items-center gap-2 px-6 py-3 rounded-full shadow-lg"
+                    icon={<FaPlus className="ml-1" />}
+                  />
+                </Link>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="flex items-center bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full"
               >
-                <MdKeyboardDoubleArrowLeft className="text-2xl animate-pulse" />
-                <h1 className="font-bold">الصفحة السابقة</h1>
+                <FaHeart className="mr-2 text-secondary" />
+                <span className="text-white font-medium">
+                  {userFavorites.length} وصفة في المفضلة
+                </span>
+              </motion.div>
+            </div>
+
+            {/* Favorites grid */}
+            {isLoading ? (
+              <div className="flex justify-center items-center min-h-[300px] bg-white/10 backdrop-blur-sm rounded-xl">
+                <Loading />
               </div>
-            </Link>
-          )}
-        </div>
+            ) : (
+              <AnimatePresence mode="wait">
+                {userFavorites?.length > 0 ? (
+                  <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                  >
+                    {userFavorites.map((recipe, index) => (
+                      <motion.div
+                        key={recipe.id || index}
+                        variants={itemVariants}
+                        transition={{ duration: 0.3 }}
+                        className="relative group"
+                      >
+                        <div className="absolute top-3 left-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => handleDeletePost(recipe)}
+                            disabled={isDeleting === recipe.id}
+                            className="bg-white/90 backdrop-blur-sm p-2 rounded-full text-primary hover:bg-primary hover:text-white transition-colors shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
+                          >
+                            {isDeleting === recipe.id ? (
+                              <svg
+                                className="animate-spin h-5 w-5"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                ></circle>
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                ></path>
+                              </svg>
+                            ) : (
+                              <IoMdClose className="h-5 w-5" />
+                            )}
+                          </motion.button>
+                        </div>
+                        <SmallItem
+                          recipe={recipe}
+                          index={index}
+                          show={false}
+                          id={true}
+                        />
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="bg-white/10 backdrop-blur-sm rounded-xl p-8 text-center"
+                  >
+                    <div className="h-20 w-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <FaHeart className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-2">
+                      لا توجد وصفات في المفضلة
+                    </h3>
+                    <p className="text-white/80 mb-6">
+                      لم تقم بإضافة أي وصفة إلى المفضلة بعد. تصفح الوصفات وأضف
+                      ما يعجبك!
+                    </p>
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Link href="/">
+                        <Button
+                          title="تصفح الوصفات"
+                          style="bg-white text-primary hover:bg-orange-50 px-6 py-3 rounded-full shadow-lg"
+                          icon={<FaUtensils className="ml-2" />}
+                        />
+                      </Link>
+                    </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            )}
+
+            {/* Pagination */}
+            {userFavorites?.length > 0 && (
+              <div className="flex justify-center items-center mt-8">
+                <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full p-1">
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => {
+                      if (pageNumber > 1) {
+                        setPageNumber(pageNumber - 1);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }
+                    }}
+                    disabled={pageNumber <= 1}
+                    className="h-10 w-10 rounded-full flex items-center justify-center text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <MdKeyboardArrowRight className="h-6 w-6" />
+                  </motion.button>
+
+                  <div className="px-4 font-medium text-white">
+                    الصفحة {pageNumber}
+                  </div>
+
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => {
+                      if (userFavorites?.length >= 8) {
+                        setPageNumber(pageNumber + 1);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }
+                    }}
+                    disabled={userFavorites?.length < 8}
+                    className="h-10 w-10 rounded-full flex items-center justify-center text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <MdKeyboardArrowLeft className="h-6 w-6" />
+                  </motion.button>
+                </div>
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
 }
-
-// 'use client';
-// import { useSession } from 'next-auth/react';
-// import SmallItem from '../../components/SmallItem';
-// import Image from 'next/image';
-// import Link from 'next/link';
-// import React, { useEffect, useState } from 'react';
-// import { IoMdClose } from 'react-icons/io';
-// import toast from 'react-hot-toast';
-// import CustomToast from '../../components/CustomToast';
-// import BackButton from '../../components/BackButton';
-// import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
-// import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
-// import SideBarMenu from '../../components/SideBarMenu';
-// import { TfiMenuAlt } from 'react-icons/tfi';
-// import Loading from '../../components/Loading';
-// import Button from '../../components/Button';
-
-// export default function Page() {
-//   const [isOpen, setIsOpen] = useState(false);
-//   const [pageNumber, setPageNumber] = useState(1);
-//   const session = useSession();
-//   const [userFavorites, setUserFavorites] = useState([]);
-
-//   useEffect(() => {
-//     if (session) {
-//       fetchUserFavorites();
-//     }
-//   }, [pageNumber]);
-
-//   const fetchUserFavorites = async () => {
-//     const email = session?.data?.user?.email;
-//     if (email) {
-//       try {
-//         const res = await fetch(
-//           `/api/actions?page=${pageNumber}&email=${email}&limit=5`
-//         );
-//         const data = await res.json();
-//         if (res.ok) {
-//           console.log('data', data);
-
-//           // Collect the promises from the fetch operations
-//           const promises = data.map(async (item) => {
-//             // console.log('item', item);
-//             const response = await fetch(`/api/editRecipe?id=${item?.mealId}`);
-//             if (response.ok) {
-//               const json = await response.json();
-//               console.log('json', json);
-//               return json;
-//             } else {
-//               throw new Error('Failed to fetch cooking recipe');
-//             }
-//           });
-
-//           // Wait for all promises to resolve
-//           const arr = await Promise.all(promises);
-//           // console.log('arr', arr);
-
-//           // Set the user favorites
-//           setUserFavorites(arr);
-//         }
-//       } catch (error) {
-//         console.error('Error fetching user favorites:', error);
-//       }
-//     }
-//   };
-
-//   async function handleDeletePost(recipe) {
-//     const email = session?.data?.user?.email;
-
-//     if (email) {
-//       const response = await fetch(`/api/actions?email=${email}`, {
-//         method: 'POST',
-//         headers: { 'Content-Type': 'application/json' },
-//         body: JSON.stringify({ mealId: recipe?.id, actionType: 'hearts' }),
-//       });
-
-//       if (response.ok) {
-//         toast.custom((t) => (
-//           <CustomToast
-//             t={t}
-//             message={'👍 تم حذف هذا البوست من قائمة المفضلة لديك'}
-//           />
-//         ));
-//         fetchUserFavorites();
-//       } else {
-//         toast.custom((t) => <CustomToast t={t} message={'حدث خطأ ما 😐'} />);
-//       }
-//     }
-//   }
-
-//   return (
-//     <div className="relative w-full bg-four h-full p-4 lg:p-8 rounded-lg z-50">
-//       <div className="absolute flex flex-col items-start gap-2 z-40 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
-//         <TfiMenuAlt
-//           className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
-//           onClick={() => {
-//             setIsOpen(!isOpen);
-//           }}
-//         />
-//         {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
-//       </div>
-//       <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
-//         <Image
-//           priority
-//           src={'/photo (19).png'}
-//           layout="fill"
-//           objectFit="cover"
-//           alt="photo"
-//         />
-//       </div>
-
-//       <div className="relative w-full h-52 overflow-hidden xl:mt-8">
-//         <Image
-//           priority
-//           src={'/photo (28).png'}
-//           layout="fill"
-//           objectFit="contain"
-//           alt="photo"
-//         />
-//       </div>
-//       <div className="flex justify-between items-center w-full gap-4 my-8">
-//         <h1 className="text-right text-xl text-white font-bold my-2 ">
-//           <span className="text-one font-bold text-2xl ml-2">#</span>
-//           وصفاتي المفضلة
-//         </h1>
-//         <BackButton />
-//       </div>
-//       <div className="w-full sm:w-1/3 gap-4 my-8">
-//         <Button title={'إنشاء وصفة جديدة'} style={' '} path="/newRecipe" />
-//       </div>
-//       <div className="my-8">
-//         {userFavorites?.length === 0 && (
-//           <Loading
-//             myMessage={'لا يوجد نتائج لعرضها 😉 لم تقم بحفظ أي وصفة بعد'}
-//           />
-//         )}
-//         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 justify-center items-center w-full ">
-//           {userFavorites?.length > 0 &&
-//             userFavorites.map((recipe, index) => (
-//               <div className="relative " key={index}>
-//                 {session?.status === 'authenticated' && (
-//                   <div
-//                     className="absolute top-12 left-4 flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
-//                     onClick={() => handleDeletePost(recipe)}
-//                   >
-//                     <IoMdClose className="" />
-//                     <h6 className="text-sm select-none">حذف</h6>
-//                   </div>
-//                 )}
-//                 <SmallItem
-//                   recipe={recipe}
-//                   index={index}
-//                   show={false}
-//                   id={true}
-//                 />
-//               </div>
-//             ))}
-//         </div>
-//         <div className="flex items-center justify-around my-4 mt-8 text-white">
-//           {userFavorites?.length >= 5 && (
-//             <Link href={'#post1'}>
-//               <div
-//                 className="flex items-center justify-around cursor-pointer"
-//                 onClick={() => setPageNumber(pageNumber + 1)}
-//               >
-//                 <h1 className="font-bold">الصفحة التالية</h1>
-//                 <MdKeyboardDoubleArrowRight className="text-2xl animate-pulse" />
-//               </div>
-//             </Link>
-//           )}
-//           {pageNumber > 1 && (
-//             <Link href={'#post1'}>
-//               <div
-//                 className="flex items-center justify-around cursor-pointer"
-//                 onClick={() => setPageNumber(pageNumber - 1)}
-//               >
-//                 <MdKeyboardDoubleArrowLeft className="text-2xl animate-pulse" />
-//                 <h1 className="font-bold">الصفحة السابقة</h1>
-//               </div>
-//             </Link>
-//           )}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }

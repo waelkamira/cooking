@@ -5,7 +5,7 @@ export default function CustomToast({
   t,
   message,
   emoji,
-  greenEmoji,
+  orangeEmoji,
   redEmoji,
 }) {
   return (
@@ -37,13 +37,13 @@ export default function CustomToast({
       <div>
         <div>
           <h1 className="sm:mt-4 text-[12px] sm:text-sm s:text-nowrap text-center  ">
-            <span className="text-green-400 text-xl font-bold">
-              {greenEmoji}
+            <span className="text-secondary text-xl font-bold">
+              {orangeEmoji}
             </span>
             <span className="text-one text-xl mx-1 font-bold">{redEmoji}</span>
 
             {message}
-            <span className="text-green-400 text-xl mx-1 font-bold">
+            <span className="text-secondary text-xl mx-1 font-bold">
               {emoji}
             </span>
           </h1>

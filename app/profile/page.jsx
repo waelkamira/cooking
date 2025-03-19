@@ -49,7 +49,7 @@ export default function Profile() {
       });
       if (response.ok) {
         toast.custom((t) => (
-          <CustomToast t={t} message={'تم التعديل بنجاح '} greenEmoji={'✔'} />
+          <CustomToast t={t} message={'تم التعديل بنجاح '} orangeEmoji={'✔'} />
         ));
         dispatch({ type: 'PROFILE_IMAGE', payload: profile_image?.image });
         if (typeof window !== 'undefined') {
@@ -83,7 +83,7 @@ export default function Profile() {
           <BackButton />
           <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
             <TfiMenuAlt
-              className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
+              className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  "
               onClick={() => {
                 setIsOpen(!isOpen);
               }}

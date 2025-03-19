@@ -8,16 +8,16 @@ export default function Page() {
   const { id } = useParams();
 
   useEffect(() => {
-    fetchOneCookingRecipe();
+    fetchOneRecipe();
   }, []);
 
-  async function fetchOneCookingRecipe() {
+  async function fetchOneRecipe() {
     console.log('id', id);
     const response = await fetch(`/api/showMealById?id=${id}`);
     const json = await response?.json();
     if (response.ok) {
-      // console.log('json', json);
-      setOneCookingRecipe(json[0]);
+      console.log('json', json);
+      setOneCookingRecipe(json);
     }
   }
 

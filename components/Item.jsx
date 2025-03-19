@@ -1,15 +1,26 @@
 'use client';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import React, { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import Button from './Button';
-import BackButton from './BackButton';
-import SideBarMenu from './SideBarMenu';
-import { TfiMenuAlt } from 'react-icons/tfi';
+import { motion, AnimatePresence } from 'framer-motion';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
-import Loading from './Loading';
+import {
+  FaArrowRight,
+  FaListUl,
+  FaClipboardList,
+  FaLightbulb,
+  FaVideo,
+  FaHeart,
+  FaBookmark,
+  FaPrint,
+  FaShare,
+} from 'react-icons/fa';
+import { TfiMenuAlt } from 'react-icons/tfi';
+import Button from './Button';
+import SideBarMenu from './SideBarMenu';
 import LoadingPhoto from './LoadingPhoto';
+import { FaArrowLeft } from 'react-icons/fa6';
 
 export default function Item({
   image,
@@ -23,21 +34,38 @@ export default function Item({
   userName,
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('ingredients');
+  const [isSaved, setIsSaved] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
   const session = useSession();
-  const videoRef = useRef(null); // Add a ref to the iframe element
-  const [isFullScreen, setIsFullScreen] = useState(false);
 
-  //? src نريد ان نستخرج منه قيمة ال string لكنه نص  ifram html الذي هو عبارة عن عنصر  link انشأنا ديف مؤقت لوضع ال
-  let tempDiv = document.createElement('div');
-  tempDiv.innerHTML = link;
+  // دالة للتحقق من صحة رابط الفيديو (يوتيوب أو تيك توك)
+  const isValidVideoLink = (url) => {
+    if (!url) return false;
 
-  //? داخل هذا الديف iframe بحثنا عن اول
-  let iframeElement = tempDiv.querySelector('iframe');
+    // تحقق من رابط يوتيوب
+    const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+/;
+    if (youtubeRegex.test(url)) return true;
 
-  //? موجود ifram اذا كان عنصر ال src استخرجنا قيمة ال
-  let iframeSrc = iframeElement ? iframeElement.getAttribute('src') : null;
+    // تحقق من رابط تيك توك
+    const tiktokRegex = /^(https?:\/\/)?(www\.)?tiktok\.com\/.+/;
+    if (tiktokRegex.test(url)) return true;
 
-  //? هذه الدالة للتأكد إذا كان التاريخ المدخل صحيحا أو لا
+    return false;
+  };
+
+  // دالة لاستخراج رابط iframe من النص HTML
+  const extractIframeSrc = (html) => {
+    if (typeof document !== 'undefined') {
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = html;
+      const iframeElement = tempDiv.querySelector('iframe');
+      return iframeElement ? iframeElement.getAttribute('src') : null;
+    }
+    return null;
+  };
+
+  // دالة لتنسيق التاريخ
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return isNaN(date)
@@ -45,215 +73,477 @@ export default function Item({
       : formatDistanceToNow(date, { addSuffix: true });
   };
 
-  return (
-    <>
-      {session?.status === 'unauthenticated' && (
-        <div className="p-4 bg-four rounded-lg m-2 md:m-8 border border-one text-center h-screen">
-          <h1 className="text-lg md:text-2xl p-2 my-8 text-white">
-            يجب عليك تسجيل الدخول أولا لرؤية هذه الوصفة
-          </h1>
-          <Link href={'/login'}>
-            {' '}
-            <Button title={'تسجيل الدخول'} />
-          </Link>{' '}
+  // استخراج رابط الفيديو
+  const iframeSrc = extractIframeSrc(link);
+  const isValidLink = isValidVideoLink(iframeSrc || link);
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  // Not authenticated view
+  if (session?.status === 'unauthenticated') {
+    return (
+      <motion.div
+        className="flex flex-col items-center justify-center p-8 bg-gradient-to-b from-primary to-secondary rounded-xl shadow-lg min-h-[50vh] text-center"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="relative w-32 h-32 mb-6">
+          <Image
+            src="/photo (28).png"
+            layout="fill"
+            objectFit="contain"
+            alt="Login required"
+          />
         </div>
-      )}
-      {session?.status === 'authenticated' && (
-        <div className="relative flex flex-col items-start w-full bg-four h-full p-2 lg:p-8 rounded-lg">
-          <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
-            <Image
-              priority
-              src={'/photo (20).png'}
-              layout="fill"
-              objectFit="cover"
-              alt="photo"
+        <h1 className="text-2xl md:text-3xl font-bold text-white mb-6">
+          يجب عليك تسجيل الدخول أولا لرؤية هذه الوصفة
+        </h1>
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <Link href="/login">
+            <Button
+              title="تسجيل الدخول"
+              style="bg-white text-primary hover:bg-orange-50 px-8 py-3 text-lg font-bold rounded-full shadow-lg"
             />
-          </div>
-          <BackButton />
-          <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
-            <TfiMenuAlt
-              className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
-              onClick={() => {
-                setIsOpen(!isOpen);
-              }}
-            />
-            {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
-          </div>
-          <div className="relative w-full h-52 overflow-hidden my-4 xl:mt-8">
-            <Image
-              priority
-              src={'/photo (28).png'}
-              layout="fill"
-              objectFit="contain"
-              alt="photo"
-            />
-          </div>
-          <div className="flex justify-between items-center w-full gap-4 sm:my-8">
-            <h1 className="grow text-lg lg:text-3xl w-full text-white select-none">
-              الوصفة:
-            </h1>
-          </div>
-          <div className="flex justify-center w-full">
-            <div className="flex flex-col w-full 2xl:w-2/3 rounded-lg p-2 sm:p-8 mt-8 bg-white border-t-[20px] border-one">
-              <div className="flex justify-start items-center gap-2 w-full mb-4">
-                <div className="relative size-14 overflow-hidden rounded-full">
-                  {!userImage && <LoadingPhoto />}
-                  {userImage && (
-                    <Image priority src={userImage} fill alt={mealName} />
-                  )}
-                </div>
-                <div className="flex flex-col justify-center">
-                  <h6 className="text-[13px] sm:text-[18px] text-eight select-none">
-                    {userName}
-                  </h6>
-                  <h1
-                    className="text-[8px] sm:text-[12px] text-gray-400 select-none text-end"
-                    dir="ltr"
-                  >
-                    {formatDate(createdAt)}
-                  </h1>
-                </div>
+          </Link>
+        </motion.div>
+      </motion.div>
+    );
+  }
+
+  // Authenticated view
+  return (
+    <div className="bg-gray-50 min-h-screen">
+      {/* Header with background image */}
+      <div className="relative h-64 md:h-80 w-full overflow-hidden">
+        <div className="absolute inset-0 bg-black/50 z-10"></div>
+        <Image
+          priority
+          src={image || '/photo (20).png'}
+          layout="fill"
+          objectFit="cover"
+          alt={mealName || 'Recipe header'}
+        />
+
+        {/* Back button and menu */}
+        <div className="absolute top-4 left-4 z-20">
+          <Link href="/">
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="bg-white/20 backdrop-blur-sm p-3 rounded-full text-white hover:bg-white/30 transition-colors"
+            >
+              <FaArrowLeft className="h-5 w-5" />
+            </motion.button>
+          </Link>
+        </div>
+
+        <div className="absolute top-4 right-4 z-20">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setIsOpen(!isOpen)}
+            className="bg-white/20 backdrop-blur-sm p-3 rounded-full text-white hover:bg-white/30 transition-colors"
+          >
+            <TfiMenuAlt className="h-5 w-5" />
+          </motion.button>
+        </div>
+
+        {/* Mobile menu */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, x: 300 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 300 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
+              onClick={() => setIsOpen(false)}
+            >
+              <div
+                className="absolute top-0 right-0 h-full w-[80%] max-w-sm"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <SideBarMenu setIsOpen={setIsOpen} />
               </div>
-              <h1 className="text-one my-4 sm:my-8 text-3xl sm:text-4xl lg:text-5xl text-center select-none  rounded-lg p-2 sm:p-4">
-                {mealName}
-              </h1>
-              {!image && <Loading myMessage={'جاري تحميل الصورة'} />}
-              {image && (
-                <div className="relative w-full h-44 sm:h-96 overflow-hidden rounded-lg border bg-gray-100">
-                  <Image
-                    priority
-                    src={image}
-                    layout="fill"
-                    objectFit="cover"
-                    alt={mealName}
-                  />
-                </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Recipe title and author info */}
+        <div className="absolute bottom-0 left-0 right-0 z-20 p-6 bg-gradient-to-t from-black/80 to-transparent">
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            {mealName}
+          </h1>
+          <div className="flex items-center">
+            <div className="relative size-10 overflow-hidden rounded-full border-2 border-white/30">
+              {!userImage ? (
+                <LoadingPhoto />
+              ) : (
+                <Image
+                  priority
+                  src={userImage || '/placeholder.svg'}
+                  fill
+                  alt={userName || 'User'}
+                />
               )}
-
-              <div className="bg-white rounded-lg mt-4 sm:mt-16">
-                <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
-                  <h1 className="text-white font-bold text-xl sm:text-3xl w-full my-2 select-none">
-                    <span className="text-one font-bold text-2xl mx-2 select-none">
-                      #
-                    </span>
-                    المقادير
-                  </h1>
-                  <div className="relative size-40 md:size-44 xl:size-48 overflow-hidden rounded-lg grow">
-                    <Image
-                      priority
-                      src={'/photo (24).png'}
-                      layout="fill"
-                      objectFit="contain"
-                      alt={mealName}
-                    />
-                  </div>
-                </div>
-                <pre className="text-md lg:text-lg xl:text-xl w-full select-none ">
-                  {ingredients}
-                </pre>
-                <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
-                  <h1 className="text-white font-bold text-xl sm:text-3xl w-full my-2 select-none">
-                    <span className="text-one font-bold text-2xl mx-2 select-none">
-                      #
-                    </span>
-                    الطريقة
-                  </h1>
-                  <div className="relative size-28 md:size-40 xl:size-48  overflow-hidden rounded-lg rotate-45">
-                    <Image
-                      priority
-                      src={'/photo (25).png'}
-                      layout="fill"
-                      objectFit="contain"
-                      alt={mealName}
-                    />
-                  </div>
-                </div>
-                <pre className="text-md lg:text-lg xl:text-xl w-full select-none ">
-                  {theWay}
-                </pre>
-                {advise && (
-                  <>
-                    <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible mb-16">
-                      <h1 className="text-white font-bold text-xl sm:text-3xl w-full my-2 select-none">
-                        <span className="text-one font-bold text-2xl mx-2 select-none">
-                          #
-                        </span>
-                        نصائح
-                      </h1>
-                      <div className="relative size-28 md:size-32 xl:size-44 overflow-hidden rounded-lg">
-                        <Image
-                          priority
-                          src={'/photo (27).png'}
-                          layout="fill"
-                          objectFit="contain"
-                          alt={mealName}
-                        />
-                      </div>
-                    </div>
-                    <pre className="text-md lg:text-lg xl:text-xl w-full select-none ">
-                      {advise}
-                    </pre>{' '}
-                  </>
-                )}
-
-                {(link || iframeSrc) && (
-                  <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
-                    <h1 className="text-white font-bold text-2xl lg:text-3xl w-full my-2 select-none">
-                      <span className="text-one font-bold text-2xl mx-2 select-none">
-                        #
-                      </span>
-                      فيديو
-                    </h1>
-                    <div className="relative size-28 md:size-32 xl:size-44 overflow-hidden rounded-lg rotate-20">
-                      <Image
-                        priority
-                        src={'/photo (26).png'}
-                        layout="fill"
-                        objectFit="contain"
-                        alt={mealName}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                <div className="flex justify-center items-center w-full mt-16">
-                  {iframeSrc && (
-                    <div className>
-                      <iframe
-                        src={iframeSrc}
-                        title="YouTube video player"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                        allowfullscreen
-                        referrerpolicy="strict-origin-when-cross-origin"
-                        className={
-                          ' rounded-lg w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]'
-                        }
-                      />
-                    </div>
-                  )}
-
-                  {!iframeSrc && (
-                    <div className=" flex flex-col items-center justify-center w-full">
-                      <iframe
-                        src={link}
-                        title="YouTube video player"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                        allowfullscreen
-                        referrerpolicy="strict-origin-when-cross-origin"
-                        className={
-                          ' rounded-lg w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]'
-                        }
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
+            </div>
+            <div className="ml-3">
+              <h6 className="text-white font-medium">{userName}</h6>
+              <p className="text-white/70 text-sm">{formatDate(createdAt)}</p>
             </div>
           </div>
         </div>
-      )}
-    </>
+      </div>
+
+      {/* Main content */}
+      <div className="container mx-auto px-4 -mt-10 relative z-30">
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          {/* Action buttons */}
+          <div className="flex justify-between items-center p-4 border-b">
+            <div className="flex space-x-4 space-x-reverse">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setIsLiked(!isLiked)}
+                className={`flex items-center space-x-1 space-x-reverse px-3 py-2 rounded-full ${
+                  isLiked
+                    ? 'bg-orange-50 text-primary'
+                    : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
+                }`}
+              >
+                <FaHeart className={`${isLiked ? 'fill-primary' : ''}`} />
+                <span className="mr-1">{isLiked ? 'أعجبني' : 'إعجاب'}</span>
+              </motion.button>
+
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setIsSaved(!isSaved)}
+                className={`flex items-center space-x-1 space-x-reverse px-3 py-2 rounded-full ${
+                  isSaved
+                    ? 'bg-blue-50 text-blue-500'
+                    : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
+                }`}
+              >
+                <FaBookmark className={`${isSaved ? 'fill-blue-500' : ''}`} />
+                <span className="mr-1">{isSaved ? 'تم الحفظ' : 'حفظ'}</span>
+              </motion.button>
+            </div>
+
+            <div className="flex space-x-2 space-x-reverse">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="p-2 bg-gray-50 rounded-full text-gray-500 hover:bg-gray-100"
+              >
+                <FaPrint />
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="p-2 bg-gray-50 rounded-full text-gray-500 hover:bg-gray-100"
+              >
+                <FaShare />
+              </motion.button>
+            </div>
+          </div>
+
+          {/* Recipe navigation */}
+          <div className="flex overflow-x-auto border-b scrollbar-hide">
+            <button
+              onClick={() => setActiveSection('ingredients')}
+              className={`px-6 py-4 font-medium flex items-center whitespace-nowrap ${
+                activeSection === 'ingredients'
+                  ? 'text-primary border-b-2 border-primary'
+                  : 'text-gray-500 hover:text-gray-800'
+              }`}
+            >
+              <FaListUl className="ml-2" />
+              المقادير
+            </button>
+            <button
+              onClick={() => setActiveSection('method')}
+              className={`px-6 py-4 font-medium flex items-center whitespace-nowrap ${
+                activeSection === 'method'
+                  ? 'text-primary border-b-2 border-primary'
+                  : 'text-gray-500 hover:text-gray-800'
+              }`}
+            >
+              <FaClipboardList className="ml-2" />
+              الطريقة
+            </button>
+            {advise && (
+              <button
+                onClick={() => setActiveSection('tips')}
+                className={`px-6 py-4 font-medium flex items-center whitespace-nowrap ${
+                  activeSection === 'tips'
+                    ? 'text-primary border-b-2 border-primary'
+                    : 'text-gray-500 hover:text-gray-800'
+                }`}
+              >
+                <FaLightbulb className="ml-2" />
+                نصائح
+              </button>
+            )}
+            {isValidLink && (
+              <button
+                onClick={() => setActiveSection('video')}
+                className={`px-6 py-4 font-medium flex items-center whitespace-nowrap ${
+                  activeSection === 'video'
+                    ? 'text-primary border-b-2 border-primary'
+                    : 'text-gray-500 hover:text-gray-800'
+                }`}
+              >
+                <FaVideo className="ml-2" />
+                فيديو
+              </button>
+            )}
+          </div>
+
+          {/* Recipe content */}
+          <div className="p-6">
+            <AnimatePresence mode="wait">
+              {activeSection === 'ingredients' && (
+                <motion.div
+                  key="ingredients"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <div className="flex items-center mb-4">
+                    <div className="h-10 w-10 bg-orange-100 rounded-full flex items-center justify-center mr-3">
+                      <FaListUl className="text-primary" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-800">
+                      المقادير
+                    </h2>
+                  </div>
+
+                  <div className="bg-orange-50 p-6 rounded-lg">
+                    <pre className="text-lg whitespace-pre-wrap font-sans">
+                      {ingredients}
+                    </pre>
+                  </div>
+
+                  <div className="flex justify-end">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setActiveSection('method')}
+                      className="flex items-center text-primary font-medium"
+                    >
+                      الطريقة
+                      <FaClipboardList className="mr-2" />
+                    </motion.button>
+                  </div>
+                </motion.div>
+              )}
+
+              {activeSection === 'method' && (
+                <motion.div
+                  key="method"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <div className="flex items-center mb-4">
+                    <div className="h-10 w-10 bg-orange-100 rounded-full flex items-center justify-center mr-3">
+                      <FaClipboardList className="text-primary" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-800">
+                      الطريقة
+                    </h2>
+                  </div>
+
+                  <div className="bg-orange-50 p-6 rounded-lg">
+                    <pre className="text-lg whitespace-pre-wrap font-sans">
+                      {theWay}
+                    </pre>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setActiveSection('ingredients')}
+                      className="flex items-center text-primary font-medium"
+                    >
+                      <FaListUl className="ml-2" />
+                      المقادير
+                    </motion.button>
+
+                    {advise && (
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setActiveSection('tips')}
+                        className="flex items-center text-primary font-medium"
+                      >
+                        نصائح
+                        <FaLightbulb className="mr-2" />
+                      </motion.button>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+
+              {activeSection === 'tips' && advise && (
+                <motion.div
+                  key="tips"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <div className="flex items-center mb-4">
+                    <div className="h-10 w-10 bg-yellow-100 rounded-full flex items-center justify-center mr-3">
+                      <FaLightbulb className="text-yellow-500" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-800">نصائح</h2>
+                  </div>
+
+                  <div className="bg-yellow-50 p-6 rounded-lg">
+                    <pre className="text-lg whitespace-pre-wrap font-sans">
+                      {advise}
+                    </pre>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setActiveSection('method')}
+                      className="flex items-center text-primary font-medium"
+                    >
+                      <FaClipboardList className="ml-2" />
+                      الطريقة
+                    </motion.button>
+
+                    {isValidLink && (
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setActiveSection('video')}
+                        className="flex items-center text-primary font-medium"
+                      >
+                        فيديو
+                        <FaVideo className="mr-2" />
+                      </motion.button>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+
+              {activeSection === 'video' && isValidLink && (
+                <motion.div
+                  key="video"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
+                >
+                  <div className="flex items-center mb-4">
+                    <div className="h-10 w-10 bg-orange-100 rounded-full flex items-center justify-center mr-3">
+                      <FaVideo className="text-primary" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-800">فيديو</h2>
+                  </div>
+
+                  <div className="aspect-video w-full rounded-lg overflow-hidden shadow-lg">
+                    <iframe
+                      src={iframeSrc || link}
+                      title="Video player"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                      allowFullScreen
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      className="w-full h-full"
+                    />
+                  </div>
+
+                  <div className="flex justify-start">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() =>
+                        setActiveSection(advise ? 'tips' : 'method')
+                      }
+                      className="flex items-center text-primary font-medium"
+                    >
+                      {advise ? (
+                        <>
+                          <FaLightbulb className="ml-2" />
+                          نصائح
+                        </>
+                      ) : (
+                        <>
+                          <FaClipboardList className="ml-2" />
+                          الطريقة
+                        </>
+                      )}
+                    </motion.button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Recipe footer */}
+          <div className="bg-gray-50 p-6 border-t">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="relative size-12 overflow-hidden rounded-full border-2 border-white">
+                  {!userImage ? (
+                    <LoadingPhoto />
+                  ) : (
+                    <Image
+                      priority
+                      src={userImage || '/placeholder.svg'}
+                      fill
+                      alt={userName || 'User'}
+                    />
+                  )}
+                </div>
+                <div className="ml-3">
+                  <h6 className="font-medium">{userName}</h6>
+                  <p className="text-gray-500 text-sm">
+                    {formatDate(createdAt)}
+                  </p>
+                </div>
+              </div>
+
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-primary hover:bg-secondary text-white px-4 py-2 rounded-full font-medium"
+              >
+                عرض المزيد من وصفات {userName?.split(' ')[0]}
+              </motion.button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

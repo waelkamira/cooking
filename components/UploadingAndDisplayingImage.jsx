@@ -71,7 +71,7 @@ export default function UploadingAndDisplayingImage({ img }) {
         </div>
 
         {img && !uploadedImage && (
-          <div className="w-full h-72 sm:h-96 border rounded-lg border-green-400">
+          <div className="w-full h-72 sm:h-96 border rounded-lg border-secondary">
             <Image
               priority
               src={img}
@@ -170,7 +170,7 @@ export default function UploadingAndDisplayingImage({ img }) {
 //         </div>
 
 //         {img && !uploadedImage && (
-//           <div className="w-full h-72 sm:h-96 border rounded-lg border-green-400">
+//           <div className="w-full h-72 sm:h-96 border rounded-lg border-secondary">
 //             <Image priority  src={img} alt="Uploaded" layout="fill" objectFit="cover" />
 //           </div>
 //         )}

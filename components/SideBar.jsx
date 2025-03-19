@@ -1,6 +1,6 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { signOut, useSession } from 'next-auth/react';
 import Button from './Button';
 import Image from 'next/image';
@@ -8,8 +8,17 @@ import CurrentUser from '../components/CurrentUser';
 import TheGarden from './Garden';
 import Categories from './Categories';
 import NewRecipeButton from './NewRecipeButton';
-import Loading from './Loading';
 import LoadingPhoto from './LoadingPhoto';
+import { motion } from 'framer-motion';
+import {
+  FaUtensils,
+  FaHeart,
+  FaAward,
+  FaUsers,
+  FaSignOutAlt,
+  FaQuestion,
+  FaBookOpen,
+} from 'react-icons/fa';
 
 export default function SideBar() {
   const router = useRouter();
@@ -17,8 +26,8 @@ export default function SideBar() {
   const [newImage, setNewImage] = useState('');
   const user = CurrentUser();
   const [userRecipeCount, setUserRecipeCount] = useState();
+  const [isHovered, setIsHovered] = useState(null);
 
-  // console.log('user', user);
   useEffect(() => {
     getTheUserRecipeCount();
     if (typeof window !== 'undefined') {
@@ -27,61 +36,229 @@ export default function SideBar() {
     }
   }, []);
 
-  //? معرفة عدد الطبخات حتى يتم اظهار زر الجوائز اولا
+  // Get user recipe count
   async function getTheUserRecipeCount() {
-    const response = await fetch('/api/myRecipes');
-    const json = await response?.json();
-    console.log('json from sidebar', json);
-    if (response.ok) {
-      setUserRecipeCount(json?.count);
+    try {
+      const response = await fetch('/api/myRecipes');
+      if (response.ok) {
+        const json = await response?.json();
+        setUserRecipeCount(json?.count);
+      }
+    } catch (error) {
+      console.error('Error fetching recipe count:', error);
     }
   }
-  console.log('userRecipeCount from sidebar', userRecipeCount);
+
+  // Navigation items
+  const navItems = [
+    {
+      title: 'شو أطبخ اليوم؟',
+      path: '/whatToCookToday',
+      icon: <FaQuestion className="ml-2" />,
+    },
+    {
+      title: 'طبخاتي',
+      path: '/myRecipes',
+      icon: <FaUtensils className="ml-2" />,
+    },
+    {
+      title: 'وصفات أعجبتني',
+      path: '/favoritePosts',
+      icon: <FaHeart className="ml-2" />,
+    },
+    { title: 'الجوائز', path: '/myGarden', icon: <FaAward className="ml-2" /> },
+  ];
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: { opacity: 1, x: 0 },
+  };
 
   return (
-    <div className="hidden xl:block w-80 h-full border-l-[16px] border-one">
-      <div
-        className={
-          (session?.status === 'unauthenticated' ? 'min-h-screen' : '') +
-          ` w-full bg-four rounded-r-lg  h-full `
-        }
+    <div className="hidden xl:block w-80 h-full">
+      <motion.div
+        className="w-full h-full bg-gradient-to-b from-primary to-secondary rounded-2xl rounded-tl-[0] shadow-xl overflow-hidden"
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
       >
-        {session?.status === 'authenticated' && (
-          <div className="flex flex-col justify-between items-center p-4 rounded-r-lg w-full">
+        {/* User Profile Section */}
+        {session?.status === 'authenticated' ? (
+          <motion.div
+            className="p-6 bg-gradient-to-b from-secondary to-primary"
+            initial={{ y: -20 }}
+            animate={{ y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
             <div
-              className="flex justify-start items-center w-full cursor-pointer gap-2 line-clamp-1"
+              className="flex items-center gap-4 cursor-pointer group"
               onClick={() => router.push('/profile?username')}
             >
-              <div className="relative size-14 overflow-hidden rounded-full">
-                {!user?.image && <LoadingPhoto />}
-
-                {user?.image && (
-                  <Image priority src={user?.image} fill alt={user?.name} />
+              <div className="relative size-16 rounded-full overflow-hidden border-4 border-white/20 shadow-lg group-hover:border-white/40 transition-all duration-300">
+                {!user?.image ? (
+                  <LoadingPhoto />
+                ) : (
+                  <Image
+                    priority
+                    src={user?.image || '/placeholder.svg'}
+                    fill
+                    alt={user?.name}
+                    className="object-cover"
+                  />
                 )}
               </div>
-              <h1 className=" text-white text-nowrap">{user?.name} </h1>
+              <div>
+                <h2 className="text-white font-bold text-lg group-hover:text-white/90 transition-colors">
+                  {user?.name || 'مرحباً بك'}
+                </h2>
+                <p className="text-white/70 text-sm">عرض الملف الشخصي</p>
+              </div>
             </div>
-
-            <div className="w-full">
+          </motion.div>
+        ) : (
+          <div className="p-6">
+            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <Button
-                title={'تسجيل الخروج'}
-                style={' '}
-                onClick={() => signOut()}
+                title={'تسجيل دخول'}
+                style={
+                  'bg-white text-secondary hover:bg-orange-50 shadow-lg w-full py-3'
+                }
+                path="/login"
               />
-            </div>
+            </motion.div>
           </div>
         )}
 
-        {session?.status === 'unauthenticated' && (
-          <div className="px-4 py-8">
-            <Button title={'تسجيل دخول'} style={' '} path="/login" />
+        {/* Main Navigation */}
+        {session?.status === 'authenticated' && (
+          <div className="px-4 py-6">
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="space-y-4"
+            >
+              {/* New Recipe Button */}
+              <motion.div
+                variants={itemVariants}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="mb-6"
+              >
+                <NewRecipeButton />
+              </motion.div>
+
+              {/* Navigation Items */}
+              {navItems.map((item, index) => (
+                <motion.div
+                  key={index}
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  onHoverStart={() => setIsHovered(index)}
+                  onHoverEnd={() => setIsHovered(null)}
+                >
+                  <Button
+                    title={item.title}
+                    style={`flex items-center justify-start bg-white/10 hover:bg-white/20 text-white border border-white/10 hover:border-white/30 transition-all duration-300 ${
+                      isHovered === index ? 'pr-6' : 'pr-4'
+                    }`}
+                    path={item.path}
+                    icon={item.icon}
+                  />
+                </motion.div>
+              ))}
+
+              {/* Admin Section */}
+              {session?.status === 'authenticated' && user?.isAdmin === 0 && (
+                <motion.div
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  <Button
+                    title={'المستخدمين'}
+                    style={
+                      'flex items-center justify-start bg-white/10 hover:bg-white/20 text-white border border-white/10 hover:border-white/30 transition-all duration-300'
+                    }
+                    path="/users"
+                    icon={<FaUsers className="ml-2" />}
+                  />
+                </motion.div>
+              )}
+
+              {/* Sign Out Button */}
+              <motion.div
+                variants={itemVariants}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="mt-8"
+              >
+                <Button
+                  title={'تسجيل الخروج'}
+                  style={
+                    'flex items-center justify-start bg-white/10 hover:bg-primary/70 text-white border border-white/10 hover:border-secondary transition-all duration-300'
+                  }
+                  onClick={() => signOut()}
+                  icon={<FaSignOutAlt className="ml-2" />}
+                />
+              </motion.div>
+            </motion.div>
           </div>
         )}
-      </div>
-      {session?.status === 'authenticated' && (
-        <div className="w-full rounded-r-lg my-4">
-          <div className="p-4 rounded-r-lg bg-four overflow-hidden my-4">
-            <div className=" relative w-full h-32">
+
+        {/* Garden Section */}
+        {session?.status === 'authenticated' && userRecipeCount > 0 && (
+          <motion.div
+            className="px-4 mb-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+              <h3 className="text-white font-bold mb-3 flex items-center">
+                <FaAward className="mr-2 text-yellow-300" /> حديقتك
+              </h3>
+              <TheGarden />
+            </div>
+          </motion.div>
+        )}
+
+        {/* Categories Section */}
+        <motion.div
+          className="px-4 mb-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+        >
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+            <h3 className="text-white font-bold mb-3 flex items-center">
+              <FaBookOpen className="mr-2" /> التصنيفات
+            </h3>
+            <Categories />
+          </div>
+        </motion.div>
+
+        {/* Promotional Image */}
+        {/* {session?.status === 'authenticated' && (
+          <motion.div
+            className="px-4 mb-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7 }}
+          >
+            <div className="relative w-full h-36 rounded-xl overflow-hidden border border-white/20 shadow-lg">
               <Image
                 priority
                 src={
@@ -90,34 +267,12 @@ export default function SideBar() {
                 layout="fill"
                 objectFit="contain"
                 alt="photo"
+                className="hover:scale-105 transition-transform duration-500"
               />
             </div>
-            <div className="hidden lg:flex flex-col justify-between items-center w-full h-full rounded-r-lg">
-              <NewRecipeButton />
-            </div>
-            <Button
-              title={'شو أطبخ اليوم؟'}
-              style={' '}
-              path="/whatToCookToday"
-            />
-            <Button title={'طبخاتي'} style={' '} path="/myRecipes" />
-            <Button title={'وصفات أعجبتني'} style={' '} path="/favoritePosts" />
-            <Button title={'الجوائز'} style={' '} path="/myGarden" />
-            {session?.status === 'authenticated' && user?.isAdmin === 0 && (
-              <Button title={'المستخدمين'} style={' '} path="/users" />
-            )}
-          </div>
-          {userRecipeCount > 0 && (
-            <div className="p-4 rounded-r-lg bg-four overflow-hidden my-4">
-              <TheGarden />
-            </div>
-          )}
-
-          <div className="px-2 rounded-r-lg bg-four overflow-hidden my-4">
-            <Categories />
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )} */}
+      </motion.div>
     </div>
   );
 }

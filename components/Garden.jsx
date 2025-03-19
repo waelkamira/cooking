@@ -77,7 +77,7 @@ export default function TheGarden() {
         {isLoading && <Loading />}
         {!isLoading && icons.length === 0 && <Loading />}
         {!isLoading && icons.length > 0 && (
-          <div className="flex flex-wrap justify-center items-center bg-one rounded-lg size-[270px]">
+          <div className="flex flex-wrap justify-center items-center bg-primary rounded-lg size-[270px]">
             {renderIconsAndPlaceholders()}
           </div>
         )}

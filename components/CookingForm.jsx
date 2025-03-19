@@ -102,7 +102,7 @@ export default function CookingForm({
               t={t}
               emoji={'🧀'}
               message={'تم إنشاء وصفة جديدة'}
-              greenEmoji={'✔'}
+              orangeEmoji={'✔'}
             />
           ));
           handleClick();

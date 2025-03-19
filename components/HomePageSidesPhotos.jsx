@@ -3,8 +3,8 @@ import React from 'react';
 
 export default function HomePageSidesPhotos() {
   return (
-    <div className="hidden xl:block h-full">
-      <div className="absolute w-72 h-full -left-[130px] top-0 z-10 ">
+    <div className="hidden xl:block h-full z-0">
+      <div className="absolute w-[500px] h-full -left-0 top-0  ">
         <Image
           priority
           src={
@@ -15,7 +15,7 @@ export default function HomePageSidesPhotos() {
           alt="photo"
         />
       </div>
-      <div className="absolute w-72 h-full -right-[130px] top-0 z-10 rotate-180">
+      <div className="absolute w-[500px] h-full -right-0 top-0  rotate-180">
         <Image
           priority
           src={

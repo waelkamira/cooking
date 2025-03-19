@@ -85,7 +85,7 @@ export default function EditRecipe() {
         <CustomToast
           t={t}
           message={'تم تعديل هذا البوست بنجاح'}
-          greenEmoji={'✔'}
+          orangeEmoji={'✔'}
         />
       ));
     }
@@ -138,7 +138,7 @@ export default function EditRecipe() {
           <BackButton />
           <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
             <TfiMenuAlt
-              className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
+              className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  "
               onClick={() => {
                 setIsOpen(!isOpen);
               }}
@@ -208,12 +208,12 @@ export default function EditRecipe() {
                     &#13;&#10;
                   </span>
 
-                  <MdEdit className="absolute top-0 right-0 animate-pulse text-2xl text-green-400" />
+                  <MdEdit className="absolute top-0 right-0  text-2xl text-secondary" />
                 </h1>
 
                 <button
                   onClick={() => handleEditRecipe()}
-                  className="bg-five mb-2 w-full sm:w-fit hover:bg-one text-white hover:scale-105 border text-center select-none  rounded-lg p-2"
+                  className="bg-five mb-2 w-full sm:w-fit hover:bg-primary text-white hover:scale-105 border text-center select-none  rounded-lg p-2"
                 >
                   حفظ التعديلات
                 </button>
@@ -221,7 +221,7 @@ export default function EditRecipe() {
               <UploadingAndDisplayingImage img={editedRecipe?.image} />
               <button
                 onClick={() => handleEditRecipe()}
-                className="bg-five mb-2 w-full sm:w-fit mt-4 hover:bg-one text-white hover:scale-105 border text-center select-none  rounded-lg p-2"
+                className="bg-five mb-2 w-full sm:w-fit mt-4 hover:bg-primary text-white hover:scale-105 border text-center select-none  rounded-lg p-2"
               >
                 حفظ التعديلات
               </button>
@@ -266,11 +266,11 @@ export default function EditRecipe() {
                   >
                     &#13;&#10;
                   </span>
-                  <MdEdit className="absolute top-0 right-0 animate-pulse text-2xl text-green-400" />
+                  <MdEdit className="absolute top-0 right-0  text-2xl text-secondary" />
                 </pre>
                 <button
                   onClick={() => handleEditRecipe()}
-                  className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one text-white hover:scale-105 border text-center select-none  rounded-lg p-2"
+                  className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-primary text-white hover:scale-105 border text-center select-none  rounded-lg p-2"
                 >
                   حفظ التعديلات
                 </button>
@@ -313,11 +313,11 @@ export default function EditRecipe() {
                   >
                     &#13;&#10;
                   </span>
-                  <MdEdit className="absolute top-0 right-0 animate-pulse text-2xl text-green-400" />
+                  <MdEdit className="absolute top-0 right-0  text-2xl text-secondary" />
                 </pre>
                 <button
                   onClick={() => handleEditRecipe()}
-                  className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one text-white hover:scale-105 border text-center select-none  rounded-lg p-2"
+                  className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-primary text-white hover:scale-105 border text-center select-none  rounded-lg p-2"
                 >
                   حفظ التعديلات
                 </button>
@@ -362,11 +362,11 @@ export default function EditRecipe() {
                       >
                         &#13;&#10;
                       </span>
-                      <MdEdit className="absolute top-0 right-0 animate-pulse text-2xl text-green-400" />
+                      <MdEdit className="absolute top-0 right-0  text-2xl text-secondary" />
                     </pre>{' '}
                     <button
                       onClick={() => handleEditRecipe()}
-                      className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one text-white hover:scale-105 border text-center select-none  rounded-lg p-2"
+                      className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-primary text-white hover:scale-105 border text-center select-none  rounded-lg p-2"
                     >
                       حفظ التعديلات
                     </button>
@@ -399,7 +399,7 @@ export default function EditRecipe() {
                 />
                 <button
                   onClick={() => handleEditRecipe()}
-                  className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one text-white hover:scale-105 border text-center select-none  rounded-lg p-2"
+                  className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-primary text-white hover:scale-105 border text-center select-none  rounded-lg p-2"
                 >
                   حفظ التعديلات
                 </button>

@@ -20,13 +20,6 @@ export default function LogInPage() {
     email: z.string().email(),
     password: z.string().min(),
   });
-  // {
-  //   "version": 2,
-  //   "builds": [
-  //     { "src": "package.json", "use": "@vercel/node" },
-  //     { "src": "next.config.js", "use": "@vercel/next" }
-  //   ]
-  // }
 
   const {
     register,
@@ -35,10 +28,6 @@ export default function LogInPage() {
     setError,
     formState: { errors },
   } = useForm({ resolver: zodResolver(schema) });
-
-  //! و ضعنا هذه الجملة الشرطية هنا لانه عندما يقوم المستخدم بتسجيل الدخول عن طريق جوجل مثلا
-  //! أو احد البروفايدرز يتم انشاء جلسة اي ان عملية تسجيل الدخول صحيحة وبالتالي نقوم باعادة توجيه المستخدم الى الصفحة الرئيسية
-  //! التطبيق build حتى لاتسبب مشكلة عند  useEffect يجب وضع الجملة الشرطية هذه ضمن
 
   useEffect(() => {
     if (session?.data?.user?.email) {
@@ -80,7 +69,7 @@ export default function LogInPage() {
           t={t}
           message={' بهيجة اشرق لبن ترحب بكم أهلا وسهلا '}
           emoji={'🧀'}
-          greenEmoji={'🧀'}
+          orangeEmoji={'🧀'}
         />
       ));
     } else {
@@ -161,7 +150,7 @@ export default function LogInPage() {
         <div className="flex flex-col sm:flex-row justify-between gap-8 items-center mt-4 w-full">
           <button
             type="submit"
-            className=" text-lg p-2  my-3 text-white text-nowrap bg-five hover:bg-one rounded-lg hover:scale-[101%] w-full "
+            className=" text-lg p-2  my-3 text-white text-nowrap bg-five hover:bg-primary rounded-lg hover:scale-[101%] w-full "
           >
             تسجيل الدخول
           </button>
@@ -170,7 +159,7 @@ export default function LogInPage() {
             <Link href={'/'}>
               <button
                 type="submit"
-                className=" text-lg p-2  my-3 text-white text-nowrap bg-five hover:bg-one rounded-lg hover:scale-[101%] w-full "
+                className=" text-lg p-2  my-3 text-white text-nowrap bg-five hover:bg-primary rounded-lg hover:scale-[101%] w-full "
               >
                 إغلاق{' '}
               </button>{' '}
@@ -189,3 +178,180 @@ export default function LogInPage() {
     </div>
   );
 }
+
+// 'use client';
+
+// import React, { useState } from 'react';
+// import { useRouter } from 'next/navigation';
+// import { useSession, signIn } from 'next-auth/react';
+// import { toast } from 'react-hot-toast';
+// import Link from 'next/link';
+
+// // دالة للتحقق من صحة البريد الإلكتروني
+// function isValidEmail(email) {
+//   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//   return emailRegex.test(email);
+// }
+
+// // دالة للتحقق من صحة بيانات تسجيل الدخول
+// function validateLogin(email, password) {
+//   const errors = {};
+
+//   if (!email) {
+//     errors.email = 'عنوان البريد الإلكتروني مطلوب';
+//   } else if (!isValidEmail(email)) {
+//     errors.email = 'عنوان البريد الإلكتروني غير صالح';
+//   }
+
+//   if (!password) {
+//     errors.password = 'كلمة السر مطلوبة';
+//   } else if (password.length < 5) {
+//     errors.password = 'كلمة السر يجب أن تكون 5 أحرف على الأقل';
+//   }
+
+//   return errors;
+// }
+
+// // دالة لتسجيل الدخول باستخدام البريد الإلكتروني وكلمة السر
+// async function handleLogin(email, password, setIsLoading) {
+//   const errors = validateLogin(email, password);
+//   if (Object.keys(errors).length > 0) {
+//     Object.values(errors).forEach((error) => toast.error(error));
+//     return;
+//   }
+
+//   setIsLoading(true);
+
+//   try {
+//     const result = await signIn('credentials', {
+//       email,
+//       password,
+//       redirect: false,
+//     });
+
+//     if (result?.error) {
+//       toast.error('فشل تسجيل الدخول: البريد الإلكتروني أو كلمة السر غير صحيحة');
+//     } else {
+//       toast.success('تم تسجيل الدخول بنجاح!');
+//       window.location.href = '/'; // إعادة التوجيه إلى الصفحة الرئيسية
+//     }
+//   } catch (error) {
+//     toast.error('حدث خطأ أثناء تسجيل الدخول. يرجى المحاولة مرة أخرى.');
+//   } finally {
+//     setIsLoading(false);
+//   }
+// }
+
+// // دالة لتسجيل الدخول باستخدام جوجل
+// async function handleGoogleSignIn(setIsGoogleLoading) {
+//   setIsGoogleLoading(true);
+
+//   try {
+//     const result = await signIn('google', { redirect: false });
+
+//     if (result?.error) {
+//       toast.error('فشل تسجيل الدخول باستخدام جوجل');
+//     } else {
+//       toast.success('تم تسجيل الدخول بنجاح باستخدام جوجل!');
+//       window.location.href = '/'; // إعادة التوجيه إلى الصفحة الرئيسية
+//     }
+//   } catch (error) {
+//     toast.error('حدث خطأ أثناء تسجيل الدخول باستخدام جوجل.');
+//   } finally {
+//     setIsGoogleLoading(false);
+//   }
+// }
+
+// // مكون تسجيل الدخول
+// export default function LoginPage() {
+//   const [email, setEmail] = useState('');
+//   const [password, setPassword] = useState('');
+//   const [isLoading, setIsLoading] = useState(false);
+//   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+//   const router = useRouter();
+//   const { data: session } = useSession();
+
+//   // إذا كان المستخدم مسجل الدخول بالفعل، إعادة توجيهه إلى الصفحة الرئيسية
+//   if (session) {
+//     router.push('/');
+//     return null;
+//   }
+
+//   return (
+//     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+//       <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
+//         <h1 className="text-2xl font-bold text-center mb-6">تسجيل الدخول</h1>
+
+//         {/* نموذج تسجيل الدخول */}
+//         <form
+//           onSubmit={async (e) => {
+//             e.preventDefault();
+//             await handleLogin(email, password, setIsLoading);
+//           }}
+//           className="space-y-4"
+//         >
+//           <div>
+//             <label
+//               htmlFor="email"
+//               className="block text-sm font-medium text-gray-700"
+//             >
+//               البريد الإلكتروني
+//             </label>
+//             <input
+//               type="email"
+//               id="email"
+//               value={email}
+//               onChange={(e) => setEmail(e.target.value)}
+//               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+//               placeholder="أدخل بريدك الإلكتروني"
+//               required
+//             />
+//           </div>
+
+//           <div>
+//             <label
+//               htmlFor="password"
+//               className="block text-sm font-medium text-gray-700"
+//             >
+//               كلمة السر
+//             </label>
+//             <input
+//               type="password"
+//               id="password"
+//               value={password}
+//               onChange={(e) => setPassword(e.target.value)}
+//               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+//               placeholder="أدخل كلمة السر"
+//               required
+//             />
+//           </div>
+
+//           <button
+//             type="submit"
+//             disabled={isLoading}
+//             className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors duration-300"
+//           >
+//             {isLoading ? 'جاري التحميل...' : 'تسجيل الدخول'}
+//           </button>
+//         </form>
+
+//         {/* زر تسجيل الدخول باستخدام جوجل */}
+//         <button
+//           onClick={async () => await handleGoogleSignIn(setIsGoogleLoading)}
+//           disabled={isGoogleLoading}
+//           className="w-full mt-4 bg-primary text-white py-2 rounded-md hover:bg-secondary transition-colors duration-300"
+//         >
+//           {isGoogleLoading ? 'جاري التحميل...' : 'تسجيل الدخول باستخدام جوجل'}
+//         </button>
+
+//         {/* رابط للتسجيل */}
+//         <p className="mt-4 text-center text-sm text-gray-600">
+//           ليس لديك حساب؟{' '}
+//           <Link href="/register" className="text-blue-500 hover:underline">
+//             أنشئ حسابًا جديدًا
+//           </Link>
+//         </p>
+//       </div>
+//     </div>
+//   );
+// }

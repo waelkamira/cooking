@@ -17,7 +17,11 @@ export async function HandleDeletePost(recipe) {
 
   if (response.ok) {
     toast.custom((t) => (
-      <CustomToast t={t} message={'تم حذف هذا البوست بنجاح'} greenEmoji={'✔'} />
+      <CustomToast
+        t={t}
+        message={'تم حذف هذا البوست بنجاح'}
+        orangeEmoji={'✔'}
+      />
     ));
     dispatch({ type: 'DELETE_RECIPE', payload: recipe });
   } else {
