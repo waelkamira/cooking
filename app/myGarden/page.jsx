@@ -175,7 +175,7 @@ export default function TheGarden() {
   };
 
   return (
-    <div className="relative w-full bg-gradient-to-b from-primary to-secondary min-h-screen p-4 lg:p-8 rounded-lg">
+    <div className="relative w-full bg-gradient-to-b from-secondary to-primary min-h-screen p-4 lg:p-8 rounded-lg">
       {/* Header banner - hidden on small screens */}
       {/* Header */}
       <div className="relative">

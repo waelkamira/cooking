@@ -66,7 +66,7 @@ export default function SideBarMenu({ setIsOpen }) {
 
   return (
     <motion.div
-      className="p-5 w-full max-w-xs h-full bg-gradient-to-b from-primary to-secondary rounded-lg shadow-xl overflow-auto"
+      className="p-5 w-full max-w-xs h-full bg-gradient-to-b from-secondary to-primary rounded-lg shadow-xl overflow-auto"
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 20 }}

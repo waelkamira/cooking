@@ -96,7 +96,7 @@ export default function Item({
   if (session?.status === 'unauthenticated') {
     return (
       <motion.div
-        className="flex flex-col items-center justify-center p-8 bg-gradient-to-b from-primary to-secondary mt-16 m-2 rounded-xl shadow-lg min-h-[50vh] text-center"
+        className="flex flex-col items-center justify-center p-8 bg-gradient-to-b from-secondary to-primary mt-16 m-2 rounded-xl shadow-lg min-h-[50vh] text-center"
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}

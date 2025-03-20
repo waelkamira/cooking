@@ -12,34 +12,14 @@ import { TfiMenuAlt } from 'react-icons/tfi';
 import { FaUtensils, FaHeart, FaBookOpen } from 'react-icons/fa';
 import CategoriesSlides from './CategoriesSlides';
 import { Suspense } from 'react';
-import Button from './Button';
 import Loading from './Loading';
-import Link from 'next/link';
 import SideBar from './SideBar';
 import { MdEmojiFoodBeverage } from 'react-icons/md';
 
 export default function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
-  // Handle scroll effect for header
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  // Save user image to localStorage if available
   useEffect(() => {
     if (typeof window !== 'undefined' && session?.user?.image) {
       localStorage.setItem('image', JSON.stringify(session.user.image));
@@ -104,10 +84,10 @@ export default function HomePage() {
                 transition={{ duration: 0.8 }}
                 className="text-center"
               >
-                <h1 className="text-3xl md:text-5xl font-bold mb-4">
+                <h1 className="hidden md:block text-3xl md:text-5xl font-bold mb-4">
                   عالم الطبخ والوصفات الشهية
                 </h1>
-                <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+                <p className="text-sm md:text-xl text-white/90 mb-8 max-w-2xl mx-auto">
                   استكشف مجموعة متنوعة من الوصفات اللذيذة من مختلف المطابخ
                   العالمية
                 </p>
@@ -121,30 +101,8 @@ export default function HomePage() {
           </div>
 
           {/* Floating action buttons */}
-          <div className="container mx-auto px-4">
-            <div className="relative -mt-8 z-30 flex justify-center md:justify-end gap-4">
-              {status === 'authenticated' ? (
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <NewRecipeButton />
-                </motion.div>
-              ) : (
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Button
-                    title={'تسجيل الدخول'}
-                    path={'/login'}
-                    style={
-                      'bg-gradient-to-r from-primary to-secondary text-white shadow-lg'
-                    }
-                  />
-                </motion.div>
-              )}
-            </div>
+          <div className="container flex justify-center sm:justify-end items-center mx-auto px-4 w-full">
+            <NewRecipeButton />
           </div>
         </div>
 

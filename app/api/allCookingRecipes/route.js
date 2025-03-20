@@ -1,76 +1,58 @@
+// API Route (with NodeCache)
+import NodeCache from 'node-cache';
 import axios from 'axios';
 import Papa from 'papaparse';
-import NodeCache from 'node-cache';
-import { createClient } from '@supabase/supabase-js';
 
-// إعداد Supabase Client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL, // عنوان URL الخاص بـ Supabase
-  process.env.NEXT_PUBLIC_SUPABASE_API // مفتاح API العمومي الخاص بـ Supabase
-);
-// إعداد التخزين المؤقت
-const cache = new NodeCache({
-  stdTTL: 60 * 10, // مدة التخزين المؤقت 10 دقائق
-  checkperiod: 60,
-  maxKeys: 1000,
-});
+// Initialize NodeCache
+const cache = new NodeCache({ stdTTL: 60 * 10 }); // 10 minutes
 
 function createCacheKey(params) {
-  return `meals_${JSON.stringify(params)}`;
-}
-
-function invalidateCacheByPrefix(prefix) {
-  const keys = cache.keys();
-  keys.forEach((key) => {
-    if (key.startsWith(prefix)) {
-      cache.del(key);
-    }
-  });
+  const { page, limit } = params;
+  return `meals_page_${page}_limit_${limit}`;
 }
 
 export async function GET(req) {
   try {
-    // إعداد الرابط للملف CSV
-    const csvUrl =
-      'https://raw.githubusercontent.com/waelkamira/cooking_csv/refs/heads/main/ar_recipes.csv';
-
-    // تحليل المعاملات الواردة من الطلب
     const url = new URL(req.url);
     const searchParams = url.searchParams;
     const page = parseInt(searchParams.get('page')) || 1;
     const limit = parseInt(searchParams.get('limit')) || 5;
-    const skip = (page - 1) * limit;
 
-    // إنشاء مفتاح التخزين المؤقت
     const cacheKey = createCacheKey({ page, limit });
 
-    // محاولة الحصول على البيانات من التخزين المؤقت
-    let meals = cache.get(cacheKey);
-    if (!meals) {
-      // جلب البيانات من الرابط
-      const response = await axios.get(csvUrl);
-      const csvData = response.data;
+    // Check if the data is in the cache
+    const cachedData = cache.get(cacheKey);
 
-      // تحليل البيانات باستخدام PapaParse
-      const parsedData = Papa.parse(csvData, {
-        header: true, // تحليل الرؤوس كأسماء أعمدة
-        skipEmptyLines: true, // تخطي الصفوف الفارغة
+    if (cachedData) {
+      console.log('Serving from cache');
+      return new Response(JSON.stringify(cachedData), {
+        headers: { 'Content-Type': 'application/json' },
       });
-
-      // البيانات المحللة
-      const allMeals = parsedData.data;
-
-      // تقسيم البيانات للصفحة المطلوبة
-      meals = allMeals.slice(skip, skip + limit);
-
-      // تخزين البيانات في التخزين المؤقت
-      cache.set(cacheKey, meals);
     }
 
-    // مراقبة الأداء
-    console.log('Cache Stats:', cache.getStats());
+    // If not in cache, fetch and parse the CSV
+    const csvUrl =
+      'https://raw.githubusercontent.com/waelkamira/cooking_csv/refs/heads/main/ar_recipes.csv';
+    const response = await axios.get(csvUrl);
+    const csvData = response.data;
 
-    return new Response(JSON.stringify(meals), {
+    const parsedData = Papa.parse(csvData, {
+      header: true,
+      skipEmptyLines: true,
+    });
+
+    let allMeals = parsedData.data;
+    allMeals = shuffleArray(allMeals);
+    const skip = (page - 1) * limit;
+    const meals = allMeals.slice(skip, skip + limit);
+
+    const dataToCache = { page, meals };
+
+    // Store the data in the cache
+    cache.set(cacheKey, dataToCache);
+    console.log('Serving from network and caching');
+
+    return new Response(JSON.stringify(dataToCache), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
@@ -80,6 +62,14 @@ export async function GET(req) {
       status: 500,
     });
   }
+}
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
 
 export async function POST(req) {
@@ -92,7 +82,7 @@ export async function POST(req) {
     if (error) {
       throw error;
     }
-
+    //! يجب تعديل جدول Meal حتى يقبل تحميل مصفوفة من الصور
     // تحديث التخزين المؤقت
     invalidateCacheByPrefix('meals_'); // إزالة المفاتيح المتعلقة بالوجبات
 

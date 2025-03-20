@@ -29,7 +29,7 @@ export default function NewRecipe() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary to-secondary pb-12">
+    <div className="min-h-screen bg-gradient-to-b from-secondary to-primary pb-12">
       {/* Header */}
       <div className="relative">
         {/* Background image with overlay */}

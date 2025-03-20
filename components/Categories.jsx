@@ -65,7 +65,7 @@ export default function CategoriesSlid() {
 
   return (
     <motion.div
-      className="hidden xl:flex flex-col items-center justify-start p-4 w-full bg-gradient-to-b from-primary to-secondary rounded-xl shadow-lg overflow-hidden"
+      className="hidden xl:flex flex-col items-center justify-start p-4 w-full bg-gradient-to-b from-primary/20 to-secondary/20 rounded-xl shadow-lg overflow-hidden"
       initial="hidden"
       animate="visible"
       variants={containerVariants}

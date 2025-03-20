@@ -229,11 +229,11 @@ export default function SearchBar() {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="relative w-full max-w-md h-40 mb-4"
+                className="relative "
               >
                 <Image
                   priority
-                  src="https://res.cloudinary.com/dh2xlutfu/image/upload/v1718716955/cooking/nasoh_and_bahiga_cn3e7h.png"
+                  src="/logo (2).png"
                   width={400}
                   height={160}
                   alt="شعار موقع الوصفات"
@@ -255,7 +255,7 @@ export default function SearchBar() {
                     id="search_meal"
                     name="search_meal"
                     placeholder="ابحث عن وصفة طبخ شهية..."
-                    className="w-full pr-4 pl-24 py-4 text-lg text-black bg-white/90 backdrop-blur-sm outline-none outline-gray-300 focus:outline focus:outline-secondary rounded-full shadow-lg"
+                    className="w-full pr-4 pl-24 py-2 md:py-4 text-lg text-black bg-white/90 backdrop-blur-sm outline-none outline-gray-300 focus:outline focus:outline-secondary rounded-full shadow-lg"
                   />
                   <Button
                     type="submit"

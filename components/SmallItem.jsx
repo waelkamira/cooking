@@ -196,7 +196,7 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
         >
           {recipe?.image ? (
             <Image
-              src={recipe.image || '/placeholder.svg'}
+              src={recipe.image || '/placeholder.jpg'}
               alt={recipe.mealName}
               layout="fill"
               objectFit="cover"

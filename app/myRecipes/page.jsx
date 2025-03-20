@@ -117,7 +117,7 @@ export default function MyRecipes() {
   if (session?.status === 'unauthenticated') {
     return (
       <motion.div
-        className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-primary to-secondary p-4"
+        className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-secondary to-primary p-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -148,7 +148,7 @@ export default function MyRecipes() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary to-secondary pb-12">
+    <div className="min-h-screen bg-gradient-to-b from-secondary to-primary pb-12">
       {/* Header */}
       <div className="relative">
         {/* Background image with overlay */}

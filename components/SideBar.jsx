@@ -19,6 +19,7 @@ import {
   FaQuestion,
   FaBookOpen,
 } from 'react-icons/fa';
+import { FaPlus } from 'react-icons/fa6';
 
 export default function SideBar() {
   const router = useRouter();
@@ -51,6 +52,11 @@ export default function SideBar() {
 
   // Navigation items
   const navItems = [
+    {
+      title: 'إنشاء وصفة',
+      path: '/newRecipe',
+      icon: <FaPlus className="ml-2" />,
+    },
     {
       title: 'شو أطبخ اليوم؟',
       path: '/whatToCookToday',
@@ -149,16 +155,6 @@ export default function SideBar() {
               animate="visible"
               className="space-y-4"
             >
-              {/* New Recipe Button */}
-              <motion.div
-                variants={itemVariants}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                className="mb-6"
-              >
-                <NewRecipeButton />
-              </motion.div>
-
               {/* Navigation Items */}
               {navItems.map((item, index) => (
                 <motion.div
@@ -171,7 +167,7 @@ export default function SideBar() {
                 >
                   <Button
                     title={item.title}
-                    style={`flex items-center justify-start bg-white/10 hover:bg-white/20 text-white border border-white/10 hover:border-white/30 transition-all duration-300 ${
+                    style={` flex items-center justify-center bg-primary/10 hover:bg-primary/20 shadow-lg text-white border border-white/10 hover:border-white/30 transition-all duration-300 ${
                       isHovered === index ? 'pr-6' : 'pr-4'
                     }`}
                     path={item.path}
@@ -197,23 +193,6 @@ export default function SideBar() {
                   />
                 </motion.div>
               )}
-
-              {/* Sign Out Button */}
-              {/* <motion.div
-                variants={itemVariants}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                className="mt-8"
-              >
-                <Button
-                  title={'تسجيل الخروج'}
-                  style={
-                    'flex items-center justify-start bg-white/10 hover:bg-primary/70 text-white border border-white/10 hover:border-secondary transition-all duration-300'
-                  }
-                  onClick={() => signOut()}
-                  icon={<FaSignOutAlt className="ml-2" />}
-                />
-              </motion.div> */}
             </motion.div>
           </div>
         )}
