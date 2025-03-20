@@ -39,6 +39,12 @@ export default function LogInPage() {
   useEffect(() => {
     if (session?.data?.user?.email) {
       router.push('/');
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(
+          'CurrentUser',
+          JSON.stringify(session?.data?.user)
+        );
+      }
     }
   }, [router, session?.data?.user?.email]);
 

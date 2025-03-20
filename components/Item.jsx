@@ -130,7 +130,7 @@ export default function Item({
     <div className="bg-gray-50 min-h-screen">
       {/* Header with background image */}
       <div className="relative h-64 md:h-80 w-full overflow-hidden">
-        <div className="absolute inset-0 bg-black/50 z-10"></div>
+        <div className="absolute inset-0 z-10"></div>
         <Image
           priority
           src={image || '/photo (20).png'}

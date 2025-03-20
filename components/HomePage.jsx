@@ -15,7 +15,7 @@ import { Suspense } from 'react';
 import Loading from './Loading';
 import SideBar from './SideBar';
 import { MdEmojiFoodBeverage } from 'react-icons/md';
-
+import ChatBot from './chatbot/Chatbot';
 export default function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session } = useSession();
@@ -107,7 +107,8 @@ export default function HomePage() {
         </div>
 
         {/* Main content */}
-        <div className="container flex justify-center items-center mx-auto px-0 py-8 w-full">
+        <div className="container flex flex-col justify-center items-center mx-auto px-0 py-8 w-full">
+          {/* <ChatBot /> */}
           <motion.div className="flex flex-col items-start justify-start w-full">
             {/* Feature cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">

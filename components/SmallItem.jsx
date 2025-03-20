@@ -175,218 +175,220 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
   if (!recipe) return <Loading />;
 
   return (
-    <motion.div
-      key={index}
-      id="post1"
-      className="bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: index * 0.1 }}
-      whileHover={{ y: -5 }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      dir="rtl"
-    >
-      {/* Recipe Image with Overlay */}
-      <div className="relative h-64 overflow-hidden">
-        <motion.div
-          animate={{ scale: isHovered ? 1.05 : 1 }}
-          transition={{ duration: 0.5 }}
-          className="h-full w-full"
-        >
-          {recipe?.image ? (
-            <Image
-              src={recipe.image || '/placeholder.jpg'}
-              alt={recipe.mealName}
-              layout="fill"
-              objectFit="cover"
-              className="transition-transform duration-500"
-            />
-          ) : (
-            <LoadingPhoto />
-          )}
-        </motion.div>
-
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/30 to-transparent"></div>
-
-        {/* Heart Button (Absolute Position) */}
-        <motion.button
-          whileTap={{ scale: 0.9 }}
-          onClick={() =>
-            handleInteraction(
-              recipe.id,
-              'hearts',
-              setHeart,
-              heart,
-              setNumberOfHearts
-            )
-          }
-          className="absolute top-4 left-4 h-10 w-10 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-sm shadow-lg"
-        >
-          {heart ? (
-            <FaHeart className="h-5 w-5 text-primary" />
-          ) : (
-            <FaRegHeart className="h-5 w-5 text-white" />
-          )}
-        </motion.button>
-
-        {/* Recipe Type Badge */}
-        <div className="absolute top-4 right-4">
-          <span className="px-3 py-1 text-sm font-medium text-white bg-gradient-to-r from-primary to-secondary rounded-full shadow-lg">
-            وصفة شهية
-          </span>
-        </div>
-
-        {/* Recipe Meta Info (Bottom of Image) */}
-        <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center">
-          <div className="flex items-center space-x-reverse space-x-3">
-            <div className="flex items-center bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">
-              <FaClock className="h-4 w-4 text-white ml-1" />
-              <span className="text-xs font-medium text-white">٣٠ دقيقة</span>
-            </div>
-            <div className="flex items-center bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">
-              <FaUtensils className="h-4 w-4 text-white ml-1" />
-              <span className="text-xs font-medium text-white">٤ أشخاص</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Recipe Content */}
-      <div className="p-5">
-        {/* Recipe Title */}
-        <h2 className="text-gray-900 font-bold text-xl mb-3 line-clamp-1">
-          {recipe.mealName}
-        </h2>
-
-        {/* Author Info */}
-        <div className="flex items-center mb-4">
-          <div className="relative h-10 w-10 rounded-full overflow-hidden border-2 border-orange-100 ml-3">
-            {recipe?.userImage ? (
+    <Link href={`/recipes/${id ? recipe?.postId : recipe?.id}`}>
+      <motion.div
+        key={index}
+        id="post1"
+        className="bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: index * 0.1 }}
+        whileHover={{ y: -5 }}
+        onHoverStart={() => setIsHovered(true)}
+        onHoverEnd={() => setIsHovered(false)}
+        dir="rtl"
+      >
+        {/* Recipe Image with Overlay */}
+        <div className="relative h-64 overflow-hidden">
+          <motion.div
+            animate={{ scale: isHovered ? 1.05 : 1 }}
+            transition={{ duration: 0.5 }}
+            className="h-full w-full"
+          >
+            {recipe?.image ? (
               <Image
-                src={recipe.userImage || '/placeholder.svg'}
-                alt={recipe.userName}
+                src={recipe.image || '/placeholder.jpg'}
+                alt={recipe.mealName}
                 layout="fill"
                 objectFit="cover"
-                className="rounded-full"
+                className="transition-transform duration-500"
               />
             ) : (
               <LoadingPhoto />
             )}
-          </div>
-          <div>
-            <p className="font-medium text-gray-800">{recipe?.userName}</p>
-            <p className="text-xs text-gray-500">
-              {formatDate(recipe?.createdAt)}
-            </p>
-          </div>
-        </div>
+          </motion.div>
 
-        {/* Recipe Ingredients */}
-        <div className="mb-4">
-          <div className="flex items-center mb-2">
-            <span className="h-5 w-5 rounded-full bg-orange-100 flex items-center justify-center ml-2">
-              <FaUtensils className="h-3 w-3 text-primary" />
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/30 to-transparent"></div>
+
+          {/* Heart Button (Absolute Position) */}
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            onClick={() =>
+              handleInteraction(
+                recipe.id,
+                'hearts',
+                setHeart,
+                heart,
+                setNumberOfHearts
+              )
+            }
+            className="absolute top-4 left-4 h-10 w-10 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-sm shadow-lg"
+          >
+            {heart ? (
+              <FaHeart className="h-5 w-5 text-primary" />
+            ) : (
+              <FaRegHeart className="h-5 w-5 text-white" />
+            )}
+          </motion.button>
+
+          {/* Recipe Type Badge */}
+          <div className="absolute top-4 right-4">
+            <span className="px-3 py-1 text-sm font-medium text-white bg-gradient-to-r from-primary to-secondary rounded-full shadow-lg">
+              وصفة شهية
             </span>
-            <h3 className="font-medium text-gray-800">المقادير:</h3>
           </div>
-          <p className="text-gray-600 text-sm line-clamp-2 pr-7">
-            {recipe?.ingredients}
-          </p>
-        </div>
 
-        {/* Interaction Buttons */}
-        {show && (
-          <div className="flex items-center justify-between mt-4 border-t border-gray-100 pt-4">
-            <button
-              onClick={() =>
-                handleInteraction(
-                  recipe.id,
-                  'likes',
-                  setLike,
-                  like,
-                  setNumberOfLikes
-                )
-              }
-              className={`flex items-center space-x-reverse space-x-1 px-3 py-1.5 rounded-full transition-colors ${
-                like
-                  ? 'text-blue-500 bg-blue-50'
-                  : 'text-gray-500 hover:bg-gray-50'
-              }`}
-            >
-              <SlLike className="h-4 w-4" />
-              <span className="text-sm font-medium">{numberOfLikes}</span>
-            </button>
-
-            <button
-              onClick={() =>
-                handleInteraction(
-                  recipe.id,
-                  'hearts',
-                  setHeart,
-                  heart,
-                  setNumberOfHearts
-                )
-              }
-              className={`flex items-center space-x-reverse space-x-1 px-3 py-1.5 rounded-full transition-colors ${
-                heart
-                  ? 'text-primary bg-orange-50'
-                  : 'text-gray-500 hover:bg-gray-50'
-              }`}
-            >
-              <FaHeart className="h-4 w-4" />
-              <span className="text-sm font-medium">{numberOfHearts}</span>
-            </button>
-
-            <button
-              onClick={() =>
-                handleInteraction(
-                  recipe.id,
-                  'emojis',
-                  setEmoji,
-                  emoji,
-                  setNumberOfEmojis
-                )
-              }
-              className={`flex items-center space-x-reverse space-x-1 px-3 py-1.5 rounded-full transition-colors ${
-                emoji
-                  ? 'text-primary bg-orange-50'
-                  : 'text-gray-500 hover:bg-gray-50'
-              }`}
-            >
-              <span className="text-lg">🥝</span>
-              <span className="text-sm font-medium">{numberOfEmojis}</span>
-            </button>
-
-            <div className="flex items-center space-x-reverse space-x-1 px-3 py-1.5 text-gray-500">
-              <BiMessageRounded className="h-4 w-4" />
-              <span className="text-sm font-medium">0</span>
+          {/* Recipe Meta Info (Bottom of Image) */}
+          <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center">
+            <div className="flex items-center space-x-reverse space-x-3">
+              <div className="flex items-center bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">
+                <FaClock className="h-4 w-4 text-white ml-1" />
+                <span className="text-xs font-medium text-white">٣٠ دقيقة</span>
+              </div>
+              <div className="flex items-center bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">
+                <FaUtensils className="h-4 w-4 text-white ml-1" />
+                <span className="text-xs font-medium text-white">٤ أشخاص</span>
+              </div>
             </div>
           </div>
-        )}
-
-        {/* Action Buttons */}
-        <div className="mt-4 flex justify-between items-center">
-          <Link
-            href={`/recipes/${id ? recipe?.postId : recipe?.id}`}
-            className="px-5 py-2.5 bg-gradient-to-r from-secondary to-primary text-white font-medium rounded-full shadow-md hover:shadow-lg transition-all duration-300 flex-grow text-center"
-          >
-            عرض الوصفة
-          </Link>
-
-          {currentUser?.isAdmin === 1 && path === '/' && (
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => handleDeletePost(recipe)}
-              className="ml-2 p-2.5 bg-orange-100 text-primary rounded-full hover:bg-orange-200 focus:outline-none transition-colors duration-300"
-            >
-              <IoMdClose className="h-5 w-5" />
-            </motion.button>
-          )}
         </div>
-      </div>
-    </motion.div>
+
+        {/* Recipe Content */}
+        <div className="p-5">
+          {/* Recipe Title */}
+          <h2 className="text-gray-900 font-bold text-xl mb-3 line-clamp-1">
+            {recipe.mealName}
+          </h2>
+
+          {/* Author Info */}
+          <div className="flex items-center mb-4">
+            <div className="relative h-10 w-10 rounded-full overflow-hidden border-2 border-orange-100 ml-3">
+              {recipe?.userImage ? (
+                <Image
+                  src={recipe.userImage || '/placeholder.svg'}
+                  alt={recipe.userName}
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-full"
+                />
+              ) : (
+                <LoadingPhoto />
+              )}
+            </div>
+            <div>
+              <p className="font-medium text-gray-800">{recipe?.userName}</p>
+              <p className="text-xs text-gray-500">
+                {formatDate(recipe?.createdAt)}
+              </p>
+            </div>
+          </div>
+
+          {/* Recipe Ingredients */}
+          <div className="mb-4">
+            <div className="flex items-center mb-2">
+              <span className="h-5 w-5 rounded-full bg-orange-100 flex items-center justify-center ml-2">
+                <FaUtensils className="h-3 w-3 text-primary" />
+              </span>
+              <h3 className="font-medium text-gray-800">المقادير:</h3>
+            </div>
+            <p className="text-gray-600 text-sm line-clamp-2 pr-7">
+              {recipe?.ingredients}
+            </p>
+          </div>
+
+          {/* Interaction Buttons */}
+          {show && (
+            <div className="flex items-center justify-between mt-4 border-t border-gray-100 pt-4">
+              <button
+                onClick={() =>
+                  handleInteraction(
+                    recipe.id,
+                    'likes',
+                    setLike,
+                    like,
+                    setNumberOfLikes
+                  )
+                }
+                className={`flex items-center space-x-reverse space-x-1 px-3 py-1.5 rounded-full transition-colors ${
+                  like
+                    ? 'text-blue-500 bg-blue-50'
+                    : 'text-gray-500 hover:bg-gray-50'
+                }`}
+              >
+                <SlLike className="h-4 w-4" />
+                <span className="text-sm font-medium">{numberOfLikes}</span>
+              </button>
+
+              <button
+                onClick={() =>
+                  handleInteraction(
+                    recipe.id,
+                    'hearts',
+                    setHeart,
+                    heart,
+                    setNumberOfHearts
+                  )
+                }
+                className={`flex items-center space-x-reverse space-x-1 px-3 py-1.5 rounded-full transition-colors ${
+                  heart
+                    ? 'text-primary bg-orange-50'
+                    : 'text-gray-500 hover:bg-gray-50'
+                }`}
+              >
+                <FaHeart className="h-4 w-4" />
+                <span className="text-sm font-medium">{numberOfHearts}</span>
+              </button>
+
+              <button
+                onClick={() =>
+                  handleInteraction(
+                    recipe.id,
+                    'emojis',
+                    setEmoji,
+                    emoji,
+                    setNumberOfEmojis
+                  )
+                }
+                className={`flex items-center space-x-reverse space-x-1 px-3 py-1.5 rounded-full transition-colors ${
+                  emoji
+                    ? 'text-primary bg-orange-50'
+                    : 'text-gray-500 hover:bg-gray-50'
+                }`}
+              >
+                <span className="text-lg">🥝</span>
+                <span className="text-sm font-medium">{numberOfEmojis}</span>
+              </button>
+
+              <div className="flex items-center space-x-reverse space-x-1 px-3 py-1.5 text-gray-500">
+                <BiMessageRounded className="h-4 w-4" />
+                <span className="text-sm font-medium">0</span>
+              </div>
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div className="mt-4 flex justify-between items-center">
+            <Link
+              href={`/recipes/${id ? recipe?.postId : recipe?.id}`}
+              className="px-5 py-2.5 bg-gradient-to-r from-secondary to-primary text-white font-medium rounded-full shadow-md hover:shadow-lg transition-all duration-300 flex-grow text-center"
+            >
+              عرض الوصفة
+            </Link>
+
+            {currentUser?.isAdmin === 1 && path === '/' && (
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => handleDeletePost(recipe)}
+                className="ml-2 p-2.5 bg-orange-100 text-primary rounded-full hover:bg-orange-200 focus:outline-none transition-colors duration-300"
+              >
+                <IoMdClose className="h-5 w-5" />
+              </motion.button>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    </Link>
   );
 }

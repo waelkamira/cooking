@@ -137,9 +137,7 @@ export default function SideBar() {
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <Button
                 title={'تسجيل دخول'}
-                style={
-                  'bg-white text-secondary hover:bg-orange-50 shadow-lg w-full py-3'
-                }
+                style={' border text-white shadow-lg w-full py-3'}
                 path="/login"
               />
             </motion.div>
