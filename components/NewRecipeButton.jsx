@@ -11,7 +11,7 @@ export default function NewRecipeButton() {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="-mt-8 z-30 flex justify-center md:justify-start md:w-44 gap-4"
+      className="-mt-8 z-10 flex justify-center md:justify-start md:w-44 gap-4"
     >
       <Button
         title={

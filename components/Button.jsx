@@ -2,7 +2,7 @@ import Link from 'next/link';
 import React from 'react';
 
 export default function Button({ style, title, onClick, path = '' }) {
-  console.log('style: ', style);
+  // console.log('style: ', style);
   return (
     <Link href={path} className="w-full">
       <button

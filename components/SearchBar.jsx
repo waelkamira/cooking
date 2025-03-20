@@ -1,23 +1,24 @@
 'use client';
 
 import React from 'react';
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect, useCallback } from 'react'; // استيراد useCallback
+import { useRouter, usePathname, useSearchParams } from 'next/navigation'; // استيراد usePathname
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, ChevronRight, ChevronLeft, X } from 'lucide-react';
+import { Search } from 'lucide-react';
 import Button from './Button';
 import { RiCloseLargeFill } from 'react-icons/ri';
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
 
 // Placeholder for SmallItem component
-const SmallItem = ({ recipe, index }) => {
-  console.log('recipe', recipe?.id, index);
+const SmallItem = ({ recipe, index, onClose }) => {
   return (
     <div className="w-full mb-4 overflow-hidden hover:shadow-lg transition-all duration-300 bg-white/90 backdrop-blur-sm border-orange-200">
       <Link
         className="flex flex-col md:flex-row"
         href={`/recipes/${recipe?.id}`}
+        onClick={onClose} // تفعيل الدالة onClose عند النقر
       >
         <div className="relative h-48 md:h-auto md:w-1/3">
           <Image
@@ -66,7 +67,7 @@ const SmallItem = ({ recipe, index }) => {
                 {recipe.userName || 'بهيجة اشرق لبن'}
               </span>
             </div>
-            <Link href={`/recipe/${recipe.id}`}>
+            <Link href={`/recipe/${recipe.id}`} onClick={onClose}>
               <Button className="bg-primary hover:bg-secondary text-black">
                 عرض الوصفة
               </Button>
@@ -108,10 +109,12 @@ export default function SearchBar() {
   const [searchedValues, setSearchedValues] = useState([]);
   const [searchTriggered, setSearchTriggered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
   const searchCategory = useSearchParams();
   const searchedCategory = searchCategory.get('searchedCategory');
+  const [totalCount, setTotalCount] = useState();
+  const [hasMore, setHasMore] = useState(false);
   const router = useRouter();
+  const pathname = usePathname(); // الحصول على المسار الحالي
 
   // Function to perform search
   const search = async () => {
@@ -137,22 +140,27 @@ export default function SearchBar() {
     }
 
     try {
-      const res = await fetch(`/api/search?${queryParams.toString()}`);
+      const res = await fetch(
+        `/api/search?${queryParams.toString()}&pageNumber=${pageNumber}&limit=8`
+      );
       const json = await res?.json();
 
       if (!normalizedSearchedWord && !normalizedCategory) {
         setIsVisible(false);
       } else {
+        setTotalCount(json?.totalCount);
+        setHasMore(json?.hasMore);
+        console.log();
         setIsVisible(true);
       }
 
       if (normalizedSearchedWord) {
-        setSearchedValues(json);
+        setSearchedValues(json?.meals);
         setSearchByCategory([]);
       }
 
       if (normalizedCategory) {
-        setSearchByCategory(json);
+        setSearchByCategory(json?.meals);
         setSearchedValues([]);
       }
     } catch (error) {
@@ -165,7 +173,7 @@ export default function SearchBar() {
 
   // useEffect to perform search when searchedCategory changes or pageNumber changes
   useEffect(() => {
-    if (searchedCategory) {
+    if (searchedCategory || pageNumber) {
       search();
     }
   }, [searchedCategory, pageNumber]);
@@ -194,14 +202,22 @@ export default function SearchBar() {
     }
   };
 
-  const handleClose = () => {
+  // استخدم useCallback لتغليف handleClose
+  const handleClose = useCallback(() => {
+    console.log('onClose تم تفعيلها!');
+
     setIsVisible(false);
     setSearchByCategory([]);
     setSearchedValues([]);
     setSearchedWord('');
     setSearchTriggered(false);
     router.push('/');
-  };
+  }, [router]); // قم بتضمين router في قائمة الاعتماديات
+
+  // استدعاء handleClose عند تغير المسار
+  useEffect(() => {
+    handleClose();
+  }, [pathname, handleClose]); // قم بتضمين pathname و handleClose في قائمة الاعتماديات
 
   return (
     <div
@@ -283,17 +299,21 @@ export default function SearchBar() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className=" flex justify-between items-center w-full bg-white/90 backdrop-blur-sm rounded-lg shadow-md mt-4 p-4"
+                className="flex justify-between items-center w-full bg-white/90 backdrop-blur-sm rounded-[5px] shadow-md mt-4 p-4"
               >
-                <h1 className="text-xl font-bold text-gray-500">
-                  نتائج البحث:
+                {/* نتائج البحث */}
+                <h1 className="text-lg md:text-xl font-bold text-gray-500">
+                  نتائج البحث:{' '}
+                  <span className="text-secondary">{totalCount}</span>
                 </h1>
-                <h1
+
+                {/* زر الإغلاق */}
+                <button
                   onClick={handleClose}
-                  className="flex flex-col justify-center items-center hover:scale-105 bg-primary hover:bg-secondary z-50 border-primary text-black rounded-full px-8 cursor-pointer"
+                  className="flex justify-center items-center gap-2 hover:scale-105 bg-gradient-to-l from-secondary to-primary hover:bg-secondary text-black rounded-full px-3 py-1.5 md:px-4 md:py-2 cursor-pointer text-sm md:text-base"
                 >
                   إغلاق <RiCloseLargeFill className="h-4 w-4 ml-2 text-black" />
-                </h1>
+                </button>
               </motion.div>
             )}
           </AnimatePresence>
@@ -327,7 +347,12 @@ export default function SearchBar() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
                     >
-                      <SmallItem recipe={recipe} index={index} />
+                      <SmallItem
+                        recipe={recipe}
+                        index={index}
+                        onClose={handleClose}
+                      />{' '}
+                      {/* تمرير handleClose */}
                     </motion.div>
                   ))}
                 </div>
@@ -345,7 +370,11 @@ export default function SearchBar() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.1 }}
                       >
-                        <SmallItem recipe={recipe} index={index} />
+                        <SmallItem
+                          recipe={recipe}
+                          index={index}
+                          onClose={handleClose} // تمرير handleClose
+                        />
                       </motion.div>
                     ))}
                   </div>
@@ -358,7 +387,7 @@ export default function SearchBar() {
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-white/90 backdrop-blur-sm rounded-lg p-8 text-center"
+                    className="bg-white/90 backdrop-blur-sm p-8 text-center rounded-[5px]"
                   >
                     <div className="text-primary text-5xl mb-4">🍽️</div>
                     <h3 className="text-xl font-bold text-gray-800 mb-2">
@@ -372,39 +401,65 @@ export default function SearchBar() {
                 )}
 
               {/* Pagination */}
-              {!isLoading &&
-                (searchByCategory.length >= 3 ||
-                  searchedValues.length >= 3) && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="flex justify-center items-center mt-8 gap-4"
+              {/* <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex justify-center items-center mt-8 gap-4 bg-green-500 text-black"
+              >
+                <Link href="#top">
+                  <button
+                    onClick={() => setPageNumber(pageNumber - 1)}
+                    variant="outline"
+                    className=" border-orange-200 text-black hover:bg-orange-50 flex items-center"
                   >
-                    {pageNumber > 1 && (
-                      <Link href="#top">
-                        <Button
-                          onClick={() => setPageNumber(pageNumber - 1)}
-                          variant="outline"
-                          className="bg-white/90 backdrop-blur-sm border-orange-200 text-orange-800 hover:bg-orange-50 flex items-center"
-                        >
-                          <ChevronRight className="h-5 w-5 ml-2" />
-                          الصفحة السابقة
-                        </Button>
-                      </Link>
-                    )}
+                    <ChevronRight className="h-5 w-5 ml-2" />
+                    الصفحة السابقة
+                  </button>
+                </Link>
 
-                    <Link href="#top">
-                      <Button
-                        onClick={() => setPageNumber(pageNumber + 1)}
-                        variant="outline"
-                        className="bg-white/90 backdrop-blur-sm border-orange-200 text-orange-800 hover:bg-orange-50 flex items-center"
-                      >
-                        الصفحة التالية
-                        <ChevronLeft className="h-5 w-5 mr-2" />
-                      </Button>
-                    </Link>
-                  </motion.div>
-                )}
+                <Link href="#top">
+                  <button
+                    onClick={() => setPageNumber(pageNumber + 1)}
+                    variant="outline"
+                    className=" backdrop-blur-sm border-orange-200 text-white hover:bg-orange-50 flex items-center"
+                  >
+                    الصفحة التالية
+                    <ChevronLeft className="h-5 w-5 mr-2" />
+                  </button>
+                </Link>
+              </motion.div> */}
+
+              {hasMore && (
+                <div className="w-full border-t border-gray-100 p-4 flex flex-col sm:flex-row items-center justify-between">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setPageNumber(pageNumber + 1)}
+                    disabled={totalCount < 6}
+                    className="px-4 py-2 rounded-full bg-gradient-to-r from-primary to-secondary text-white disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-md hover:shadow-lg transition-all duration-300 mb-2 sm:mb-0"
+                  >
+                    التالي
+                    <MdKeyboardArrowRight className="text-xl" />
+                  </motion.button>
+
+                  <div className="flex items-center">
+                    <span className="px-3 py-1 rounded-full bg-orange-50 text-primary font-medium text-sm">
+                      الصفحة {pageNumber}
+                    </span>
+                  </div>
+
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setPageNumber(pageNumber - 1)}
+                    disabled={pageNumber <= 1}
+                    className="px-4 py-2 rounded-full bg-gradient-to-r from-primary to-secondary text-white disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-md hover:shadow-lg transition-all duration-300"
+                  >
+                    <MdKeyboardArrowLeft className="text-xl" />
+                    السابق
+                  </motion.button>
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>

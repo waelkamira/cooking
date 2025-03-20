@@ -44,7 +44,7 @@ export default function HomePage() {
             />
 
             {/* Mobile menu button */}
-            <div className="xl:hidden absolute z-50 top-4 right-4">
+            <div className="xl:hidden absolute z-0 top-4 right-4">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

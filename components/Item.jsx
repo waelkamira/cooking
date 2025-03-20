@@ -17,7 +17,6 @@ import {
   FaShare,
 } from 'react-icons/fa';
 import { TfiMenuAlt } from 'react-icons/tfi';
-import Button from './Button';
 import SideBarMenu from './SideBarMenu';
 import LoadingPhoto from './LoadingPhoto';
 
@@ -127,7 +126,7 @@ export default function Item({
 
   // Authenticated view
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 min-h-screen xl:w-3/4">
       {/* Header with background image */}
       <div className="relative h-64 md:h-80 w-full overflow-hidden">
         <div className="absolute inset-0 z-10"></div>
@@ -185,8 +184,8 @@ export default function Item({
         </AnimatePresence>
 
         {/* Recipe title and author info */}
-        <div className="absolute bottom-0 left-0 right-0 z-50 p-6 bg-gradient-to-br from-black/80 to-transparent">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+        <div className="absolute bottom-0 left-0 right-0 z-40 p-6 bg-gradient-to-br from-black/80 to-transparent">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4">
             {mealName}
           </h1>
           <div className="flex items-center">
@@ -510,33 +509,38 @@ export default function Item({
           </div>
 
           {/* Recipe footer */}
-          <div className="bg-gray-50 p-6 border-t">
-            <div className="flex items-center justify-between">
+          <div className="bg-gray-50 p-3 md:p-6 border-t">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              {/* معلومات المستخدم والصورة */}
               <div className="flex items-center">
-                <div className="relative size-12 overflow-hidden rounded-full border-2 border-white">
+                <div className="relative size-10 md:size-12 overflow-hidden rounded-full border-2 border-white">
                   {!userImage ? (
-                    <LoadingPhoto />
+                    <div>جاري التحميل</div> // Placeholder or loading component
                   ) : (
                     <Image
                       priority
                       src={userImage || '/placeholder.svg'}
                       fill
                       alt={userName || 'User'}
+                      style={{ objectFit: 'cover' }} // Ensure image covers the area
                     />
                   )}
                 </div>
                 <div className="ml-3">
-                  <h6 className="font-medium">{userName}</h6>
-                  <p className="text-gray-500 text-sm">
+                  <h6 className="font-medium text-sm md:text-base">
+                    {userName}
+                  </h6>
+                  <p className="text-gray-500 text-xs md:text-sm">
                     {formatDate(createdAt)}
                   </p>
                 </div>
               </div>
 
+              {/* زر عرض المزيد */}
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="bg-primary hover:bg-secondary text-white px-4 py-2 rounded-full font-medium"
+                className="bg-primary hover:bg-secondary text-white px-3 py-1.5 md:px-4 md:py-2 rounded-full font-medium text-xs md:text-sm whitespace-nowrap"
               >
                 عرض المزيد من وصفات {userName?.split(' ')[0]}
               </motion.button>

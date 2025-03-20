@@ -31,18 +31,29 @@ export async function GET(req) {
     // تحليل المعاملات الواردة من الطلب
     const url = new URL(req.url);
     const searchParams = url.searchParams;
-    const page = parseInt(searchParams.get('page')) || 1;
+    const pageNumber = parseInt(searchParams.get('pageNumber')) || 1;
     const limit = 8; // تم تعيين الحد الأقصى للنتائج هنا
     const mealName = searchParams.get('mealName') || '';
     const selectedValue = searchParams.get('selectedValue') || '';
-    const skip = (page - 1) * limit;
+    const skip = (pageNumber - 1) * limit;
 
     // إنشاء مفتاح التخزين المؤقت
-    const cacheKey = createCacheKey({ page, limit, mealName, selectedValue });
+    const cacheKey = createCacheKey({
+      pageNumber,
+      limit,
+      mealName,
+      selectedValue,
+    });
 
     // محاولة الحصول على البيانات من التخزين المؤقت
-    let meals = cache.get(cacheKey);
-    if (!meals) {
+    let cachedData = cache.get(cacheKey);
+    let meals, totalCount;
+
+    if (cachedData) {
+      // استرجاع البيانات من الكاش
+      meals = cachedData.meals;
+      totalCount = cachedData.totalCount;
+    } else {
       // جلب البيانات من الرابط
       const response = await axios.get(csvUrl);
       const csvData = response.data;
@@ -75,19 +86,29 @@ export async function GET(req) {
         );
       }
 
+      // حساب العدد الإجمالي بعد التصفية
+      totalCount = allMeals.length;
+
       // تقسيم البيانات للصفحة المطلوبة
       meals = allMeals.slice(skip, skip + limit);
 
       // تخزين البيانات في التخزين المؤقت
-      cache.set(cacheKey, meals);
+      cache.set(cacheKey, { meals, totalCount });
     }
 
     // مراقبة الأداء
     console.log('Cache Stats:', cache.getStats());
 
-    return new Response(JSON.stringify(meals), {
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(
+      JSON.stringify({
+        meals,
+        totalCount: totalCount,
+        hasMore: skip + limit < totalCount, // تحديد إذا كان هناك المزيد من العناصر
+      }),
+      {
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
   } catch (error) {
     console.error('Error fetching meals:', error);
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {

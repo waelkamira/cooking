@@ -78,9 +78,9 @@ export async function POST(req) {
     const { prompt } = await req.json();
 
     const recipe = await generateRecipe(prompt);
-    console.log('recipe **********************', recipe);
+    // console.log('recipe **********************', recipe);
     const imageURL = await generateImage(recipe); // استخدام recipe مباشرةً
-    console.log('imageURL **********************', imageURL);
+    // console.log('imageURL **********************', imageURL);
 
     return NextResponse.json({
       recipe: recipe,
