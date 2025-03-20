@@ -208,7 +208,7 @@ export default function SmallItem({ recipe, index, show = true, id = false }) {
         </motion.div>
 
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/30 to-transparent"></div>
 
         {/* Heart Button (Absolute Position) */}
         <motion.button

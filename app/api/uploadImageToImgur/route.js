@@ -20,7 +20,7 @@ export async function POST(req) {
     const data = await imgurResponse.json();
 
     if (imgurResponse.ok) {
-      console.log('data', data);
+      // console.log('data', data);
       return NextResponse.json({ success: true, data: data.data });
     } else {
       return NextResponse.json(

@@ -7,15 +7,26 @@
 } */
 
 :root {
-  --primary: #ff7300; /* لون أخضر */
-  --primary-foreground: #ffffff; /* لون نص أبيض */
+  --primary: #faa662;
+  --primary-foreground: #ffffff;
 
-  --secondary: #fe5800; /* لون أخضر فاتح */
-  --secondary-foreground: #ffffff; /* لون نص أبيض */
+  --secondary: #c64948;
+  --secondary-foreground: #ffffff;
 
-  --secondary: #f08b33; /* لون أخضر باهت */
-  --secondary-foreground: #000000; /* لون نص أسود */
+  --secondary: #f08b33;
+  --secondary-foreground: #000000;
 }
+/* :root {
+  --primary: #ff7300; 
+  --primary-foreground: #ffffff;
+
+  --secondary: #fe5800;
+  --secondary-foreground: #ffffff;
+
+  --secondary: #f08b33; 
+  --secondary-foreground: #000000; 
+} */
+
 body {
   font-family: 'Rubik', sans-serif;
 }
@@ -53,7 +64,7 @@ pre {
 
 .btn {
   position: relative;
-  background: #fd6e00;
+  background: #fd6e0034;
   /* color: rgb(255, 255, 255); */
   height: 100%;
   z-index: 1;

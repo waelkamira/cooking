@@ -1,6 +1,8 @@
 'use client';
 import Image from 'next/image';
 import React from 'react';
+import { motion } from 'framer-motion';
+
 export default function CustomToast({
   t,
   message,
@@ -8,47 +10,56 @@ export default function CustomToast({
   orangeEmoji,
   redEmoji,
 }) {
+  const toastVariants = {
+    hidden: { opacity: 0, y: 20, scale: 0.9 },
+    visible: { opacity: 1, y: 0, scale: 1 },
+    exit: { opacity: 0, y: -20, scale: 0.9 },
+  };
+
   return (
-    <div
-      className={`${
-        t.visible ? 'animate-enter' : 'animate-leave'
-      } max-w-md w-full bg-white text-four shadow-lg rounded-lg pointer-events-auto flex-2 items-center justify-center p-4 mx-2 border`}
+    <motion.div
+      variants={toastVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+      className="max-w-md w-full bg-white text-four shadow-xl rounded-xl pointer-events-auto flex-2 items-center justify-center p-4 mx-2 border-one"
     >
-      <div className="flex justify-between items-center my-1">
+      <div className="flex justify-between items-center my-2">
         <div className="flex-1 w-full">
-          <div className="flex justify-center items-center gap-2">
-            <div className="relative w-14 h-14 flex-shrink-0 pt-0.5 rounded-full ">
+          <div className="flex justify-start items-center gap-3">
+            <div className="relative w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 rounded-full overflow-hidden">
               <Image
                 priority
-                className="h-10 w-10 rounded-full"
+                className="object-cover"
                 src="/bahiga.png"
                 alt="photo"
                 fill
               />
             </div>
-            <div className="ml-3 flex-1">
-              <h1 className="text-sm">بهيجة اشرق لبن</h1>
+            <div className="ml-1">
+              <h1 className="text-sm sm:text-base font-semibold">
+                بهيجة اشرق لبن
+              </h1>
             </div>
           </div>
         </div>
       </div>
-      {/* <hr className="w-full h-[1px] bg-four rounded-full border-hidden select-none my-1" /> */}
 
-      <div>
-        <div>
-          <h1 className="sm:mt-4 text-[12px] sm:text-sm s:text-nowrap text-center  ">
-            <span className="text-secondary text-xl font-bold">
-              {orangeEmoji}
-            </span>
-            <span className="text-one text-xl mx-1 font-bold">{redEmoji}</span>
-
-            {message}
-            <span className="text-secondary text-xl mx-1 font-bold">
-              {emoji}
-            </span>
-          </h1>
-        </div>
+      <div className="mt-2">
+        <h1 className="text-center text-xs sm:text-sm font-medium leading-relaxed">
+          <span className="text-secondary text-lg sm:text-xl font-bold">
+            {orangeEmoji}
+          </span>
+          <span className="text-one text-lg sm:text-xl mx-1 font-bold">
+            {redEmoji}
+          </span>
+          {message}
+          <span className="text-secondary text-lg sm:text-xl mx-1 font-bold">
+            {emoji}
+          </span>
+        </h1>
       </div>
-    </div>
+    </motion.div>
   );
 }

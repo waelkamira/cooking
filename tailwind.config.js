@@ -17,19 +17,19 @@ module.exports = {
       colors: {
         border: '#E2E8F0', // لون الحدود (رمادي فاتح)
         input: '#FFFFFF', // لون خلفية الحقول (أبيض)
-        ring: '#FE5800', // لون الحلقة (أخضر)
+        ring: '#FAA662', // لون الحلقة (أخضر)
         background: '#FFFFFF', // لون الخلفية (أبيض)
         foreground: '#000000', // لون النص (أسود)
         primary: {
-          DEFAULT: '#FE5800', // لون أخضر
+          DEFAULT: '#FAA662', // لون أخضر
           foreground: '#FFFFFF', // لون نص أبيض
         },
         secondary: {
-          DEFAULT: '#FF7300', // لون أخضر فاتح
+          DEFAULT: '#FAA662', // لون أخضر فاتح
           foreground: '#FFFFFF', // لون نص أبيض
         },
         destructive: {
-          DEFAULT: '#FF5733', // لون أحمر (لون التحذير)
+          DEFAULT: '#', // لون أحمر (لون التحذير)
           foreground: '#FFFFFF', // لون نص أبيض
         },
         muted: {
@@ -37,7 +37,7 @@ module.exports = {
           foreground: '#64748B', // لون نص رمادي
         },
         secondary: {
-          DEFAULT: '#F08B33', // لون أخضر باهت
+          DEFAULT: '#FF5733', // لون أخضر باهت
           foreground: '#000000', // لون نص أسود
         },
         popover: {

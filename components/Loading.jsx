@@ -20,9 +20,9 @@ export default function Loading({ myMessage = 'لا يوجد نتائج لعرض
             <FaGear className="animate-spin text-2xl transition duration-300 mx-8 w-full" />
           </div>
           <div className="w-full">
-            <hr className="w-1/2 h-[10px] bg-gray-600 rounded-full border-hidden animate-pulse my-4 transition duration-300" />
-            <hr className="w-3/4 h-[10px] bg-gray-600 rounded-full border-hidden animate-pulse my-4 transition duration-300" />
-            <hr className="w-full h-[10px] bg-gray-600 rounded-full border-hidden animate-pulse my-4 transition duration-300" />
+            <hr className="w-1/2 h-[10px] bg-secondary rounded-full border-hidden animate-pulse my-4 transition duration-300" />
+            <hr className="w-3/4 h-[10px] bg-secondary rounded-full border-hidden animate-pulse my-4 transition duration-300" />
+            <hr className="w-full h-[10px] bg-secondary rounded-full border-hidden animate-pulse my-4 transition duration-300" />
           </div>
         </div>
       )}

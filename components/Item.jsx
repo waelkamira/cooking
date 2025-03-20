@@ -96,12 +96,12 @@ export default function Item({
   if (session?.status === 'unauthenticated') {
     return (
       <motion.div
-        className="flex flex-col items-center justify-center p-8 bg-gradient-to-b from-primary to-secondary rounded-xl shadow-lg min-h-[50vh] text-center"
+        className="flex flex-col items-center justify-center p-8 bg-gradient-to-b from-primary to-secondary mt-16 m-2 rounded-xl shadow-lg min-h-[50vh] text-center"
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="relative w-32 h-32 mb-6">
+        <div className="relative size-44 sm:size-64 md:size-72 mb-6">
           <Image
             src="/photo (28).png"
             layout="fill"
@@ -109,17 +109,18 @@ export default function Item({
             alt="Login required"
           />
         </div>
-        <h1 className="text-2xl md:text-3xl font-bold text-white mb-6">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-6">
           يجب عليك تسجيل الدخول أولا لرؤية هذه الوصفة
         </h1>
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Link href="/login">
-            <Button
-              title="تسجيل الدخول"
-              style="bg-white text-primary hover:bg-orange-50 px-8 py-3 text-lg font-bold rounded-full shadow-lg"
-            />
-          </Link>
-        </motion.div>
+        <Link href={'/login'}>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-white text-primary hover:bg-orange-50 px-6 py-2 sm:px-8 sm:py-3 text-base sm:text-lg font-bold rounded-full shadow-lg"
+          >
+            تسجيل الدخول
+          </motion.button>
+        </Link>
       </motion.div>
     );
   }
@@ -184,7 +185,7 @@ export default function Item({
         </AnimatePresence>
 
         {/* Recipe title and author info */}
-        <div className="absolute bottom-0 left-0 right-0 z-50 p-6 bg-gradient-to-t from-black/80 to-transparent">
+        <div className="absolute bottom-0 left-0 right-0 z-50 p-6 bg-gradient-to-br from-black/80 to-transparent">
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
             {mealName}
           </h1>

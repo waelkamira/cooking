@@ -97,7 +97,7 @@ export default function HomePage() {
             </AnimatePresence>
 
             {/* Header content */}
-            <div className="absolute inset-0 z-50 flex flex-col items-center justify-center text-white px-4">
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-white px-4">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
